@@ -22,10 +22,11 @@ const login = createAsyncThunk(
     async (credentials: LoginRequest, { rejectWithValue }) => {
         try {
             const response = await authService.login(credentials);
+            // Kiểm tra xem API có trả về accessToken hợp lệ không
+            if (!response.data || !response.data.acessToken) {
+                throw new Error("Invalid response from server");
+            }
             const accessToken = response.data.acessToken;
-            
-            localStorage.setItem('token', accessToken);
-
             return { token: accessToken };
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Login failed');

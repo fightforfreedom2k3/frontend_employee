@@ -4,6 +4,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import EmployeeList from "./pages/employee/EmployeeList";
 import MainLayout from "./layouts/MainLayout";
+import DepartmentList from "./pages/department/DepartmentList";
 
 function RedirectToLogin() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function RedirectToLogin() {
 }
 
 function App() {
+  localStorage.clear();
   return (
     <Router>
       <Routes>
@@ -24,6 +26,7 @@ function App() {
         <Route path="/" element={<MainLayout/>}>
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/employee" element={<EmployeeList/>}/>
+          <Route path="/department" element={<DepartmentList/>}/>
         </Route>
       </Routes>
     </Router>

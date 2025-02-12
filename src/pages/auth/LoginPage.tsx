@@ -6,7 +6,6 @@ import { login } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
-    localStorage.clear();
     const [userName, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch<AppDispatch>();

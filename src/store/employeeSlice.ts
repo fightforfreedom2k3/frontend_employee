@@ -35,21 +35,18 @@ export const fetchEmployees = createAsyncThunk(
         try {
             const response = await employeeService.getAllEmployee(page, size, sort, order);
 
-            // API trả về ngay Employee[], không có `data`
-            if (!Array.isArray(response.data)) {
+            if (!Array.isArray(response.data.data)) {
                 return rejectWithValue("Dữ liệu không hợp lệ từ server.");
             }
-
-            return response.data; // Trả về danh sách Employee[]
+            return {
+                employees: response.data.data,
+                total: response.data.totalCount,
+            };
         } catch (error: any) {
-            if (error.response?.status === 401) {
-                return rejectWithValue("Token không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.");
-            }
             return rejectWithValue(error.response?.data?.message || "Lỗi lấy danh sách nhân viên");
         }
     }
 );
-
 
 const employeeSlice = createSlice({
     name: "employee",
@@ -59,17 +56,11 @@ const employeeSlice = createSlice({
         builder
             .addCase(fetchEmployees.pending, (state) => {
                 state.loading = true;
-                state.error = null;
             })
             .addCase(fetchEmployees.fulfilled, (state, action) => {
                 state.loading = false;
-                if (action.payload) {
-                    state.employees = action.payload;
-                    state.pagination = {
-                        ...state.pagination,
-                        totalEmployee: action.payload.length,
-                    };
-                }
+                state.employees = action.payload.employees;
+                state.pagination.totalEmployee = action.payload.total;
             })
             .addCase(fetchEmployees.rejected, (state, action) => {
                 state.loading = false;

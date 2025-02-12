@@ -27,10 +27,21 @@ api.interceptors.response.use(
     error => {
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
-            window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
+            // chuyển hướng đến trang đăng nhập
+            if (window.location.pathname !== '/login') {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }
 );
 
+export const api2 = axios.create({
+    baseURL: 'http://localhost:3000',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
 export default api;
+

@@ -1,18 +1,13 @@
-export interface BankAccount {
-    bankName: string;
-    accountNumber: string;
-}
-
-export interface Insurance {
-    socialInsuranceRate: number;
-    healthInsuranceRate: number;
-    unemploymentInsuranceRate: number;
-}
+import { BankAccount, Insurance } from "./common";
 
 export interface Department {
     _id: string;
     name: string;
     description: string;
+    manager: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
 }
 
 export interface Employee {
@@ -20,7 +15,7 @@ export interface Employee {
     userName: string;
     fullName: string;
     dob: string;  // Date string
-    department: Department; // Sửa lại kiểu dữ liệu
+    department: Department | null; // Sửa lại kiểu dữ liệu
     position: string;
     role: string;
     baseSalary: number;

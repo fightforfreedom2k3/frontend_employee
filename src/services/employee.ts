@@ -1,4 +1,5 @@
 import api from "./api";
+import { api2 } from "./api";
 import { ApiResponse } from "../types/api";
 import { Employee } from "../types/employee";
 
@@ -17,4 +18,5 @@ export const employeeService = {
         }),
     getEmployeeById: (_id: string) =>
         api.get<ApiResponse<Employee>>(`/employee/getEmployeeById/${_id}`),
+    
 };

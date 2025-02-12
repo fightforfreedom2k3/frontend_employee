@@ -8,7 +8,8 @@ export interface ApiResponse<T> {
     errors?: string[]
     statusCode: number
     acessToken: string
-    employees: Employee[]
+    employee: Employee
+    totalCount: number
 }
 
 
