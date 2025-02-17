@@ -46,7 +46,7 @@ export default function EmployeeDialog({ open, onClose, employeeId }: EmployeeDi
                     <>
                         <Typography><b>Họ và tên:</b> {employee.fullName}</Typography>
                         <Typography><b>Chức vụ:</b> {employee.position}</Typography>
-                        <Typography><b>Phòng ban:</b> {employee.department.name}</Typography>
+                        <Typography><b>Phòng ban:</b> {employee.department ? employee.department.name : ""}</Typography>
                         <Typography><b>Lương cơ bản:</b> {employee.baseSalary.toLocaleString()} VND</Typography>
                         <Typography><b>Ngân hàng:</b> {employee.bankAccount.bankName}</Typography>
                         <Typography><b>Số tài khoản:</b> {employee.bankAccount.accountNumber}</Typography>

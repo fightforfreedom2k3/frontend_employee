@@ -15,4 +15,7 @@ export const departmentService = {
         api2.get<ApiResponse<Department[]>>(`/department/getAllDepartment`, {
             params: {page, size, sort, order},
         }),
+    getAllDepartment2: () => {
+        api2.get<ApiResponse<Department[]>>(`/department/getAllDepartment`), {}},
+
 }

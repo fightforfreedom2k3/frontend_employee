@@ -9,3 +9,8 @@ export interface Insurance {
     healthInsuranceRate: number;
     unemploymentInsuranceRate: number;
 }
+
+export interface Attachments {
+    fileName: string;
+    fileUrl: string;
+}
