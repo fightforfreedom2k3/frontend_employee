@@ -1,16 +1,15 @@
-
 export interface BankAccount {
-    bankName: string;
-    accountNumber: string;
+  bankName: string | undefined;
+  accountNumber: string | undefined;
 }
 
 export interface Insurance {
-    socialInsuranceRate: number;
-    healthInsuranceRate: number;
-    unemploymentInsuranceRate: number;
+  socialInsuranceRate: number;
+  healthInsuranceRate: number;
+  unemploymentInsuranceRate: number;
 }
 
 export interface Attachments {
-    fileName: string;
-    fileUrl: string;
+  fileName: string;
+  fileUrl: string;
 }
