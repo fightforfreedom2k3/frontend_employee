@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { AppDispatch } from '../../../store';
 import { useEffect, useState } from 'react';
-import { AddNewEmployeeRequest } from '../../services/employee';
-import { addNewEmployee, fetchEmployees } from '../../store/employeeSlice';
+import { AddNewEmployeeRequest } from '../../../services/employee';
+import { addNewEmployee, fetchEmployees } from '../../../store/employeeSlice';
 import {
   Alert,
   Button,
@@ -16,8 +16,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Department } from '../../types/employee';
-import { departmentService } from '../../services/department';
+import { Department } from '../../../types/employee';
+import { departmentService } from '../../../services/department';
 
 interface CreateEmployeeDialogProps {
   open: boolean;

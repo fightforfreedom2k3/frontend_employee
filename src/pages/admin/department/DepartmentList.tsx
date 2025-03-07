@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store';
+import { AppDispatch, RootState } from '../../../store';
 import { useEffect, useState } from 'react';
-import { fetchDepartments } from '../../store/departmentSlice';
+import { fetchDepartments } from '../../../store/departmentSlice';
 import {
   Box,
   CircularProgress,

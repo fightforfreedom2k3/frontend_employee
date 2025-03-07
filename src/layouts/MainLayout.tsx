@@ -26,6 +26,7 @@ export default function MainLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const location = useLocation(); // Lấy URL hiện tại
+  const role = localStorage.getItem('role');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -33,12 +34,34 @@ export default function MainLayout() {
 
   // Danh sách menu
   const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-    { text: 'Nhân viên', icon: <PeopleIcon />, path: '/employee' },
-    { text: 'Phòng ban', icon: <BusinessIcon />, path: '/department' },
-    { text: 'Hợp đồng', icon: <DescriptionIcon />, path: '/contract' },
+    {
+      text: 'Dashboard',
+      icon: <DashboardIcon />,
+      path: '/dashboard',
+    },
+    {
+      text: 'Nhân viên',
+      icon: <PeopleIcon />,
+      path: '/employee',
+      role: 'ADMIN',
+    },
+    {
+      text: 'Phòng ban',
+      icon: <BusinessIcon />,
+      path: '/department',
+      role: 'ADMIN',
+    },
+    {
+      text: 'Hợp đồng',
+      icon: <DescriptionIcon />,
+      path: '/contract',
+      role: 'ADMIN',
+    },
   ];
 
+  const menuItemsByRole = menuItems.filter(
+    item => !item.role || item.role === role
+  );
   const drawer = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Toolbar
@@ -53,27 +76,29 @@ export default function MainLayout() {
       </Toolbar>
       <Divider />
       <List sx={{ flexGrow: 1 }}>
-        {menuItems.map(item => (
-          <ListItemButton
-            key={item.text}
-            component={Link}
-            to={item.path}
-            sx={{
-              borderRadius: '8px',
-              mx: 1,
-              my: 0.5,
-              '&:hover': { bgcolor: theme.palette.action.hover },
-              ...(location.pathname === item.path && {
-                bgcolor: theme.palette.primary.light,
-                color: theme.palette.primary.contrastText,
-                '&:hover': { bgcolor: theme.palette.primary.main },
-              }),
-            }}
-          >
-            {item.icon}
-            <ListItemText primary={item.text} sx={{ ml: 2 }} />
-          </ListItemButton>
-        ))}
+        {menuItemsByRole.map(item => {
+          return (
+            <ListItemButton
+              key={item.text}
+              component={Link}
+              to={item.path}
+              sx={{
+                borderRadius: '8px',
+                mx: 1,
+                my: 0.5,
+                '&:hover': { bgcolor: theme.palette.action.hover },
+                ...(location.pathname === item.path && {
+                  bgcolor: theme.palette.primary.light,
+                  color: theme.palette.primary.contrastText,
+                  '&:hover': { bgcolor: 'theme.palette.primary.main' },
+                }),
+              }}
+            >
+              {item.icon}
+              <ListItemText primary={item.text} sx={{ ml: 2 }} />
+            </ListItemButton>
+          );
+        })}
       </List>
       <Divider />
       <Box
@@ -106,8 +131,8 @@ export default function MainLayout() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            {menuItems.find(item => location.pathname === item.path)?.text ||
-              'Quản lý nhân sự'}
+            {menuItemsByRole.find(item => location.pathname === item.path)
+              ?.text || 'Quản lý nhân sự'}
           </Typography>
         </Toolbar>
       </AppBar>

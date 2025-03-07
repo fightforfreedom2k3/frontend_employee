@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { AppDispatch } from '../../../store';
 import { useEffect, useState } from 'react';
-import { employeeService } from '../../services/employee';
+import { employeeService } from '../../../services/employee';
 import {
   Alert,
   Button,
@@ -15,9 +15,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Department, Employee } from '../../types/employee';
-import { departmentService } from '../../services/department';
-import { fetchEmployees, updateEmployee } from '../../store/employeeSlice'; // import update action
+import { Department, Employee } from '../../../types/employee';
+import { departmentService } from '../../../services/department';
+import { fetchEmployees, updateEmployee } from '../../../store/employeeSlice'; // import update action
 
 interface UpdateEmployeeDialog {
   open: boolean;

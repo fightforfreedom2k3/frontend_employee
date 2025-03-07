@@ -8,8 +8,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { employeeService } from '../../services/employee';
-import { Employee } from '../../types/employee';
+import { employeeService } from '../../../services/employee';
+import { Employee } from '../../../types/employee';
 
 interface EmployeeDialogProps {
   open: boolean;

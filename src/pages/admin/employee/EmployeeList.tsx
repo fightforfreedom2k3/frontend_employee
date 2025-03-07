@@ -19,8 +19,8 @@ import {
   IconButton,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store';
-import { fetchEmployees } from '../../store/employeeSlice';
+import { AppDispatch, RootState } from '../../../store';
+import { fetchEmployees } from '../../../store/employeeSlice';
 import EmployeeDialog from './EmployeeDialog';
 import CreateEmployeeDialog from './CreateEmployeeDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -142,7 +142,7 @@ export default function EmployeeList() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          maxHeight: '68vh',
+          maxHeight: '62vh',
         }}
       >
         <TableContainer
