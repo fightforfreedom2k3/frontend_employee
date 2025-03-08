@@ -13,9 +13,10 @@ export interface Department {
 export interface Employee {
   _id: string;
   userName: string;
+  password: string;
   fullName: string;
   dob: string; // Date string
-  department: Department | string; // Sửa lại kiểu dữ liệu
+  department: Department; // Sửa lại kiểu dữ liệu
   position: string;
   role: string;
   baseSalary: number;

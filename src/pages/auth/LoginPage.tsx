@@ -19,18 +19,12 @@ function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error, token } = useSelector(
+  const { loading, error, token, role } = useSelector(
     (state: RootState) => state.auth
   );
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    //tạm thời để role admin cho nguyen.van.a
-    console.log(userName);
-    if (userName == 'nguyen.van.a') {
-      localStorage.setItem('role', 'ADMIN');
-      console.log(localStorage.getItem('role'));
-    }
     if (!userName || !password) {
       return;
     }
@@ -38,8 +32,10 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    if (token) {
+    console.log(role);
+    if (token && role) {
       localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
       navigate('/dashboard');
     }
   }, [token, navigate]);

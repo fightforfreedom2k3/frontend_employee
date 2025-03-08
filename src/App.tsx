@@ -22,7 +22,6 @@ function RedirectToLogin() {
 }
 
 function App() {
-  localStorage.removeItem('token');
   return (
     <Router>
       <Routes>
