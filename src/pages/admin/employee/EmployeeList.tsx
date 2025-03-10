@@ -58,6 +58,7 @@ export default function EmployeeList() {
     );
   }, [dispatch, page, rowsPerPage, searchQuery]);
 
+  //dialog thông tin nhân viên
   const handleRowClick = (employeeId: string) => {
     setSelectedEmployeeId(employeeId);
     setDialogOpen(true);
@@ -67,7 +68,7 @@ export default function EmployeeList() {
     setDialogOpen(false);
     setSelectedEmployeeId('');
   };
-
+  //dialog tạo mới nhân viên
   const handleCreateDialogOpen = () => {
     setCreateDialogOpen(true);
   };
@@ -75,7 +76,7 @@ export default function EmployeeList() {
   const handleCreateDialogClose = () => {
     setCreateDialogOpen(false);
   };
-
+  // dialog chỉnh sửa nhân viên
   const handleUpdateDialogOpen = (employeeId: string) => {
     setSelectedEmployeeId(employeeId);
     setUpdateDialogOpen(true);
@@ -84,22 +85,23 @@ export default function EmployeeList() {
   const handleUpdateDialogClose = () => {
     setUpdateDialogOpen(false);
   };
-
+  //xử lí phân trang
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-
+  //số hàng mỗi trang
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  //xử lí tìm kiếm(chưa làm)
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
+  //Giao diện Quản lý nhân viên
   if (loading)
     return (
       <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />

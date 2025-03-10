@@ -57,6 +57,12 @@ export default function MainLayout() {
       path: '/contract',
       role: 'ADMIN',
     },
+    {
+      text: 'Chấm công',
+      icon: <DescriptionIcon />,
+      path: '/attendance',
+      role: 'ADMIN',
+    },
   ];
 
   const menuItemsByRole = menuItems.filter(
