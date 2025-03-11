@@ -2,6 +2,12 @@ import { ApiResponse } from '../types/api';
 import { AttendanceRecord } from '../types/attendance';
 import api from './api';
 
+export interface CheckInData {
+  id: string;
+  checkInHour: string;
+  workHour: string;
+}
+
 export const attendanceService = {
   getAllAttendanceRecord: (
     page = 1,
@@ -14,5 +20,10 @@ export const attendanceService = {
       {
         params: { page, size, sort, order },
       }
+    ),
+  checkIn: (_id: string, checkInData: CheckInData) =>
+    api.post<ApiResponse<AttendanceRecord>>(
+      `/attendance-record/checkIn/${_id}`,
+      checkInData
     ),
 };

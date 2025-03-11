@@ -62,4 +62,8 @@ export const employeeService = {
       `employee/updateEmployee/${_id}`,
       employeeData
     ),
+  deleteEmployee: (id: string) =>
+    api.delete<ApiResponse<Employee>>(
+      `/employee/deleteEmployeeByAdminAndManager/${id}`
+    ),
 };

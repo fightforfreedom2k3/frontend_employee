@@ -17,15 +17,19 @@ import {
   Grid,
   TextField,
   IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
-import { fetchEmployees } from '../../../store/employeeSlice';
+import { deleteEmployee, fetchEmployees } from '../../../store/employeeSlice';
 import EmployeeDialog from './EmployeeDialog';
 import CreateEmployeeDialog from './CreateEmployeeDialog';
+import UpdateEmployeeDialog from './UpdateEmployeeDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import UpdateEmployeeDialog from './UpdateEmployeeDialog';
 
 export default function EmployeeList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,18 +37,15 @@ export default function EmployeeList() {
     (state: RootState) => state.employee
   );
 
-  // Kiểm tra kích thước màn hình
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
-
-  // State phân trang với mặc định 10 nhân viên mỗi trang
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false); // Dialog xác nhận xóa
 
   useEffect(() => {
     dispatch(
@@ -53,12 +54,12 @@ export default function EmployeeList() {
         size: rowsPerPage,
         sort: 'createdAt',
         order: 'DESC',
-        // search: searchQuery, // Add search query here
+        // search: searchQuery,
       })
     );
   }, [dispatch, page, rowsPerPage, searchQuery]);
 
-  //dialog thông tin nhân viên
+  // Các hàm xử lý dialog
   const handleRowClick = (employeeId: string) => {
     setSelectedEmployeeId(employeeId);
     setDialogOpen(true);
@@ -68,40 +69,58 @@ export default function EmployeeList() {
     setDialogOpen(false);
     setSelectedEmployeeId('');
   };
-  //dialog tạo mới nhân viên
-  const handleCreateDialogOpen = () => {
-    setCreateDialogOpen(true);
-  };
 
-  const handleCreateDialogClose = () => {
-    setCreateDialogOpen(false);
-  };
-  // dialog chỉnh sửa nhân viên
+  const handleCreateDialogOpen = () => setCreateDialogOpen(true);
+  const handleCreateDialogClose = () => setCreateDialogOpen(false);
+
   const handleUpdateDialogOpen = (employeeId: string) => {
     setSelectedEmployeeId(employeeId);
     setUpdateDialogOpen(true);
   };
 
-  const handleUpdateDialogClose = () => {
-    setUpdateDialogOpen(false);
-  };
-  //xử lí phân trang
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleUpdateDialogClose = () => setUpdateDialogOpen(false);
+
+  // Xử lý phân trang
+  const handleChangePage = (event: unknown, newPage: number) =>
     setPage(newPage);
-  };
-  //số hàng mỗi trang
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  //xử lí tìm kiếm(chưa làm)
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
-  //Giao diện Quản lý nhân viên
+  // Xử lý xóa nhân viên và load lại trang
+  const handleDeleteEmployee = () => {
+    dispatch(deleteEmployee({ id: selectedEmployeeId }))
+      .then(() => {
+        // Sau khi xóa thành công, đóng dialog xác nhận xóa và load lại dữ liệu
+        setConfirmDeleteOpen(false);
+        dispatch(
+          fetchEmployees({
+            page: page + 1,
+            size: rowsPerPage,
+            sort: 'createdAt',
+            order: 'DESC',
+          })
+        );
+      })
+      .catch(error => {
+        console.error('Error deleting employee:', error);
+        setConfirmDeleteOpen(false);
+      });
+  };
+
+  const handleDeleteButtonClick = (employeeId: string) => {
+    setSelectedEmployeeId(employeeId);
+    setConfirmDeleteOpen(true);
+  };
+
+  // Hiển thị Loading và Error
   if (loading)
     return (
       <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
@@ -117,7 +136,6 @@ export default function EmployeeList() {
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
       <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}>
         <Grid item xs={12} sm={6}>
-          {/* Search Input */}
           <TextField
             fullWidth
             label="Tìm kiếm nhân viên"
@@ -127,7 +145,6 @@ export default function EmployeeList() {
           />
         </Grid>
         <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-          {/* Create Employee Button */}
           <Button
             onClick={handleCreateDialogOpen}
             variant="contained"
@@ -201,19 +218,17 @@ export default function EmployeeList() {
                       </TableCell>
                     )}
                     <TableCell>{emp.bankAccount.bankName}</TableCell>
-                    {/* Xóa */}
                     <TableCell>
                       <IconButton
                         onClick={event => {
                           event.stopPropagation();
-                          console.log('delete');
+                          handleDeleteButtonClick(emp._id);
                         }}
                       >
                         <Typography>Xóa</Typography>
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
-                    {/* Chỉnh sửa */}
                     <TableCell>
                       <IconButton
                         onClick={event => {
@@ -246,18 +261,37 @@ export default function EmployeeList() {
         />
       </Box>
 
-      {/* Hiển thị dialog chi tiết nhân viên */}
+      {/* Hiển thị Dialog xác nhận xóa */}
+      <Dialog
+        open={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+      >
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Bạn có chắc chắn muốn xóa nhân viên này không?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteOpen(false)} color="secondary">
+            Hủy
+          </Button>
+          <Button onClick={handleDeleteEmployee} color="primary">
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Hiển thị các Dialog khác */}
       <EmployeeDialog
         open={dialogOpen}
         onClose={handleDialogClose}
         employeeId={selectedEmployeeId}
       />
-      {/* Hiển thị dialog tạo mới nhân viên */}
       <CreateEmployeeDialog
         open={createDialogOpen}
         onClose={handleCreateDialogClose}
       />
-      {/* Hiển thị Dialog chỉnh sửa nhân viên */}
       <UpdateEmployeeDialog
         open={updateDialogOpen}
         onClose={handleUpdateDialogClose}

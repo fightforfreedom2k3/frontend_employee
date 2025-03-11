@@ -101,6 +101,21 @@ export const updateEmployee = createAsyncThunk(
   }
 );
 
+//Gọi API xóa nhân viên
+export const deleteEmployee = createAsyncThunk(
+  `employee/deleteEmployee`,
+  async ({ id }: { id: string }, { rejectWithValue }) => {
+    try {
+      const response = await employeeService.deleteEmployee(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Lỗi khi xóa nhân viên'
+      );
+    }
+  }
+);
+
 const employeeSlice = createSlice({
   name: 'employee',
   initialState,
@@ -141,6 +156,18 @@ const employeeSlice = createSlice({
         state.loading = false;
       })
       .addCase(updateEmployee.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //deleteEmployee
+      .addCase(deleteEmployee.pending, state => {
+        state.loading = true;
+      })
+      .addCase(deleteEmployee.fulfilled, (state, action) => {
+        state.loading = false;
+        //maybe add action
+      })
+      .addCase(deleteEmployee.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
