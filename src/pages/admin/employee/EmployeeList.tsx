@@ -53,7 +53,7 @@ export default function EmployeeList() {
         size: rowsPerPage,
         sort: 'createdAt',
         order: 'DESC',
-        value: searchQuery,
+        value: searchQuery.trim(),
       })
     );
   }, [dispatch, page, rowsPerPage, searchQuery]);
