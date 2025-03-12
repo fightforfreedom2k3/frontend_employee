@@ -9,7 +9,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  CircularProgress,
   TablePagination,
   useMediaQuery,
   Box,
@@ -54,7 +53,7 @@ export default function EmployeeList() {
         size: rowsPerPage,
         sort: 'createdAt',
         order: 'DESC',
-        // search: searchQuery,
+        value: searchQuery,
       })
     );
   }, [dispatch, page, rowsPerPage, searchQuery]);
@@ -121,16 +120,16 @@ export default function EmployeeList() {
   };
 
   // Hiển thị Loading và Error
-  if (loading)
-    return (
-      <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
-    );
-  if (error)
-    return (
-      <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
-        {error}
-      </Typography>
-    );
+  // if (loading)
+  //   return (
+  //     <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
+  //   );
+  // if (error)
+  //   return (
+  //     <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
+  //       {error}
+  //     </Typography>
+  //   );
 
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>

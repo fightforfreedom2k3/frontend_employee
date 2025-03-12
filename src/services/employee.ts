@@ -49,9 +49,15 @@ export interface UpdateEmployeeRequest {
 }
 
 export const employeeService = {
-  getAllEmployee: (page = 1, size = 10, sort = 'ASC', order = 'username') =>
+  getAllEmployee: (
+    page = 1,
+    size = 10,
+    sort = 'ASC',
+    order = 'username',
+    value = ''
+  ) =>
     api.get<ApiResponse<Employee[]>>(`/employee/getAllEmployee`, {
-      params: { page, size, sort, order },
+      params: { page, size, sort, order, value },
     }),
   getEmployeeById: (_id: string) =>
     api.get<ApiResponse<Employee>>(`/employee/getEmployeeById/${_id}`),

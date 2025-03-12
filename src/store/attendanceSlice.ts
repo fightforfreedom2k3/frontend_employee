@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AttendanceRecord } from '../types/attendance';
-import { attendanceService } from '../services/attendance';
+import { attendanceService, CheckInData } from '../services/attendance';
 
 interface AttendanceState {
   attendanceRecord: AttendanceRecord | null;
@@ -65,6 +65,23 @@ export const fetchAttendance = createAsyncThunk(
   }
 );
 
+export const takeAttendance = createAsyncThunk(
+  'attendance-record/checkIn',
+  async (
+    { id, checkInData }: { id: string; checkInData: CheckInData },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await attendanceService.checkIn(id, checkInData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || `Lỗi khi chấm công`
+      );
+    }
+  }
+);
+
 const attendanceSlice = createSlice({
   name: 'attendance',
   initialState,
@@ -81,6 +98,18 @@ const attendanceSlice = createSlice({
         state.pagination.totalRecord = action.payload.total;
       })
       .addCase(fetchAttendance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //CheckIn
+      .addCase(takeAttendance.pending, state => {
+        state.loading = true;
+      })
+      .addCase(takeAttendance.fulfilled, (state, action) => {
+        state.loading = false;
+        state.attendanceRecord = action.payload.attendanceRecord;
+      })
+      .addCase(takeAttendance.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

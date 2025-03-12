@@ -1,3 +1,4 @@
+import { AttendanceRecord } from './attendance';
 import { Employee } from './employee';
 
 export interface ApiResponse<T> {
@@ -11,6 +12,7 @@ export interface ApiResponse<T> {
   employee: Employee;
   totalCount: number;
   user: Employee;
+  attendanceRecord: AttendanceRecord;
 }
 
 export interface AuthResponse {
