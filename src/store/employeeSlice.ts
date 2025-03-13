@@ -7,6 +7,7 @@ import {
 import { Employee } from '../types/employee';
 
 interface EmployeeState {
+  employeeById: { [id: string]: Employee };
   employee: any | null;
   employees: Employee[];
   selectedEmployee: Employee | null;
@@ -21,6 +22,7 @@ interface EmployeeState {
 }
 
 const initialState: EmployeeState = {
+  employeeById: {},
   employee: null,
   employees: [],
   selectedEmployee: null,
@@ -124,6 +126,21 @@ export const deleteEmployee = createAsyncThunk(
   }
 );
 
+//Gọi API lấy thông tin nhân viên theo id
+export const getEmployeeById = createAsyncThunk(
+  `employee/getEmployeeById`,
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await employeeService.getEmployeeById(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Lỗi khi lấy thông tin nhân viên'
+      );
+    }
+  }
+);
+
 const employeeSlice = createSlice({
   name: 'employee',
   initialState,
@@ -176,6 +193,22 @@ const employeeSlice = createSlice({
         //maybe add action
       })
       .addCase(deleteEmployee.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //getEmployeeById
+      .addCase(getEmployeeById.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getEmployeeById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.employee = action.payload.data;
+        const employeeData = action.payload.data;
+        if (employeeData) {
+          state.employeeById[employeeData._id] = employeeData;
+        }
+      })
+      .addCase(getEmployeeById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

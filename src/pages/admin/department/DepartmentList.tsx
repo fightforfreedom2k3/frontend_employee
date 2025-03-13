@@ -16,6 +16,9 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { getEmployeeById } from '../../../store/employeeSlice';
+import { employeeService } from '../../../services/employee';
+import { Employee } from '../../../types/employee';
 
 export default function DepartmentList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -63,6 +66,37 @@ export default function DepartmentList() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const [managerNames, setManagerNames] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const fetchManagerNames = async () => {
+      const newManagerNames: Record<string, string> = {};
+
+      await Promise.all(
+        departments.map(async department => {
+          console.log(department.manager);
+          if (department.manager) {
+            try {
+              const response = await employeeService.getEmployeeById(
+                department.manager
+              );
+              newManagerNames[department.manager] = response.data.fullName;
+            } catch (error) {
+              newManagerNames[department.manager] = 'Không tìm thấy';
+            }
+          }
+        })
+      );
+
+      setManagerNames(newManagerNames);
+    };
+
+    if (departments.length > 0) {
+      fetchManagerNames();
+    }
+  }, [departments]);
+
   if (loading)
     return (
       <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
@@ -116,7 +150,9 @@ export default function DepartmentList() {
                   >
                     <TableCell>{department.name}</TableCell>
                     <TableCell>{department.description}</TableCell>
-                    <TableCell>{department.manager.fullName}</TableCell>
+                    <TableCell>
+                      {managerNames[department.manager] || 'Đang tải...'}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

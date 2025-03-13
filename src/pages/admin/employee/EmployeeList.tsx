@@ -105,6 +105,7 @@ export default function EmployeeList() {
             size: rowsPerPage,
             sort: 'createdAt',
             order: 'DESC',
+            value: searchQuery.trim(),
           })
         );
       })

@@ -19,7 +19,7 @@ function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error, token, role } = useSelector(
+  const { loading, error, token, role, userId } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -32,10 +32,11 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    console.log(role);
-    if (token && role) {
+    console.log(userId);
+    if (token && role && userId) {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
+      localStorage.setItem('userId', userId);
       navigate('/dashboard');
     }
   }, [token, navigate]);

@@ -170,6 +170,7 @@ export default function CreateEmployeeDialog({
             size: 10,
             sort: 'createdAt',
             order: 'DESC',
+            value: '',
           })
         );
       }, 5000);

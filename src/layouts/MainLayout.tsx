@@ -63,6 +63,12 @@ export default function MainLayout() {
       path: '/attendance',
       role: 'ADMIN',
     },
+    {
+      text: 'Lịch sử chấm công',
+      icon: <DescriptionIcon />,
+      path: '/attendance',
+      role: 'ADMIN',
+    },
   ];
 
   const menuItemsByRole = menuItems.filter(

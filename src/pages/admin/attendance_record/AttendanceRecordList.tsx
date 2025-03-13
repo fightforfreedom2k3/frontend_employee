@@ -2,7 +2,6 @@ import {
   Box,
   Container,
   Paper,
-  Stack,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +12,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchAttendance } from '../../../store/attendanceSlice';
 
 export default function AttendanceRecordList() {
@@ -100,7 +99,7 @@ export default function AttendanceRecordList() {
                     '$:hover': { backgroundColor: '#f5f5f5' },
                   }}
                 >
-                  <TableCell>{attendanceRecord.employeeId.fullName}</TableCell>
+                  <TableCell>{attendanceRecord.employeeId}</TableCell>
                   {/* Cần xử lý gọi api lấy tên phòng ban */}
                   <TableCell>Nothing</TableCell>
                   <TableCell>{attendanceRecord.checkIn}</TableCell>

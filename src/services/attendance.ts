@@ -3,7 +3,7 @@ import { AttendanceRecord } from '../types/attendance';
 import api from './api';
 
 export interface CheckInData {
-  id: string;
+  id: string | null;
   checkInHour: string;
   workHour: string;
 }
@@ -21,9 +21,13 @@ export const attendanceService = {
         params: { page, size, sort, order },
       }
     ),
-  checkIn: (id: string, checkInData: CheckInData) =>
+  checkIn: (id: string | null, checkInData: CheckInData) =>
     api.post<ApiResponse<AttendanceRecord>>(
       `/attendance-record/checkIn/${id}`,
       checkInData
+    ),
+  getAllMyAttendanceRecord: (id: string) =>
+    api.get<ApiResponse<AttendanceRecord[]>>(
+      `/attendance-record/getAllMyAttendanceRecord/${id}`
     ),
 };

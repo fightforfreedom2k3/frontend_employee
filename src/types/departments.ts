@@ -1,4 +1,4 @@
-import { BankAccount, Insurance } from "./common";
+import { BankAccount, Insurance } from './common';
 
 export interface Manager {
   _id: string;
@@ -20,7 +20,7 @@ export interface Department {
   _id: string;
   name: string;
   description: string;
-  manager: Manager;
+  manager: string;
   createdAt: string;
   updatedAt: string;
   __v: number;

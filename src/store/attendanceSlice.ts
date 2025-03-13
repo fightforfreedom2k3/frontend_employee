@@ -65,10 +65,11 @@ export const fetchAttendance = createAsyncThunk(
   }
 );
 
+//Post Api CheckIn
 export const takeAttendance = createAsyncThunk(
   'attendance-record/checkIn',
   async (
-    { id, checkInData }: { id: string; checkInData: CheckInData },
+    { id, checkInData }: { id: string | null; checkInData: CheckInData },
     { rejectWithValue }
   ) => {
     try {
@@ -82,6 +83,22 @@ export const takeAttendance = createAsyncThunk(
   }
 );
 
+//get api all my attendance record
+export const getAllMyAttendanceRecord = createAsyncThunk(
+  'attendance-record/getAllMyAttendanceRecord',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await attendanceService.getAllMyAttendanceRecord(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.reponse?.data?.message || `Lỗi khi lấy lịch sử chấm công`
+      );
+    }
+  }
+);
+
+//attendance slice
 const attendanceSlice = createSlice({
   name: 'attendance',
   initialState,
@@ -110,6 +127,19 @@ const attendanceSlice = createSlice({
         state.attendanceRecord = action.payload.attendanceRecord;
       })
       .addCase(takeAttendance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //getAllMyAttendanceRecord
+      .addCase(getAllMyAttendanceRecord.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getAllMyAttendanceRecord.fulfilled, (state, action) => {
+        state.loading = false;
+        state.attendanceRecords =
+          action.payload as unknown as AttendanceRecord[];
+      })
+      .addCase(getAllMyAttendanceRecord.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

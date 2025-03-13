@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { authService, LoginRequest } from '../services/auth';
 
 interface AuthState {
+  userId: string | null;
   role: string | null;
   token: string | null;
   loading: boolean;
@@ -11,6 +12,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
+  userId: localStorage.getItem('userId'),
   role: localStorage.getItem('role'),
   token: localStorage.getItem('token'),
   loading: false,
@@ -24,11 +26,16 @@ const login = createAsyncThunk(
   async (credentials: LoginRequest, { rejectWithValue }) => {
     try {
       const response = await authService.login(credentials);
+      console.log(response.data.user._id);
       // Kiểm tra xem API có trả về accessToken hợp lệ không
       if (!response.data || !response.data.acessToken) {
         throw new Error('Invalid response from server');
       }
-      return { token: response.data.acessToken, role: response.data.user.role };
+      return {
+        token: response.data.acessToken,
+        role: response.data.user.role,
+        userId: response.data.user._id,
+      };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
     }
@@ -55,6 +62,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.role = action.payload.role;
+        state.userId = action.payload.userId;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
