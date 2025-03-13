@@ -67,6 +67,7 @@ export default function DepartmentList() {
     setPage(0);
   };
 
+  //Lấy tên quản lý từ id
   const [managerNames, setManagerNames] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -75,7 +76,6 @@ export default function DepartmentList() {
 
       await Promise.all(
         departments.map(async department => {
-          console.log(department.manager);
           if (department.manager) {
             try {
               const response = await employeeService.getEmployeeById(
