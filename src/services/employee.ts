@@ -19,6 +19,8 @@ export interface AddNewEmployeeRequest {
   department: string;
   userName: string;
   password: string;
+  email: string;
+  phoneNumber: string;
   role: 'DEPARTMENT_MANAGER' | 'EMPLOYEE' | 'HR' | 'OTHER'; // Có thể thêm role khác
   position: string;
   baseSalary: number;
@@ -40,6 +42,8 @@ export interface UpdateEmployeeRequest {
   dob: string;
   department: Department | string;
   userName: string;
+  email: string;
+  phoneNumber: string;
   role: string;
   position: string;
   baseSalary: number;
@@ -62,7 +66,7 @@ export const employeeService = {
   getEmployeeById: (_id: string) =>
     api.get<ApiResponse<Employee>>(`/employee/getEmployeeById/${_id}`),
   addNewEmployee: (employeeData: AddNewEmployeeRequest) =>
-    api2.post<ApiResponse<Employee>>(`/employee/addNewEmployee`, employeeData),
+    api.post<ApiResponse<Employee>>(`/employee/addNewEmployee`, employeeData),
   updateEmployee: (_id: string, employeeData: UpdateEmployeeRequest) =>
     api.post<ApiResponse<Employee>>(
       `employee/updateEmployee/${_id}`,

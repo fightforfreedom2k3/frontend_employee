@@ -112,6 +112,8 @@ export default function UpdateEmployeeDialog({
           dob: employee.dob,
           department: employee.department,
           userName: employee.userName,
+          email: employee.email,
+          phoneNumber: employee.phoneNumber,
           role: employee.role,
           position: employee.position,
           baseSalary: employee.baseSalary,
@@ -138,6 +140,7 @@ export default function UpdateEmployeeDialog({
             size: 10,
             sort: 'createdAt',
             order: 'DESC',
+            value: '',
           })
         );
         onClose(); // Đóng dialog sau khi cập nhật
@@ -173,6 +176,22 @@ export default function UpdateEmployeeDialog({
                 fullWidth
                 margin="dense"
                 value={employee.fullName || ''}
+                onChange={handleChange}
+              />
+              <TextField
+                label={'Email'}
+                name="email"
+                fullWidth
+                margin="dense"
+                value={employee.email}
+                onChange={handleChange}
+              />
+              <TextField
+                label={'Số điện thoại'}
+                name="phoneNumber"
+                fullWidth
+                margin="dense"
+                value={employee.phoneNumber}
                 onChange={handleChange}
               />
               <TextField

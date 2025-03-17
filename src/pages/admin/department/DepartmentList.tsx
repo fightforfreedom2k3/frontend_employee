@@ -16,10 +16,6 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { getEmployeeById } from '../../../store/employeeSlice';
-import { employeeService } from '../../../services/employee';
-import { Employee } from '../../../types/employee';
-
 export default function DepartmentList() {
   const dispatch = useDispatch<AppDispatch>();
   const { departments, loading, pagination, error } = useSelector(
@@ -70,32 +66,32 @@ export default function DepartmentList() {
   //Lấy tên quản lý từ id
   const [managerNames, setManagerNames] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    const fetchManagerNames = async () => {
-      const newManagerNames: Record<string, string> = {};
+  // useEffect(() => {
+  //   const fetchManagerNames = async () => {
+  //     const newManagerNames: Record<string, string> = {};
 
-      await Promise.all(
-        departments.map(async department => {
-          if (department.manager) {
-            try {
-              const response = await employeeService.getEmployeeById(
-                department.manager
-              );
-              newManagerNames[department.manager] = response.data.fullName;
-            } catch (error) {
-              newManagerNames[department.manager] = 'Không tìm thấy';
-            }
-          }
-        })
-      );
+  //     await Promise.all(
+  //       departments.map(async department => {
+  //         if (department.manager) {
+  //           try {
+  //             const response = await employeeService.getEmployeeById(
+  //               department.manager
+  //             );
+  //             newManagerNames[department.manager] = response.data.fullName;
+  //           } catch (error) {
+  //             newManagerNames[department.manager] = 'Không tìm thấy';
+  //           }
+  //         }
+  //       })
+  //     );
 
-      setManagerNames(newManagerNames);
-    };
+  //     setManagerNames(newManagerNames);
+  //   };
 
-    if (departments.length > 0) {
-      fetchManagerNames();
-    }
-  }, [departments]);
+  //   if (departments.length > 0) {
+  //     fetchManagerNames();
+  //   }
+  // }, [departments]);
 
   if (loading)
     return (
@@ -151,7 +147,7 @@ export default function DepartmentList() {
                     <TableCell>{department.name}</TableCell>
                     <TableCell>{department.description}</TableCell>
                     <TableCell>
-                      {managerNames[department.manager] || 'Đang tải...'}
+                      {department.manager.fullName || 'Đang tải...'}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -15,8 +15,10 @@ export interface Employee {
   userName: string;
   password: string;
   fullName: string;
+  email: string;
+  phoneNumber: string;
   dob: string; // Date string
-  department: Department; // Sửa lại kiểu dữ liệu
+  department: Department;
   position: string;
   role: string;
   baseSalary: number;

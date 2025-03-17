@@ -4,8 +4,8 @@ import api from './api';
 
 export interface CheckInData {
   id: string | null;
-  checkInHour: string;
-  workHour: string;
+  check_in_hour: string;
+  work_hour: string;
 }
 
 export const attendanceService = {

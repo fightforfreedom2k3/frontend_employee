@@ -6,6 +6,4 @@ export interface AttendanceRecord {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  checkout: string | null;
-  workHours: number | null;
 }

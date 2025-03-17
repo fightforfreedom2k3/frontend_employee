@@ -20,6 +20,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  CircularProgress,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
@@ -31,6 +32,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 export default function EmployeeList() {
+  console.log(localStorage.getItem('token'));
   const dispatch = useDispatch<AppDispatch>();
   const { employees, loading, error, pagination } = useSelector(
     (state: RootState) => state.employee
@@ -125,12 +127,12 @@ export default function EmployeeList() {
   //   return (
   //     <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
   //   );
-  // if (error)
-  //   return (
-  //     <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
-  //       {error}
-  //     </Typography>
-  //   );
+  if (error)
+    return (
+      <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
+        {error}
+      </Typography>
+    );
 
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -156,96 +158,96 @@ export default function EmployeeList() {
       </Grid>
 
       {/* Bảng nhân viên */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          maxHeight: '62vh',
-        }}
-      >
-        <TableContainer
-          component={Paper}
-          sx={{ overflowX: 'auto', width: '100%', maxWidth: '1200px' }}
+      {loading ? (
+        <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
+      ) : (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            maxHeight: '62vh',
+          }}
         >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <b>Họ & Tên</b>
-                </TableCell>
-                <TableCell>
-                  <b>Chức vụ</b>
-                </TableCell>
-                {!isSmallScreen && (
+          <TableContainer
+            component={Paper}
+            sx={{ overflowX: 'auto', width: '100%', maxWidth: '1200px' }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell>
-                    <b>Phòng ban</b>
+                    <b>Họ & Tên</b>
                   </TableCell>
-                )}
-                {!isSmallScreen && (
                   <TableCell>
-                    <b>Lương cơ bản</b>
+                    <b>Chức vụ</b>
                   </TableCell>
-                )}
-                <TableCell>
-                  <b>Ngân hàng</b>
-                </TableCell>
-                <TableCell sx={{ ml: 3 }}>Hành động</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {employees &&
-                employees.map(emp => (
-                  <TableRow
-                    key={emp._id}
-                    onClick={() => handleRowClick(emp._id)}
-                    sx={{
-                      cursor: 'pointer',
-                      '&:hover': { backgroundColor: '#f5f5f5' },
-                    }}
-                  >
-                    <TableCell>{emp.fullName}</TableCell>
-                    <TableCell>{emp.position}</TableCell>
-                    {!isSmallScreen && (
-                      <TableCell>
-                        {emp.department ? emp.department.name : ''}
-                      </TableCell>
-                    )}
-                    {!isSmallScreen && (
-                      <TableCell>
-                        {emp.baseSalary.toLocaleString()} VND
-                      </TableCell>
-                    )}
-                    <TableCell>{emp.bankAccount.bankName}</TableCell>
+                  {!isSmallScreen && (
                     <TableCell>
-                      <IconButton
-                        onClick={event => {
-                          event.stopPropagation();
-                          handleDeleteButtonClick(emp._id);
-                        }}
-                      >
-                        <Typography>Xóa</Typography>
-                        <DeleteIcon />
-                      </IconButton>
+                      <b>Phòng ban</b>
                     </TableCell>
+                  )}
+                  {!isSmallScreen && (
                     <TableCell>
-                      <IconButton
-                        onClick={event => {
-                          event.stopPropagation();
-                          handleUpdateDialogOpen(emp._id);
-                        }}
-                      >
-                        <Typography>Chỉnh sửa</Typography>
-                        <EditIcon />
-                      </IconButton>
+                      <b>Email</b>
                     </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+                  )}
+                  <TableCell>
+                    <b>Số điện thoại</b>
+                  </TableCell>
+                  <TableCell sx={{ ml: 3 }}>Hành động</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {employees &&
+                  employees.map(emp => (
+                    <TableRow
+                      key={emp._id}
+                      onClick={() => handleRowClick(emp._id)}
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': { backgroundColor: '#f5f5f5' },
+                      }}
+                    >
+                      <TableCell>{emp.fullName}</TableCell>
+                      <TableCell>{emp.position}</TableCell>
+                      {!isSmallScreen && (
+                        <TableCell>
+                          {emp.department ? emp.department.name : ''}
+                        </TableCell>
+                      )}
+                      {!isSmallScreen && <TableCell>{emp.email}</TableCell>}
+                      <TableCell>{emp.phoneNumber}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={event => {
+                            event.stopPropagation();
+                            handleDeleteButtonClick(emp._id);
+                          }}
+                        >
+                          <Typography>Xóa</Typography>
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={event => {
+                            event.stopPropagation();
+                            handleUpdateDialogOpen(emp._id);
+                          }}
+                        >
+                          <Typography>Chỉnh sửa</Typography>
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      )}
 
       {/* Phân trang */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto' }}>

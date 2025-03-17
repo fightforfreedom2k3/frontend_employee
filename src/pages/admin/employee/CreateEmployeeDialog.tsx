@@ -60,6 +60,8 @@ export default function CreateEmployeeDialog({
     department: '',
     userName: '',
     password: '',
+    email: '',
+    phoneNumber: '',
     role: 'OTHER',
     position: '',
     baseSalary: 0,
@@ -134,6 +136,8 @@ export default function CreateEmployeeDialog({
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
     const employeeDataFormat = {
       ...employeeData,
       dob: new Date(employeeData.dob).toISOString(),
@@ -156,8 +160,6 @@ export default function CreateEmployeeDialog({
           Number(employeeData.insurance.unemploymentInsuranceRate) || 0,
       },
     };
-    setLoading(true);
-    setError(null);
     try {
       await dispatch(addNewEmployee(employeeDataFormat));
       setSuccessMessage('Nhân viên đã được tạo thành công!');
@@ -173,7 +175,7 @@ export default function CreateEmployeeDialog({
             value: '',
           })
         );
-      }, 5000);
+      }, 3000);
     } catch (err: any) {
       setError(`Lỗi khi tạo nhân viên: ${err.message || err}`);
     }
@@ -216,6 +218,22 @@ export default function CreateEmployeeDialog({
                 onChange={handleChange}
               />
               <TextField
+                label={'Email'}
+                name="email"
+                fullWidth
+                margin="dense"
+                value={employeeData.email}
+                onChange={handleChange}
+              />
+              <TextField
+                label={'Số điện thoại'}
+                name="phoneNumber"
+                fullWidth
+                margin="dense"
+                value={employeeData.phoneNumber}
+                onChange={handleChange}
+              />
+              <TextField
                 label={'Vai trò'}
                 name="role"
                 fullWidth
@@ -225,9 +243,9 @@ export default function CreateEmployeeDialog({
                 onChange={handleChange}
               >
                 {/* Sửa để thêm role */}
+                <MenuItem value={'ADMIN'}>Quản trị viên</MenuItem>
                 <MenuItem value={'DEPARTMENT_MANAGER'}>Quản lý</MenuItem>
                 <MenuItem value={'EMPLOYEE'}>Nhân viên</MenuItem>
-                <MenuItem value={'HR'}>Nhân sự</MenuItem>
                 <MenuItem value={'OTHER'}>Khác</MenuItem>
               </TextField>
               <TextField
@@ -243,7 +261,12 @@ export default function CreateEmployeeDialog({
                 <MenuItem value={'MANAGER'}>MANAGER</MenuItem>
                 <MenuItem value={'CEO'}>CEO</MenuItem>
                 <MenuItem value={'TEAM_LEAD'}>TEAM_LEAD</MenuItem>
-                <MenuItem value={'EMPLOYEE'}>EMPLOYEE</MenuItem>
+                <MenuItem value={'INTERN'}>INTERN</MenuItem>
+                <MenuItem value={'STAFF'}>STAFF</MenuItem>
+                <MenuItem value={'SENIOR_STAFF'}>SENIOR_STAFF</MenuItem>
+                <MenuItem value={'DIRECTOR'}>DIRECTOR</MenuItem>
+                <MenuItem value={'FREELANCER'}>FREELANCER</MenuItem>
+                <MenuItem value={'OTHER'}>OTHER</MenuItem>
               </TextField>
               <TextField
                 label={'Phòng ban'}

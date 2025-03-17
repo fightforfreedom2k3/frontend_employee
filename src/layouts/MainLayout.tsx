@@ -67,7 +67,7 @@ export default function MainLayout() {
       text: 'Lịch sử chấm công',
       icon: <DescriptionIcon />,
       path: '/attendance',
-      role: 'ADMIN',
+      role: 'EMPLOYEE',
     },
   ];
 
