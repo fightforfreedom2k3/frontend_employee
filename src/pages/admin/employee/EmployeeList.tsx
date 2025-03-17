@@ -158,96 +158,92 @@ export default function EmployeeList() {
       </Grid>
 
       {/* Bảng nhân viên */}
-      {loading ? (
-        <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
-      ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            maxHeight: '62vh',
-          }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          maxHeight: '62vh',
+        }}
+      >
+        <TableContainer
+          component={Paper}
+          sx={{ overflowX: 'auto', width: '100%', maxWidth: '1200px' }}
         >
-          <TableContainer
-            component={Paper}
-            sx={{ overflowX: 'auto', width: '100%', maxWidth: '1200px' }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <b>Họ & Tên</b>
+                </TableCell>
+                <TableCell>
+                  <b>Chức vụ</b>
+                </TableCell>
+                {!isSmallScreen && (
                   <TableCell>
-                    <b>Họ & Tên</b>
+                    <b>Phòng ban</b>
                   </TableCell>
+                )}
+                {!isSmallScreen && (
                   <TableCell>
-                    <b>Chức vụ</b>
+                    <b>Email</b>
                   </TableCell>
-                  {!isSmallScreen && (
-                    <TableCell>
-                      <b>Phòng ban</b>
-                    </TableCell>
-                  )}
-                  {!isSmallScreen && (
-                    <TableCell>
-                      <b>Email</b>
-                    </TableCell>
-                  )}
-                  <TableCell>
-                    <b>Số điện thoại</b>
-                  </TableCell>
-                  <TableCell sx={{ ml: 3 }}>Hành động</TableCell>
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {employees &&
-                  employees.map(emp => (
-                    <TableRow
-                      key={emp._id}
-                      onClick={() => handleRowClick(emp._id)}
-                      sx={{
-                        cursor: 'pointer',
-                        '&:hover': { backgroundColor: '#f5f5f5' },
-                      }}
-                    >
-                      <TableCell>{emp.fullName}</TableCell>
-                      <TableCell>{emp.position}</TableCell>
-                      {!isSmallScreen && (
-                        <TableCell>
-                          {emp.department ? emp.department.name : ''}
-                        </TableCell>
-                      )}
-                      {!isSmallScreen && <TableCell>{emp.email}</TableCell>}
-                      <TableCell>{emp.phoneNumber}</TableCell>
+                )}
+                <TableCell>
+                  <b>Số điện thoại</b>
+                </TableCell>
+                <TableCell sx={{ ml: 3 }}>Hành động</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {employees &&
+                employees.map(emp => (
+                  <TableRow
+                    key={emp._id}
+                    onClick={() => handleRowClick(emp._id)}
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': { backgroundColor: '#f5f5f5' },
+                    }}
+                  >
+                    <TableCell>{emp.fullName}</TableCell>
+                    <TableCell>{emp.position}</TableCell>
+                    {!isSmallScreen && (
                       <TableCell>
-                        <IconButton
-                          onClick={event => {
-                            event.stopPropagation();
-                            handleDeleteButtonClick(emp._id);
-                          }}
-                        >
-                          <Typography>Xóa</Typography>
-                          <DeleteIcon />
-                        </IconButton>
+                        {emp.department ? emp.department.name : ''}
                       </TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={event => {
-                            event.stopPropagation();
-                            handleUpdateDialogOpen(emp._id);
-                          }}
-                        >
-                          <Typography>Chỉnh sửa</Typography>
-                          <EditIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      )}
+                    )}
+                    {!isSmallScreen && <TableCell>{emp.email}</TableCell>}
+                    <TableCell>{emp.phoneNumber}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={event => {
+                          event.stopPropagation();
+                          handleDeleteButtonClick(emp._id);
+                        }}
+                      >
+                        <Typography>Xóa</Typography>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={event => {
+                          event.stopPropagation();
+                          handleUpdateDialogOpen(emp._id);
+                        }}
+                      >
+                        <Typography>Chỉnh sửa</Typography>
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       {/* Phân trang */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto' }}>

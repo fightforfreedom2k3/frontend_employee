@@ -18,7 +18,9 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
   // Dữ liệu các mục
-  const items = [{ title: 'Truy cập lịch sử chấm công' }];
+  const items = [
+    { title: 'Truy cập lịch sử chấm công', navigateTo: '/attendance-history' },
+  ];
   const [isCheckIn, setIsCheckIn] = useState(false);
   const userId = localStorage.getItem('userId');
   const today = new Date();
@@ -106,9 +108,9 @@ export default function Dashboard() {
           <Grid item xs={12} sm={12} md={12} lg={12} key={index}>
             <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
               <CardContent
-                sx={{ flexGrow: 1 }}
+                sx={{ flexGrow: 1, cursor: 'pointer' }}
                 onClick={() =>
-                  navigate('/attendance-history', {
+                  navigate(`${item.navigateTo}`, {
                     state: { attendanceRecords },
                   })
                 }

@@ -18,6 +18,18 @@ export const AttendanceHistory = () => {
   const { attendanceRecords } = location.state;
   console.log(attendanceRecords);
 
+  // Hàm chuyển đổi sang giờ Việt Nam
+  const convertToVietnamTime = (isoString: string): string => {
+    const date = new Date(isoString);
+
+    const vietnamTime = date.toLocaleString('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      hour12: false, // sử dụng định dạng 24 giờ
+    });
+
+    return vietnamTime;
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
@@ -31,6 +43,7 @@ export const AttendanceHistory = () => {
           <TableHead>
             <TableRow>
               <TableCell>Chấm vào</TableCell>
+              <TableCell>Chấm ra</TableCell>
               <TableCell>Đi muộn</TableCell>
               <TableCell>Đúng giờ</TableCell>
             </TableRow>
@@ -38,12 +51,31 @@ export const AttendanceHistory = () => {
           <TableBody>
             {attendanceRecords.map((record: any, index: number) => (
               <TableRow key={index}>
-                <TableCell>{record.checkIn}</TableCell>
+                <TableCell>{convertToVietnamTime(record.checkIn)}</TableCell>
+                <TableCell>{convertToVietnamTime(record.checkOut)}</TableCell>
                 <TableCell>
-                  <Checkbox checked={record.status === 'LATE'} disabled />
+                  <Checkbox
+                    checked={record.status === 'LATE'}
+                    disabled
+                    sx={{
+                      color: record.status === 'LATE' ? 'red' : 'default',
+                      '&.Mui-checked': {
+                        color: 'red', // Khi checkbox được chọn, màu sẽ là đỏ
+                      },
+                    }}
+                  />
                 </TableCell>
                 <TableCell>
-                  <Checkbox checked={record.status === 'PRESENT'} disabled />
+                  <Checkbox
+                    checked={record.status === 'PRESENT'}
+                    disabled
+                    sx={{
+                      color: record.status === 'PRESENT' ? 'green' : 'default',
+                      '&.Mui-checked': {
+                        color: 'green', // Khi checkbox được chọn, màu sẽ là xanh
+                      },
+                    }}
+                  />
                 </TableCell>
               </TableRow>
             ))}
