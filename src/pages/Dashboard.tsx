@@ -14,6 +14,7 @@ import {
   takeAttendance,
 } from '../store/attendanceSlice';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
   // Dữ liệu các mục
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const [isCheckIn, setIsCheckIn] = useState(false);
   const userId = localStorage.getItem('userId');
   const today = new Date();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<AppDispatch>();
   const { attendanceRecords, attendanceRecord, loading, error, pagination } =
@@ -103,7 +105,14 @@ export default function Dashboard() {
         {items.map((item, index) => (
           <Grid item xs={12} sm={12} md={12} lg={12} key={index}>
             <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent
+                sx={{ flexGrow: 1 }}
+                onClick={() =>
+                  navigate('/attendance-history', {
+                    state: { attendanceRecords },
+                  })
+                }
+              >
                 <Typography variant="subtitle1">{item.title}</Typography>
               </CardContent>
               <ArrowForwardIcon />
