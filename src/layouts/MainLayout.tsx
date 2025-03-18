@@ -19,6 +19,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import BusinessIcon from '@mui/icons-material/Business';
 import DescriptionIcon from '@mui/icons-material/Description';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const drawerWidth = 240;
 
@@ -28,17 +29,27 @@ export default function MainLayout() {
   const location = useLocation(); // Lấy URL hiện tại
   const role = localStorage.getItem('role');
 
+  //Xử lí giao diện mobi
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  // Danh sách menu
+  //Xử lí đăng xuất
+  const handleLogout = () => {
+    //add thêm gọi api đăng xuất ở đây
+    localStorage.clear();
+    window.location.href = '/login';
+  };
+
+  // Danh sách màn hình theo role
   const menuItems = [
+    //dasboard
     {
       text: 'Dashboard',
       icon: <DashboardIcon />,
       path: '/dashboard',
     },
+    //role ADMIN
     {
       text: 'Nhân viên',
       icon: <PeopleIcon />,
@@ -63,6 +74,8 @@ export default function MainLayout() {
       path: '/attendance',
       role: 'ADMIN',
     },
+    //role DEPARTMENT_MANAGER
+    //role EMPLOYEE
     {
       text: 'Lịch sử chấm công',
       icon: <DescriptionIcon />,
@@ -71,6 +84,7 @@ export default function MainLayout() {
     },
   ];
 
+  // Lọc menu theo role
   const menuItemsByRole = menuItems.filter(
     item => !item.role || item.role === role
   );
@@ -112,9 +126,35 @@ export default function MainLayout() {
           );
         })}
       </List>
+      <ListItemButton
+        className="logout-button"
+        sx={{
+          borderRadius: '8px',
+          mx: 1,
+          my: 1,
+          '&:hover': { bgcolor: theme.palette.action.hover },
+          display: 'flex',
+          alignItems: 'center',
+          padding: '6px 12px',
+          height: '48px',
+          flexGrow: 0,
+        }}
+        onClick={handleLogout}
+      >
+        <ExitToAppIcon sx={{ fontSize: '20px' }} />
+        <ListItemText
+          primary="Đăng xuất"
+          sx={{
+            ml: 2,
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
+            fontSize: '1rem',
+          }}
+        />
+      </ListItemButton>
       <Divider />
       <Box
-        sx={{ textAlign: 'center', p: 2, fontSize: '0.8rem', color: 'gray' }}
+        sx={{ textAlign: 'center', p: 2, fontSize: '0.875rem', color: 'gray' }}
       >
         © 2025 Trung tâm nghiên cứu Khoa học Quân sự
       </Box>

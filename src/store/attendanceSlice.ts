@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { AttendanceRecord } from '../types/attendance';
+import {
+  AttendanceRecord,
+  GetAllttendanceRecordResponse,
+} from '../types/attendance';
 import { attendanceService, CheckInData } from '../services/attendance';
 
 interface AttendanceState {
   attendanceRecord: AttendanceRecord | null;
   attendanceRecords: AttendanceRecord[];
+  allAttendanceRecords: GetAllttendanceRecordResponse[];
   selectedAttendanceRecord: AttendanceRecord | null;
   loading: boolean;
   error: string | null;
@@ -19,6 +23,7 @@ interface AttendanceState {
 const initialState: AttendanceState = {
   attendanceRecord: null,
   attendanceRecords: [],
+  allAttendanceRecords: [],
   selectedAttendanceRecord: null,
   loading: false,
   error: null,
@@ -31,8 +36,8 @@ const initialState: AttendanceState = {
 };
 
 // fecth api get all attendance record
-export const fetchAttendance = createAsyncThunk(
-  'attendance-record/getAllAttendaceRecord',
+export const fetchAllAttendanceRecords = createAsyncThunk(
+  'attendance-record/getAllAttendaceRecords',
   async (
     {
       page,
@@ -54,7 +59,7 @@ export const fetchAttendance = createAsyncThunk(
         return rejectWithValue('Dữ liệu không hợp lệ từ server.');
       }
       return {
-        attendanceRecords: response.data.data,
+        allAttendanceRecords: response.data.data,
         total: response.data.totalCount,
       };
     } catch (error: any) {
@@ -106,15 +111,15 @@ const attendanceSlice = createSlice({
   extraReducers: builder => {
     builder
       //getAllAttendanceRecord
-      .addCase(fetchAttendance.pending, state => {
+      .addCase(fetchAllAttendanceRecords.pending, state => {
         state.loading = true;
       })
-      .addCase(fetchAttendance.fulfilled, (state, action) => {
+      .addCase(fetchAllAttendanceRecords.fulfilled, (state, action) => {
         state.loading = false;
-        state.attendanceRecords = action.payload.attendanceRecords;
+        state.allAttendanceRecords = action.payload.allAttendanceRecords;
         state.pagination.totalRecord = action.payload.total;
       })
-      .addCase(fetchAttendance.rejected, (state, action) => {
+      .addCase(fetchAllAttendanceRecords.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

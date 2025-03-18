@@ -13,11 +13,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import React, { useEffect, useState } from 'react';
-import { fetchAttendance } from '../../../store/attendanceSlice';
+import { fetchAllAttendanceRecords } from '../../../store/attendanceSlice';
 
 export default function AttendanceRecordList() {
   const dispatch = useDispatch<AppDispatch>();
-  const { attendanceRecords, loading, error, pagination } = useSelector(
+  const { allAttendanceRecords, loading, error, pagination } = useSelector(
     (state: RootState) => state.attendance
   );
 
@@ -29,7 +29,7 @@ export default function AttendanceRecordList() {
 
   useEffect(() => {
     dispatch(
-      fetchAttendance({
+      fetchAllAttendanceRecords({
         page: page + 1,
         size: rowsPerPage,
         sort: 'checkIn',
@@ -50,6 +50,8 @@ export default function AttendanceRecordList() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  console.log(allAttendanceRecords);
 
   //Giao diện quản lý Chấm công
   return (
@@ -90,7 +92,7 @@ export default function AttendanceRecordList() {
             </TableHead>
             {/* Body */}
             <TableBody>
-              {attendanceRecords.map(attendanceRecord => (
+              {allAttendanceRecords.map(attendanceRecord => (
                 <TableRow
                   key={attendanceRecord._id}
                   onClick={() => {}}
@@ -99,7 +101,11 @@ export default function AttendanceRecordList() {
                     '$:hover': { backgroundColor: '#f5f5f5' },
                   }}
                 >
-                  <TableCell>{attendanceRecord.employeeId}</TableCell>
+                  <TableCell>
+                    {attendanceRecord.employeeId
+                      ? attendanceRecord.employeeId.fullName
+                      : ''}
+                  </TableCell>
                   {/* Cần xử lý gọi api lấy tên phòng ban */}
                   <TableCell>Nothing</TableCell>
                   <TableCell>{attendanceRecord.checkIn}</TableCell>

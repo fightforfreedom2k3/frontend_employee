@@ -16,7 +16,6 @@ import {
 export const AttendanceHistory = () => {
   const location = useLocation();
   const { attendanceRecords } = location.state;
-  console.log(attendanceRecords);
 
   // Hàm chuyển đổi sang giờ Việt Nam
   const convertToVietnamTime = (isoString: string): string => {

@@ -20,7 +20,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  CircularProgress,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';

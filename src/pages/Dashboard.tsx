@@ -78,7 +78,6 @@ export default function Dashboard() {
       }
     }
   }, [attendanceRecords]);
-  console.log(attendanceRecords);
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: 2 }}>

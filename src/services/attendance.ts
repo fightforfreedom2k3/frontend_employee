@@ -1,5 +1,8 @@
 import { ApiResponse } from '../types/api';
-import { AttendanceRecord } from '../types/attendance';
+import {
+  AttendanceRecord,
+  GetAllttendanceRecordResponse,
+} from '../types/attendance';
 import api from './api';
 
 export interface CheckInData {
@@ -15,7 +18,7 @@ export const attendanceService = {
     sort = 'ASC',
     order = 'checkIn'
   ) =>
-    api.get<ApiResponse<AttendanceRecord[]>>(
+    api.get<ApiResponse<GetAllttendanceRecordResponse[]>>(
       `/attendance-record/getAllAttendanceRecord`,
       {
         params: { page, size, sort, order },
