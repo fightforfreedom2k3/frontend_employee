@@ -32,7 +32,6 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    console.log(userId);
     if (token && role && userId) {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
@@ -42,17 +41,27 @@ function LoginPage() {
   }, [token, navigate]);
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" className="login-container">
       <Paper
         elevation={6}
-        sx={{ padding: 4, mt: 10, textAlign: 'center', borderRadius: 3 }}
+        sx={{
+          padding: 4,
+          mt: 10,
+          textAlign: 'center',
+          borderRadius: 3,
+          backgroundColor: '#ffffff', // White background similar to your image
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Light shadow
+        }}
       >
-        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 3 }}>
-          Đăng Nhập
+        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+          Đăng nhập HRM
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 3 }}>
+          Xin chào! Một ngày mới tốt lành nhé
         </Typography>
         <Box component="form" onSubmit={handleLogin}>
           <TextField
-            label="Tên đăng nhập"
+            label="Email"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -70,7 +79,6 @@ function LoginPage() {
             onChange={e => setPassword(e.target.value)}
             required
           />
-          {/* Hiển thị lỗi nếu có */}
           {error && (
             <Typography color="error" sx={{ mt: 2, mb: 2 }}>
               {error}
@@ -79,9 +87,14 @@ function LoginPage() {
           <Button
             type="submit"
             variant="contained"
-            color="primary"
+            color="success"
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{
+              mt: 2,
+              padding: '10px',
+              textTransform: 'none',
+              fontSize: '16px',
+            }}
             disabled={loading}
           >
             {loading ? <CircularProgress size={24} /> : 'Đăng nhập'}

@@ -205,7 +205,7 @@ export default function UpdateEmployeeDialog({
               >
                 <MenuItem value={'DEPARTMENT_MANAGER'}>Quản lý</MenuItem>
                 <MenuItem value={'EMPLOYEE'}>Nhân viên</MenuItem>
-                <MenuItem value={'HR'}>Nhân sự</MenuItem>
+                <MenuItem value={'ADMIN'}>Admin</MenuItem>
                 <MenuItem value={'OTHER'}>Khác</MenuItem>
               </TextField>
               <TextField
@@ -220,7 +220,12 @@ export default function UpdateEmployeeDialog({
                 <MenuItem value={'MANAGER'}>MANAGER</MenuItem>
                 <MenuItem value={'CEO'}>CEO</MenuItem>
                 <MenuItem value={'TEAM_LEAD'}>TEAM_LEAD</MenuItem>
-                <MenuItem value={'EMPLOYEE'}>EMPLOYEE</MenuItem>
+                <MenuItem value={'INTERN'}>INTERN</MenuItem>
+                <MenuItem value={'STAFF'}>STAFF</MenuItem>
+                <MenuItem value={'SENIOR_STAFF'}>SENIOR_STAFF</MenuItem>
+                <MenuItem value={'DIRECTOR'}>DIRECTOR</MenuItem>
+                <MenuItem value={'FREELANCER'}>FREELANCER</MenuItem>
+                <MenuItem value={'OTHER'}>OTHER</MenuItem>
               </TextField>
               <TextField
                 label={'Phòng ban'}

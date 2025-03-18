@@ -31,7 +31,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 export default function EmployeeList() {
-  console.log(localStorage.getItem('token'));
   const dispatch = useDispatch<AppDispatch>();
   const { employees, loading, error, pagination } = useSelector(
     (state: RootState) => state.employee
@@ -45,7 +44,7 @@ export default function EmployeeList() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false); // Dialog xác nhận xóa
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   useEffect(() => {
     dispatch(
@@ -59,7 +58,7 @@ export default function EmployeeList() {
     );
   }, [dispatch, page, rowsPerPage, searchQuery]);
 
-  // Các hàm xử lý dialog
+  // Dialog handling
   const handleRowClick = (employeeId: string) => {
     setSelectedEmployeeId(employeeId);
     setDialogOpen(true);
@@ -80,7 +79,6 @@ export default function EmployeeList() {
 
   const handleUpdateDialogClose = () => setUpdateDialogOpen(false);
 
-  // Xử lý phân trang
   const handleChangePage = (event: unknown, newPage: number) =>
     setPage(newPage);
   const handleChangeRowsPerPage = (
@@ -94,11 +92,9 @@ export default function EmployeeList() {
     setSearchQuery(event.target.value);
   };
 
-  // Xử lý xóa nhân viên và load lại trang
   const handleDeleteEmployee = () => {
     dispatch(deleteEmployee({ id: selectedEmployeeId }))
       .then(() => {
-        // Sau khi xóa thành công, đóng dialog xác nhận xóa và load lại dữ liệu
         setConfirmDeleteOpen(false);
         dispatch(
           fetchEmployees({
@@ -121,11 +117,6 @@ export default function EmployeeList() {
     setConfirmDeleteOpen(true);
   };
 
-  // Hiển thị Loading và Error
-  // if (loading)
-  //   return (
-  //     <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
-  //   );
   if (error)
     return (
       <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
@@ -156,13 +147,17 @@ export default function EmployeeList() {
         </Grid>
       </Grid>
 
-      {/* Bảng nhân viên */}
+      {/* Employee Table */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          overflowX: 'auto',
           maxHeight: '62vh',
+          border: '1px solid #e0e0e0',
+          borderRadius: '5px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
         }}
       >
         <TableContainer
@@ -191,8 +186,9 @@ export default function EmployeeList() {
                 <TableCell>
                   <b>Số điện thoại</b>
                 </TableCell>
-                <TableCell sx={{ ml: 3 }}>Hành động</TableCell>
-                <TableCell />
+                <TableCell sx={{ ml: 3 }}>
+                  <b>Hành động</b>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -209,9 +205,7 @@ export default function EmployeeList() {
                     <TableCell>{emp.fullName}</TableCell>
                     <TableCell>{emp.position}</TableCell>
                     {!isSmallScreen && (
-                      <TableCell>
-                        {emp.department ? emp.department.name : ''}
-                      </TableCell>
+                      <TableCell>{emp.department?.name}</TableCell>
                     )}
                     {!isSmallScreen && <TableCell>{emp.email}</TableCell>}
                     <TableCell>{emp.phoneNumber}</TableCell>
@@ -222,18 +216,14 @@ export default function EmployeeList() {
                           handleDeleteButtonClick(emp._id);
                         }}
                       >
-                        <Typography>Xóa</Typography>
                         <DeleteIcon />
                       </IconButton>
-                    </TableCell>
-                    <TableCell>
                       <IconButton
                         onClick={event => {
                           event.stopPropagation();
                           handleUpdateDialogOpen(emp._id);
                         }}
                       >
-                        <Typography>Chỉnh sửa</Typography>
                         <EditIcon />
                       </IconButton>
                     </TableCell>
@@ -244,7 +234,7 @@ export default function EmployeeList() {
         </TableContainer>
       </Box>
 
-      {/* Phân trang */}
+      {/* Pagination */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto' }}>
         <TablePagination
           component="div"
@@ -254,11 +244,10 @@ export default function EmployeeList() {
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           rowsPerPageOptions={[5, 10]}
-          labelRowsPerPage="Số nhân viên mỗi trang"
         />
       </Box>
 
-      {/* Hiển thị Dialog xác nhận xóa */}
+      {/* Confirm Delete Dialog */}
       <Dialog
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
@@ -279,7 +268,7 @@ export default function EmployeeList() {
         </DialogActions>
       </Dialog>
 
-      {/* Hiển thị các Dialog khác */}
+      {/* Dialogs */}
       <EmployeeDialog
         open={dialogOpen}
         onClose={handleDialogClose}
