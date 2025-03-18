@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import React, { useEffect, useState } from 'react';
 import { fetchAllAttendanceRecords } from '../../../store/attendanceSlice';
+import { convertToVietnamTime } from '../../../lib/formatDateTime';
 
 export default function AttendanceRecordList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,6 +87,9 @@ export default function AttendanceRecordList() {
                   <Typography>Thời gian chấm công</Typography>
                 </TableCell>
                 <TableCell>
+                  <Typography>Kết thúc ca</Typography>
+                </TableCell>
+                <TableCell>
                   <Typography>Trạng thái</Typography>
                 </TableCell>
               </TableRow>
@@ -108,7 +112,12 @@ export default function AttendanceRecordList() {
                   </TableCell>
                   {/* Cần xử lý gọi api lấy tên phòng ban */}
                   <TableCell>Nothing</TableCell>
-                  <TableCell>{attendanceRecord.checkIn}</TableCell>
+                  <TableCell>
+                    {convertToVietnamTime(attendanceRecord.checkIn)}
+                  </TableCell>
+                  <TableCell>
+                    {convertToVietnamTime(attendanceRecord.checkOut)}
+                  </TableCell>
                   <TableCell>{attendanceRecord.status}</TableCell>
                 </TableRow>
               ))}

@@ -12,22 +12,11 @@ import {
   Paper,
   Checkbox,
 } from '@mui/material';
+import { convertToVietnamTime } from '../../../lib/formatDateTime';
 
 export const AttendanceHistory = () => {
   const location = useLocation();
   const { attendanceRecords } = location.state;
-
-  // Hàm chuyển đổi sang giờ Việt Nam
-  const convertToVietnamTime = (isoString: string): string => {
-    const date = new Date(isoString);
-
-    const vietnamTime = date.toLocaleString('vi-VN', {
-      timeZone: 'Asia/Ho_Chi_Minh',
-      hour12: false, // sử dụng định dạng 24 giờ
-    });
-
-    return vietnamTime;
-  };
 
   return (
     <Container>

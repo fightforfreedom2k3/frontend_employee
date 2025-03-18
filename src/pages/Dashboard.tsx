@@ -5,6 +5,8 @@ import {
   Grid,
   Card,
   CardContent,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,19 +20,29 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
+  const userId = localStorage.getItem('userId');
+  const today = new Date();
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const { attendanceRecords, attendanceRecord, loading, error, pagination } =
+    useSelector((state: RootState) => state.attendance);
+
   // Dữ liệu các mục
   const items = [
     { title: 'Truy cập lịch sử chấm công', navigateTo: '/attendance-history' },
   ];
+
+  //Trạng thái chấm công
   const [isCheckIn, setIsCheckIn] = useState(false);
   const [isCheckOut, setIsCheckOut] = useState(false);
-  const userId = localStorage.getItem('userId');
-  const today = new Date();
-  const navigate = useNavigate();
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { attendanceRecords, attendanceRecord, loading, error, pagination } =
-    useSelector((state: RootState) => state.attendance);
+  // Trạng thái cho Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  // Hàm đóng Snackbar
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   //Hàm lấy giờ làm việc
   function getWorkHour() {
@@ -39,6 +51,7 @@ export default function Dashboard() {
     workHour.setHours(8, 0, 0, 0);
     return workHour.toISOString();
   }
+
   //Hàm chấm công
   const handleCheckIn = () => {
     if (!userId) return;
@@ -53,12 +66,16 @@ export default function Dashboard() {
         },
       })
     );
+    dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
     setIsCheckIn(true);
-    setIsCheckOut(false);
   };
 
   //Hàm chấm công ra
   const hadleCheckOut = () => {
+    if (!isCheckIn) {
+      setOpenSnackbar(true);
+      return;
+    }
     if (!userId) return;
     const currentTime = new Date();
     dispatch(
@@ -68,17 +85,18 @@ export default function Dashboard() {
         note: 'Check out',
       })
     );
+    dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
     setIsCheckOut(true);
   };
 
-  //Lay lich su cham cong
+  //Lấy lịch sử chấm công
   useEffect(() => {
     if (userId) {
       dispatch(getAllMyAttendanceRecord(userId));
     }
   }, [dispatch, userId]);
-  //useEffect riêng để xử lí chấm công
-  // useEffect riêng để xử lý việc kiểm tra trạng thái checkIn
+
+  // useEffect riêng để xử lý việc kiểm tra trạng thái checkIn và checkOut
   useEffect(() => {
     if (attendanceRecords && attendanceRecords.length > 0) {
       try {
@@ -92,13 +110,11 @@ export default function Dashboard() {
         ) {
           setIsCheckIn(true);
         }
+        if (attendanceRecords[attendanceRecords.length - 1].checkOut) {
+          setIsCheckOut(true);
+        }
       } catch (error) {
         console.error('Lỗi khi xử lý dữ liệu attendanceRecords:', error);
-      }
-    }
-    if (attendanceRecord) {
-      if (attendanceRecord.checkOut) {
-        setIsCheckOut(true);
       }
     }
   }, [attendanceRecords]);
@@ -126,16 +142,12 @@ export default function Dashboard() {
             {isCheckIn ? 'Đã chấm công' : 'Chấm công'}
           </Button>
           <Button
-            disabled={!isCheckIn || isCheckOut}
+            disabled={isCheckOut}
             variant="contained"
             color="error"
             onClick={hadleCheckOut}
           >
-            {!isCheckIn
-              ? 'Chưa chấm công'
-              : isCheckOut
-              ? 'Đã chấm công'
-              : 'Chấm công ra'}
+            {isCheckOut ? 'Đã kết thúc ca' : 'Kết thúc ca'}
           </Button>
         </Box>
       </Grid>
@@ -161,6 +173,21 @@ export default function Dashboard() {
           </Grid>
         ))}
       </Grid>
+
+      {/* Thông báo phải checkin trước khi checkout */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="warning"
+          sx={{ width: '100%' }}
+        >
+          Bạn phải chấm công trước khi kết thúc ca!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
