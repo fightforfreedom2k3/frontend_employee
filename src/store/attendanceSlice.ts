@@ -88,6 +88,32 @@ export const takeAttendance = createAsyncThunk(
   }
 );
 
+//post api checkOut
+export const checkOut = createAsyncThunk(
+  'attendance-record/checkOut',
+  async (
+    {
+      id,
+      check_out_hour,
+      note,
+    }: { id: string; check_out_hour: string; note: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await attendanceService.checkOut(
+        id,
+        check_out_hour,
+        note
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || `Lỗi khi chấm công`
+      );
+    }
+  }
+);
+
 //get api all my attendance record
 export const getAllMyAttendanceRecord = createAsyncThunk(
   'attendance-record/getAllMyAttendanceRecord',
@@ -145,6 +171,18 @@ const attendanceSlice = createSlice({
           action.payload as unknown as AttendanceRecord[];
       })
       .addCase(getAllMyAttendanceRecord.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //checkOut
+      .addCase(checkOut.pending, state => {
+        state.loading = true;
+      })
+      .addCase(checkOut.fulfilled, (state, action) => {
+        state.loading = false;
+        state.attendanceRecord = action.payload.attendanceRecord;
+      })
+      .addCase(checkOut.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

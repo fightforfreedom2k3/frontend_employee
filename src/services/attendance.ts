@@ -33,4 +33,9 @@ export const attendanceService = {
     api.get<ApiResponse<AttendanceRecord[]>>(
       `/attendance-record/getAllMyAttendanceRecord/${id}`
     ),
+  checkOut: (id: string, check_out_hour: string, note: string) =>
+    api.post<ApiResponse<AttendanceRecord>>(
+      `/attendance-record/checkOut/${id}`,
+      { id, check_out_hour, note }
+    ),
 };

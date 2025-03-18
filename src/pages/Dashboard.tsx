@@ -10,6 +10,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import {
+  checkOut,
   getAllMyAttendanceRecord,
   takeAttendance,
 } from '../store/attendanceSlice';
@@ -22,6 +23,7 @@ export default function Dashboard() {
     { title: 'Truy cập lịch sử chấm công', navigateTo: '/attendance-history' },
   ];
   const [isCheckIn, setIsCheckIn] = useState(false);
+  const [isCheckOut, setIsCheckOut] = useState(false);
   const userId = localStorage.getItem('userId');
   const today = new Date();
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ export default function Dashboard() {
     workHour.setHours(8, 0, 0, 0);
     return workHour.toISOString();
   }
+  //Hàm chấm công
   const handleCheckIn = () => {
     if (!userId) return;
     const currentTime = new Date();
@@ -51,7 +54,23 @@ export default function Dashboard() {
       })
     );
     setIsCheckIn(true);
+    setIsCheckOut(false);
   };
+
+  //Hàm chấm công ra
+  const hadleCheckOut = () => {
+    if (!userId) return;
+    const currentTime = new Date();
+    dispatch(
+      checkOut({
+        id: userId,
+        check_out_hour: currentTime.toISOString(),
+        note: 'Check out',
+      })
+    );
+    setIsCheckOut(true);
+  };
+
   //Lay lich su cham cong
   useEffect(() => {
     if (userId) {
@@ -77,6 +96,11 @@ export default function Dashboard() {
         console.error('Lỗi khi xử lý dữ liệu attendanceRecords:', error);
       }
     }
+    if (attendanceRecord) {
+      if (attendanceRecord.checkOut) {
+        setIsCheckOut(true);
+      }
+    }
   }, [attendanceRecords]);
 
   return (
@@ -91,14 +115,29 @@ export default function Dashboard() {
         <Typography variant="h4" fontWeight="bold">
           Xin chào!
         </Typography>
-        <Button
-          disabled={isCheckIn}
-          variant="contained"
-          color="success"
-          onClick={handleCheckIn}
-        >
-          {isCheckIn ? 'Đã chấm công' : 'Chấm công'}
-        </Button>
+        <Box>
+          <Button
+            disabled={isCheckIn}
+            variant="contained"
+            color="success"
+            onClick={handleCheckIn}
+            sx={{ mr: 2 }}
+          >
+            {isCheckIn ? 'Đã chấm công' : 'Chấm công'}
+          </Button>
+          <Button
+            disabled={!isCheckIn || isCheckOut}
+            variant="contained"
+            color="error"
+            onClick={hadleCheckOut}
+          >
+            {!isCheckIn
+              ? 'Chưa chấm công'
+              : isCheckOut
+              ? 'Đã chấm công'
+              : 'Chấm công ra'}
+          </Button>
+        </Box>
       </Grid>
 
       {/* Danh sách mục */}
