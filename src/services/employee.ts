@@ -1,5 +1,4 @@
 import api from './api';
-import { api2 } from './api';
 import { ApiResponse } from '../types/api';
 import { Department, Employee } from '../types/employee';
 import { Attachments, BankAccount, Insurance } from '../types/common';

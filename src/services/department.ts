@@ -15,4 +15,12 @@ export const departmentService = {
     api.get<ApiResponse<Department[]>>(`/department/getAllDepartment`, {
       params: { page, size, sort, order },
     }),
+  createDepartment: (name: string, description: string, manager: string) =>
+    api.post<ApiResponse<Department>>(`/department/createDepartment`, {
+      name,
+      description,
+      manager,
+    }),
+  deleteDepartment: (id: string) =>
+    api.delete<ApiResponse<Department>>(`/department/deleteDepartment/${id}`),
 };

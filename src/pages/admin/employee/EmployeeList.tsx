@@ -31,6 +31,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 export default function EmployeeList() {
+  console.log(localStorage.getItem('token'));
   const dispatch = useDispatch<AppDispatch>();
   const { employees, loading, error, pagination } = useSelector(
     (state: RootState) => state.employee

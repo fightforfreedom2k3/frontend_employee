@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { fetchDepartments } from '../../../store/departmentSlice';
 import {
   Box,
-  CircularProgress,
+  Button,
   Container,
+  Grid,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -14,23 +16,32 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
+  TextField,
 } from '@mui/material';
+import { DepartmentDetailDialog } from './DepartmentDetailDialog';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { CreateDepartmentDialog } from './CreateDepartmentDialog';
+
 export default function DepartmentList() {
   const dispatch = useDispatch<AppDispatch>();
   const { departments, loading, pagination, error } = useSelector(
     (state: RootState) => state.department
   );
 
-  //State phân trang
+  // State for pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // State for dialog visibility
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<
     string | null
   >(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
+  // Initialize data
   useEffect(() => {
     dispatch(
       fetchDepartments({
@@ -38,24 +49,36 @@ export default function DepartmentList() {
         size: rowsPerPage,
         sort: 'ASC',
         order: 'createdAt',
+        // Add search query if needed
       })
     );
   }, [dispatch, page, rowsPerPage]);
 
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Handle row click for department details
   const handleRowClick = (departmentId: string) => {
     setSelectedDepartmentId(departmentId);
     setDialogOpen(true);
   };
-
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedDepartmentId(null);
   };
 
+  // Handle creating a new department
+  const handleCreateDialogOpen = () => {
+    setCreateDialogOpen(true);
+  };
+  const handleCreateDialogClose = () => setCreateDialogOpen(false);
+
+  // Handle pagination change
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -63,100 +86,100 @@ export default function DepartmentList() {
     setPage(0);
   };
 
-  //Lấy tên quản lý từ id
-  const [managerNames, setManagerNames] = useState<Record<string, string>>({});
-
-  // useEffect(() => {
-  //   const fetchManagerNames = async () => {
-  //     const newManagerNames: Record<string, string> = {};
-
-  //     await Promise.all(
-  //       departments.map(async department => {
-  //         if (department.manager) {
-  //           try {
-  //             const response = await employeeService.getEmployeeById(
-  //               department.manager
-  //             );
-  //             newManagerNames[department.manager] = response.data.fullName;
-  //           } catch (error) {
-  //             newManagerNames[department.manager] = 'Không tìm thấy';
-  //           }
-  //         }
-  //       })
-  //     );
-
-  //     setManagerNames(newManagerNames);
-  //   };
-
-  //   if (departments.length > 0) {
-  //     fetchManagerNames();
-  //   }
-  // }, [departments]);
-
-  if (loading)
-    return (
-      <CircularProgress sx={{ display: 'block', margin: 'auto', mt: 5 }} />
-    );
-  if (error)
-    return (
-      <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
-        {error}
-      </Typography>
-    );
-
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
-      {
-        <Box
+      {/* Search and Create Department Section */}
+      <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}>
+        <Grid item xs={12} sm={8} md={6}>
+          <TextField
+            fullWidth
+            label="Tìm kiếm tên phòng ban"
+            variant="outlined"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            sx={{ width: '100%' }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={4} md={6} sx={{ textAlign: 'right' }}>
+          <Button
+            onClick={handleCreateDialogOpen}
+            variant="contained"
+            color="secondary"
+          >
+            Tạo mới phòng ban
+          </Button>
+        </Grid>
+      </Grid>
+
+      {/* Department List Table */}
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <TableContainer
+          component={Paper}
           sx={{
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            maxHeight: '100vh',
+            overflow: 'auto',
+            width: '100%',
+            maxWidth: '900px',
+            borderRadius: '8px',
           }}
         >
-          <TableContainer
-            component={Paper}
-            sx={{ overflow: 'auto', width: '100%', maxWidth: '900px' }}
-          >
-            <Table>
-              <TableHead>
-                <TableRow>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <b>Tên phòng</b>
+                </TableCell>
+                <TableCell>
+                  <b>Mô tả</b>
+                </TableCell>
+                <TableCell>
+                  <b>Quản lý</b>
+                </TableCell>
+                <TableCell>
+                  <b>Hành động</b>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {departments.map(department => (
+                <TableRow
+                  key={department._id}
+                  onClick={() => handleRowClick(department._id)}
+                  sx={{
+                    cursor: 'pointer',
+                    '&:hover': { backgroundColor: '#f5f5f5' },
+                  }}
+                >
+                  <TableCell>{department.name}</TableCell>
+                  <TableCell>{department.description}</TableCell>
                   <TableCell>
-                    <b>Tên phòng</b>
+                    {department.manager.fullName || 'Đang tải...'}
                   </TableCell>
                   <TableCell>
-                    <b>Mô tả</b>
-                  </TableCell>
-                  <TableCell>
-                    <b>Quản lý</b>
+                    <IconButton
+                      onClick={event => {
+                        event.stopPropagation();
+                        // handleDelete
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={event => {
+                        event.stopPropagation();
+                        // handleUpdate
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {departments.map(department => (
-                  <TableRow
-                    key={department._id}
-                    onClick={() => handleRowClick(department._id)}
-                    sx={{
-                      cursor: 'pointer',
-                      '&:hover': { backgroundColor: '#f5f5f5' },
-                    }}
-                  >
-                    <TableCell>{department.name}</TableCell>
-                    <TableCell>{department.description}</TableCell>
-                    <TableCell>
-                      {department.manager.fullName || 'Đang tải...'}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-      }
-      {/* Phân trang */}
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+
+      {/* Pagination */}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto' }}>
         <TablePagination
           component={'div'}
@@ -165,12 +188,25 @@ export default function DepartmentList() {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 10, 15]} // số hàng mỗi cột
+          rowsPerPageOptions={[5, 10, 15]}
           labelRowsPerPage="Số phòng mỗi trang"
         />
       </Box>
 
-      {/* Hiển thị dialog chi tiết phòng ban */}
+      {/* Dialogs */}
+      <DepartmentDetailDialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        department={
+          departments.find(
+            department => department._id === selectedDepartmentId
+          ) || null
+        }
+      />
+      <CreateDepartmentDialog
+        open={createDialogOpen}
+        onClose={handleCreateDialogClose}
+      />
     </Container>
   );
 }

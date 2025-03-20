@@ -40,7 +40,11 @@ export const AttendanceHistory = () => {
             {attendanceRecords.map((record: any, index: number) => (
               <TableRow key={index}>
                 <TableCell>{convertToVietnamTime(record.checkIn)}</TableCell>
-                <TableCell>{convertToVietnamTime(record.checkOut)}</TableCell>
+                <TableCell>
+                  {record.checkOut
+                    ? convertToVietnamTime(record.checkOut)
+                    : 'Chưa kết thúc ca'}
+                </TableCell>
                 <TableCell>
                   <Checkbox
                     checked={record.status === 'LATE'}

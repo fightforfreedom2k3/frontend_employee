@@ -188,7 +188,7 @@ const employeeSlice = createSlice({
       .addCase(deleteEmployee.pending, state => {
         state.loading = true;
       })
-      .addCase(deleteEmployee.fulfilled, (state, action) => {
+      .addCase(deleteEmployee.fulfilled, state => {
         state.loading = false;
         //maybe add action
       })

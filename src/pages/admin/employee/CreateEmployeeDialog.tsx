@@ -163,7 +163,6 @@ export default function CreateEmployeeDialog({
     try {
       await dispatch(addNewEmployee(employeeDataFormat));
       setSuccessMessage('Nhân viên đã được tạo thành công!');
-      console.log(successMessage);
       setTimeout(() => {
         onClose();
         dispatch(
@@ -175,7 +174,7 @@ export default function CreateEmployeeDialog({
             value: '',
           })
         );
-      }, 3000);
+      }, 1000);
     } catch (err: any) {
       setError(`Lỗi khi tạo nhân viên: ${err.message || err}`);
     }

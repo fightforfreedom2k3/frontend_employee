@@ -89,7 +89,10 @@ export default function MainLayout() {
     item => !item.role || item.role === role
   );
   const drawer = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      className="hoang2"
+      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
       <Toolbar
         sx={{
           bgcolor: theme.palette.primary.main,
@@ -166,11 +169,12 @@ export default function MainLayout() {
       <CssBaseline />
       {/* App Bar */}
       <AppBar
+        className="hoang1"
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          boxShadow: theme.shadows[3],
+          boxShadow: 'none',
         }}
       >
         <Toolbar>

@@ -38,10 +38,14 @@ export default function Dashboard() {
 
   // Trạng thái cho Snackbar
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [successSnackbar, setSuccessSnackbar] = useState(false);
 
   // Hàm đóng Snackbar
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
+  };
+  const handleCloseSuccessSnackbar = () => {
+    setSuccessSnackbar(false);
   };
 
   //Hàm lấy giờ làm việc
@@ -65,9 +69,11 @@ export default function Dashboard() {
           id: userId,
         },
       })
-    );
-    dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
-    setIsCheckIn(true);
+    ).then(() => {
+      dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
+      setIsCheckIn(true);
+      setSuccessSnackbar(true);
+    });
   };
 
   //Hàm chấm công ra
@@ -84,9 +90,11 @@ export default function Dashboard() {
         check_out_hour: currentTime.toISOString(),
         note: 'Check out',
       })
-    );
-    dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
-    setIsCheckOut(true);
+    ).then(() => {
+      dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
+      setIsCheckOut(true);
+      setSuccessSnackbar(true);
+    });
   };
 
   //Lấy lịch sử chấm công
@@ -100,6 +108,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (attendanceRecords && attendanceRecords.length > 0) {
       try {
+        //Kiểm tra checkin
         const nearestCheckIn = new Date(
           attendanceRecords[attendanceRecords.length - 1].checkIn
         );
@@ -110,7 +119,15 @@ export default function Dashboard() {
         ) {
           setIsCheckIn(true);
         }
-        if (attendanceRecords[attendanceRecords.length - 1].checkOut) {
+        //Kiểm tra checkOut
+        const nearestCheckOut = new Date(
+          attendanceRecords[attendanceRecords.length - 1].checkOut
+        );
+        if (
+          today.getDate() === nearestCheckOut.getDate() &&
+          today.getMonth() === nearestCheckOut.getMonth() &&
+          today.getFullYear() === nearestCheckOut.getFullYear()
+        ) {
           setIsCheckOut(true);
         }
       } catch (error) {
@@ -176,6 +193,8 @@ export default function Dashboard() {
 
       {/* Thông báo phải checkin trước khi checkout */}
       <Snackbar
+        className="snackbar-name123"
+        style={{ left: 'auto' }}
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
@@ -186,6 +205,23 @@ export default function Dashboard() {
           sx={{ width: '100%' }}
         >
           Bạn phải chấm công trước khi kết thúc ca!
+        </Alert>
+      </Snackbar>
+
+      {/* Thông báo chấm công thành công */}
+      <Snackbar
+        className="snackbar-name123"
+        style={{ left: 'auto' }}
+        open={successSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccessSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSuccessSnackbar}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          Chấm công thành công!
         </Alert>
       </Snackbar>
     </Box>
