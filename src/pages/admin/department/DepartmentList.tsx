@@ -112,13 +112,16 @@ export default function DepartmentList() {
       </Grid>
 
       {/* Department List Table */}
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box
+        maxHeight={'65vh'}
+        sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}
+      >
         <TableContainer
           component={Paper}
           sx={{
             overflow: 'auto',
             width: '100%',
-            maxWidth: '900px',
+            maxWidth: '1200px',
             borderRadius: '8px',
           }}
         >
