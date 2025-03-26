@@ -71,33 +71,37 @@ export default function UpdateEmployeeDialog({
     if (employee) {
       const { name, value } = e.target;
 
-      if (name.startsWith('bankAccount')) {
-        // Cập nhật bankAccount
-        const fieldName = name.split('.')[1];
-        setEmployee({
-          ...employee,
-          bankAccount: {
-            ...employee.bankAccount,
-            [fieldName]: value,
-          },
-        });
-      } else if (name.startsWith('insurance')) {
-        // Cập nhật insurance
-        const fieldName = name.split('.')[1];
-        setEmployee({
-          ...employee,
-          insurance: {
-            ...employee.insurance,
-            [fieldName]: value,
-          },
-        });
-      } else {
-        // Cập nhật các trường khác
-        setEmployee({
-          ...employee,
-          [name]: value,
-        });
-      }
+      // if (name.startsWith('bankAccount')) {
+      //   // Cập nhật bankAccount
+      //   const fieldName = name.split('.')[1];
+      //   setEmployee({
+      //     ...employee,
+      //     bankAccount: {
+      //       ...employee.bankAccount,
+      //       [fieldName]: value,
+      //     },
+      //   });
+      // } else if (name.startsWith('insurance')) {
+      //   // Cập nhật insurance
+      //   const fieldName = name.split('.')[1];
+      //   setEmployee({
+      //     ...employee,
+      //     insurance: {
+      //       ...employee.insurance,
+      //       [fieldName]: value,
+      //     },
+      //   });
+      // } else {
+      //   // Cập nhật các trường khác
+      //   setEmployee({
+      //     ...employee,
+      //     [name]: value,
+      //   });
+      // }
+      setEmployee({
+        ...employee,
+        [name]: value,
+      });
     }
   };
 
@@ -116,18 +120,6 @@ export default function UpdateEmployeeDialog({
           phoneNumber: employee.phoneNumber,
           role: employee.role,
           position: employee.position,
-          baseSalary: employee.baseSalary,
-          bankAccount: {
-            bankName: employee.bankAccount.bankName,
-            accountNumber: employee.bankAccount.accountNumber,
-          },
-          insurance: {
-            socialInsuranceRate: employee.insurance.socialInsuranceRate,
-            healthInsuranceRate: employee.insurance.healthInsuranceRate,
-            unemploymentInsuranceRate:
-              employee.insurance.unemploymentInsuranceRate,
-          },
-          taxCode: employee.taxCode,
         };
 
         // Gọi API update
@@ -245,71 +237,15 @@ export default function UpdateEmployeeDialog({
               <TextField
                 label={'Ngày sinh'}
                 name="dob"
-                value={employee.dob}
+                value={
+                  employee.dob
+                    ? new Date(employee.dob).toISOString().split('T')[0]
+                    : ''
+                }
                 margin="dense"
                 type="date"
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Lương cơ bản"
-                name="baseSalary"
-                type="number"
-                fullWidth
-                margin="dense"
-                value={employee.baseSalary}
-                onChange={handleChange}
-              />
-              <TextField
-                label={'Ngân hàng'}
-                name="bankAccount.bankName"
-                value={employee.bankAccount.bankName}
-                fullWidth
-                margin="dense"
-                onChange={handleChange}
-              />
-              <TextField
-                label={'Số tài khoản'}
-                name="bankAccount.accountNumber"
-                value={employee.bankAccount.accountNumber}
-                fullWidth
-                margin="dense"
-                onChange={handleChange}
-              />
-              <TextField
-                label="Bảo hiểm y tế"
-                name="insurance.healthInsuranceRate"
-                fullWidth
-                type="number"
-                margin="dense"
-                value={employee.insurance.healthInsuranceRate}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Bảo hiểm xã hội"
-                name="insurance.socialInsuranceRate"
-                fullWidth
-                type="number"
-                margin="dense"
-                value={employee.insurance.socialInsuranceRate}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Bảo hiểm thất nghiệp"
-                name="insurance.unemploymentInsuranceRate"
-                fullWidth
-                type="number"
-                margin="dense"
-                value={employee.insurance.unemploymentInsuranceRate}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Mã số thuế"
-                name="taxCode"
-                fullWidth
-                margin="dense"
-                value={employee.taxCode}
                 onChange={handleChange}
               />
             </>

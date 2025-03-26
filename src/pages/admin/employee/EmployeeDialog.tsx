@@ -72,30 +72,6 @@ export default function EmployeeDialog({
               <b>Phòng ban:</b>{' '}
               {employee.department ? employee.department.name : ''}
             </Typography>
-            <Typography>
-              <b>Lương cơ bản:</b> {employee.baseSalary.toLocaleString()} VND
-            </Typography>
-            <Typography>
-              <b>Ngân hàng:</b> {employee.bankAccount.bankName}
-            </Typography>
-            <Typography>
-              <b>Số tài khoản:</b> {employee.bankAccount.accountNumber}
-            </Typography>
-            <Typography>
-              <b>Mã số thuế:</b> {employee.taxCode}
-            </Typography>
-            <Typography>
-              <b>Bảo hiểm xã hội:</b>{' '}
-              {employee.insurance.socialInsuranceRate * 100}%
-            </Typography>
-            <Typography>
-              <b>Bảo hiểm y tế:</b>{' '}
-              {employee.insurance.healthInsuranceRate * 100}%
-            </Typography>
-            <Typography>
-              <b>Bảo hiểm thất nghiệp:</b>{' '}
-              {employee.insurance.unemploymentInsuranceRate * 100}%
-            </Typography>
           </>
         ) : (
           <Typography color="error">Không tìm thấy nhân viên</Typography>

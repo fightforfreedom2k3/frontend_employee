@@ -1,11 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import { useEffect, useState } from 'react';
-import { fetchDepartments } from '../../../store/departmentSlice';
+import {
+  deleteDepartment,
+  fetchDepartments,
+} from '../../../store/departmentSlice';
 import {
   Box,
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   IconButton,
   Paper,
@@ -17,6 +24,7 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
 import { DepartmentDetailDialog } from './DepartmentDetailDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -32,6 +40,9 @@ export default function DepartmentList() {
   // State for pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //State for confirm delete
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   // State for dialog visibility
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<
@@ -85,6 +96,32 @@ export default function DepartmentList() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  //handle delete
+  const handleDeleteButton = (departmentId: string) => {
+    setSelectedDepartmentId(departmentId);
+    setConfirmDeleteOpen(true);
+  };
+  const handleDelete = () => {
+    if (selectedDepartmentId !== null) {
+      dispatch(deleteDepartment({ id: selectedDepartmentId }))
+        .then(() => {
+          setConfirmDeleteOpen(false);
+          dispatch(
+            fetchDepartments({
+              page: 1,
+              size: 10,
+              sort: 'createdAt',
+              order: 'ASC',
+            })
+          );
+        })
+        .catch(error => {
+          console.error('Failed to delete department', error);
+        });
+    }
+  };
+  //handle update
 
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -161,7 +198,7 @@ export default function DepartmentList() {
                     <IconButton
                       onClick={event => {
                         event.stopPropagation();
-                        // handleDelete
+                        handleDeleteButton(department._id);
                       }}
                     >
                       <DeleteIcon />
@@ -210,6 +247,25 @@ export default function DepartmentList() {
         open={createDialogOpen}
         onClose={handleCreateDialogClose}
       />
+      <Dialog
+        open={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+      >
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Bạn có chắc chắn muốn xóa nhân viên này không?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmDeleteOpen(false)} color="secondary">
+            Hủy
+          </Button>
+          <Button onClick={handleDelete} color="primary">
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }

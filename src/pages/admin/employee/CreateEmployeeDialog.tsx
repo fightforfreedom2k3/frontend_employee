@@ -64,17 +64,6 @@ export default function CreateEmployeeDialog({
     phoneNumber: '',
     role: 'OTHER',
     position: '',
-    baseSalary: 0,
-    bankAccount: {
-      accountNumber: '',
-      bankName: '',
-    },
-    insurance: {
-      healthInsuranceRate: 0,
-      socialInsuranceRate: 0,
-      unemploymentInsuranceRate: 0,
-    },
-    taxCode: '',
     contract: {
       startDate: '',
       endDate: null,
@@ -88,50 +77,20 @@ export default function CreateEmployeeDialog({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    //Chuyển đổi kiểu số
-    const parseValue = [
-      'baseSalary',
-      'insurance.healthInsuranceRate',
-      'insurance.socialInsuranceRate',
-      'insurance.unemploymentInsuranceRate',
-    ].includes(name)
-      ? parseFloat(value) || 0
-      : value;
-
-    // Kiểm tra nếu name là của bankAccount (ví dụ: bankAccount.bankName hoặc bankAccount.accountNumber)
-    if (name.includes('bankAccount')) {
-      const field = name.split('.')[1]; // Phân tích ra trường "bankName" hoặc "accountNumber"
-      setEmployeeData(prev => ({
-        ...prev,
-        bankAccount: {
-          ...prev.bankAccount,
-          [field]: parseValue, // Cập nhật giá trị trường con tương ứng trong bankAccount
-        },
-      }));
-    } else if (name.includes('insurance')) {
-      const field = name.split('.')[1];
-      setEmployeeData(prev => ({
-        ...prev,
-        insurance: {
-          ...prev.insurance,
-          [field]: parseValue, // Cập nhật giá trị trường con tương ứng trong insurance
-        },
-      }));
-    } else if (name.includes('contract')) {
+    if (name.includes('contract')) {
       const field = name.split('.')[1];
       setEmployeeData(prev => ({
         ...prev,
         contract: {
           ...prev.contract,
-          [field]: parseValue, //Cập nhật giá trị của các trường trong contract
+          [field]: value, //Cập nhật giá trị của các trường trong contract
         },
       }));
     } else {
-      // Xử lý các trường không phải bankAccount và insurance
-      setEmployeeData({
-        ...employeeData,
-        [name]: parseValue,
-      });
+      setEmployeeData(prev => ({
+        ...prev,
+        [name]: value, //Cập nhật giá trị của các trường khác
+      }));
     }
   };
 
@@ -149,16 +108,6 @@ export default function CreateEmployeeDialog({
           : null, // Nếu có endDate, chuyển đổi
         signDate: new Date(employeeData.contract.signDate).toISOString(),
       },
-      baseSalary: Number(employeeData.baseSalary) || 0,
-      insurance: {
-        ...employeeData.insurance,
-        healthInsuranceRate:
-          Number(employeeData.insurance.healthInsuranceRate) || 0,
-        socialInsuranceRate:
-          Number(employeeData.insurance.socialInsuranceRate) || 0,
-        unemploymentInsuranceRate:
-          Number(employeeData.insurance.unemploymentInsuranceRate) || 0,
-      },
     };
     try {
       await dispatch(addNewEmployee(employeeDataFormat));
@@ -174,7 +123,7 @@ export default function CreateEmployeeDialog({
             value: '',
           })
         );
-      }, 1000);
+      }, 200);
     } catch (err: any) {
       setError(`Lỗi khi tạo nhân viên: ${err.message || err}`);
     }
@@ -292,66 +241,6 @@ export default function CreateEmployeeDialog({
                 type="date"
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Lương cơ bản"
-                name="baseSalary"
-                type="number"
-                fullWidth
-                margin="dense"
-                value={employeeData.baseSalary}
-                onChange={handleChange}
-              />
-              <TextField
-                label={'Ngân hàng'}
-                name="bankAccount.bankName"
-                value={employeeData.bankAccount.bankName}
-                fullWidth
-                margin="dense"
-                onChange={handleChange}
-              />
-              <TextField
-                label={'Số tài khoản'}
-                name="bankAccount.accountNumber"
-                value={employeeData.bankAccount.accountNumber}
-                fullWidth
-                margin="dense"
-                onChange={handleChange}
-              />
-              <TextField
-                label="Bảo hiểm y tế"
-                name="insurance.healthInsuranceRate"
-                fullWidth
-                type="number"
-                margin="dense"
-                value={employeeData.insurance.healthInsuranceRate}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Bảo hiểm xã hội"
-                name="insurance.socialInsuranceRate"
-                fullWidth
-                type="number"
-                margin="dense"
-                value={employeeData.insurance.socialInsuranceRate}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Bảo hiểm thất nghiệp"
-                name="insurance.unemploymentInsuranceRate"
-                fullWidth
-                type="number"
-                margin="dense"
-                value={employeeData.insurance.unemploymentInsuranceRate}
-                onChange={handleChange}
-              />
-              <TextField
-                label="Mã số thuế"
-                name="taxCode"
-                fullWidth
-                margin="dense"
-                value={employeeData.taxCode}
                 onChange={handleChange}
               />
               <TextField

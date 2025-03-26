@@ -1,7 +1,7 @@
 import api from './api';
 import { ApiResponse } from '../types/api';
 import { Department, Employee } from '../types/employee';
-import { Attachments, BankAccount, Insurance } from '../types/common';
+import { Attachments } from '../types/common';
 
 //getAllEmployee
 // export interface GetAllEmployeeResponse {
@@ -22,10 +22,6 @@ export interface AddNewEmployeeRequest {
   phoneNumber: string;
   role: 'DEPARTMENT_MANAGER' | 'EMPLOYEE' | 'HR' | 'OTHER'; // Có thể thêm role khác
   position: string;
-  baseSalary: number;
-  bankAccount: BankAccount;
-  insurance: Insurance;
-  taxCode: string;
   contract: {
     startDate: string;
     endDate: string | null;
@@ -45,10 +41,6 @@ export interface UpdateEmployeeRequest {
   phoneNumber: string;
   role: string;
   position: string;
-  baseSalary: number;
-  bankAccount: BankAccount;
-  insurance: Insurance;
-  taxCode: string;
 }
 
 export const employeeService = {

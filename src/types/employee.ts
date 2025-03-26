@@ -1,5 +1,3 @@
-import { BankAccount, Insurance } from './common';
-
 export interface Department {
   _id: string;
   name: string;
@@ -21,10 +19,6 @@ export interface Employee {
   department: Department;
   position: string;
   role: string;
-  baseSalary: number;
-  bankAccount: BankAccount;
-  insurance: Insurance;
-  taxCode: string;
   createdAt: string;
   updatedAt: string;
 }

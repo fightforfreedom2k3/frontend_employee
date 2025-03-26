@@ -96,7 +96,7 @@ export const createDepartment = createAsyncThunk(
 
 export const deleteDepartment = createAsyncThunk(
   `department/deleteDepartment`,
-  async (id: string, { rejectWithValue }) => {
+  async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
       const response = await departmentService.deleteDepartment(id);
       return response.data;
