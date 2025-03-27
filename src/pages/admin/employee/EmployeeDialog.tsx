@@ -63,6 +63,15 @@ export default function EmployeeDialog({
         ) : employee ? (
           <>
             <Typography>
+              <b>Username:</b> {employee.userName}
+            </Typography>
+            <Typography>
+              <b>Email:</b> {employee.email}
+            </Typography>
+            <Typography>
+              <b>Số điện thoại:</b> {employee.phoneNumber}
+            </Typography>
+            <Typography>
               <b>Họ và tên:</b> {employee.fullName}
             </Typography>
             <Typography>

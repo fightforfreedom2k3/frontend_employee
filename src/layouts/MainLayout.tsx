@@ -74,14 +74,7 @@ export default function MainLayout() {
       path: '/attendance',
       role: 'ADMIN',
     },
-    //role DEPARTMENT_MANAGER
     //role EMPLOYEE
-    {
-      text: 'Lịch sử chấm công',
-      icon: <DescriptionIcon />,
-      path: '/attendance',
-      role: 'EMPLOYEE',
-    },
   ];
 
   // Lọc menu theo role
