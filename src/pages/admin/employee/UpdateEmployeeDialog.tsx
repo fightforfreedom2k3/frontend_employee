@@ -57,7 +57,11 @@ export default function UpdateEmployeeDialog({
       employeeService
         .getEmployeeById(employeeId)
         .then(reponse => {
-          setEmployee(reponse.data);
+          const employeeData = reponse.data;
+          setEmployee({
+            ...employeeData,
+            department: employeeData.department._id,
+          });
           setLoading(false);
         })
         .catch(err => {
