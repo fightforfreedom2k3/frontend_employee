@@ -13,6 +13,8 @@ export interface ApiResponse<T> {
   totalCount: number;
   user: Employee;
   attendanceRecord: AttendanceRecord;
+  weekRange?: T;
+  weeklyData?: T;
 }
 
 export interface AuthResponse {
