@@ -4,6 +4,7 @@ import employeeReducer from './employeeSlice';
 import departmentReducer from './departmentSlice';
 import attendanceReducer from './attendanceSlice';
 import mealReducer from './mealSlice';
+import contractReducer from './contractSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     department: departmentReducer,
     attendance: attendanceReducer,
     meal: mealReducer,
+    contract: contractReducer,
   },
 });
 

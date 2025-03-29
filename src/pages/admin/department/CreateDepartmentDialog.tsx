@@ -63,7 +63,8 @@ export const CreateDepartmentDialog = ({
             page: 1,
             size: 10,
             sort: 'createdAt',
-            order: 'DESC',
+            order: 'DEC',
+            value: '',
           })
         );
       }, 1000);
