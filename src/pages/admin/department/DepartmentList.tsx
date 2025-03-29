@@ -60,10 +60,11 @@ export default function DepartmentList() {
         size: rowsPerPage,
         sort: 'ASC',
         order: 'createdAt',
+        value: searchQuery,
         // Add search query if needed
       })
     );
-  }, [dispatch, page, rowsPerPage]);
+  }, [dispatch, page, rowsPerPage, searchQuery]);
 
   // Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,6 +114,7 @@ export default function DepartmentList() {
               size: 10,
               sort: 'createdAt',
               order: 'ASC',
+              value: '',
             })
           );
         })

@@ -18,7 +18,7 @@ export default function LunchRegistration() {
 
   const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay ở định dạng "YYYY-MM-DD"
   const filteredMeals = meals.filter(meal => meal.date >= today); // Lọc các bữa ăn có ngày >= hôm nay
-
+  console.log(filteredMeals);
   if (loading) {
     return <Typography>Loading...</Typography>;
   }

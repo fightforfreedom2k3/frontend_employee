@@ -80,8 +80,10 @@ export default function EmployeeList() {
 
   const handleUpdateDialogClose = () => setUpdateDialogOpen(false);
 
-  const handleChangePage = (event: unknown, newPage: number) =>
-    setPage(newPage);
+  const handleChangePage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    newPage: number
+  ) => setPage(newPage);
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {

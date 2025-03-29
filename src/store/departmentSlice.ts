@@ -38,7 +38,14 @@ export const fetchDepartments = createAsyncThunk(
       size,
       sort,
       order,
-    }: { page: number; size: number; sort: string; order: string },
+      value,
+    }: {
+      page: number;
+      size: number;
+      sort: string;
+      order: string;
+      value: string;
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -46,7 +53,8 @@ export const fetchDepartments = createAsyncThunk(
         page,
         size,
         sort,
-        order
+        order,
+        value
       );
 
       if (!Array.isArray(response.data.data)) {
