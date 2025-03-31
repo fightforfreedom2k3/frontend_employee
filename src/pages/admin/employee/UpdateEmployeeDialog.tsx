@@ -15,9 +15,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Department, Employee } from '../../../types/employee';
+import { Employee } from '../../../types/employee';
 import { departmentService } from '../../../services/department';
 import { fetchEmployees, updateEmployee } from '../../../store/employeeSlice'; // import update action
+import { Department } from '../../../types/departments';
 
 interface UpdateEmployeeDialog {
   open: boolean;
@@ -59,6 +60,7 @@ export default function UpdateEmployeeDialog({
         .then(reponse => {
           const employeeData = reponse.data;
           setEmployee({
+            //no match no big deals
             ...employeeData,
             department: employeeData.department._id,
           });
@@ -74,34 +76,6 @@ export default function UpdateEmployeeDialog({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (employee) {
       const { name, value } = e.target;
-
-      // if (name.startsWith('bankAccount')) {
-      //   // Cập nhật bankAccount
-      //   const fieldName = name.split('.')[1];
-      //   setEmployee({
-      //     ...employee,
-      //     bankAccount: {
-      //       ...employee.bankAccount,
-      //       [fieldName]: value,
-      //     },
-      //   });
-      // } else if (name.startsWith('insurance')) {
-      //   // Cập nhật insurance
-      //   const fieldName = name.split('.')[1];
-      //   setEmployee({
-      //     ...employee,
-      //     insurance: {
-      //       ...employee.insurance,
-      //       [fieldName]: value,
-      //     },
-      //   });
-      // } else {
-      //   // Cập nhật các trường khác
-      //   setEmployee({
-      //     ...employee,
-      //     [name]: value,
-      //   });
-      // }
       setEmployee({
         ...employee,
         [name]: value,
@@ -199,10 +173,8 @@ export default function UpdateEmployeeDialog({
                 select
                 onChange={handleChange}
               >
-                <MenuItem value={'DEPARTMENT_MANAGER'}>Quản lý</MenuItem>
                 <MenuItem value={'EMPLOYEE'}>Nhân viên</MenuItem>
-                <MenuItem value={'ADMIN'}>Admin</MenuItem>
-                <MenuItem value={'OTHER'}>Khác</MenuItem>
+                <MenuItem value={'ADMIN'}>Quản trị viên</MenuItem>
               </TextField>
               <TextField
                 label={'Vị trí'}

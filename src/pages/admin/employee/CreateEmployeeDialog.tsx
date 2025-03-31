@@ -16,8 +16,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Department } from '../../../types/employee';
 import { departmentService } from '../../../services/department';
+import { Department } from '../../../types/departments';
 
 interface CreateEmployeeDialogProps {
   open: boolean;
@@ -192,9 +192,7 @@ export default function CreateEmployeeDialog({
               >
                 {/* Sửa để thêm role */}
                 <MenuItem value={'ADMIN'}>Quản trị viên</MenuItem>
-                <MenuItem value={'DEPARTMENT_MANAGER'}>Quản lý</MenuItem>
                 <MenuItem value={'EMPLOYEE'}>Nhân viên</MenuItem>
-                <MenuItem value={'OTHER'}>Khác</MenuItem>
               </TextField>
               <TextField
                 label={'Vị trí'}

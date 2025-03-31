@@ -10,9 +10,12 @@ export const departmentService = {
     order = 'DESC',
     value = ''
   ) =>
-    api.get<ApiResponse<Department[]>>(`/department/getAllDepartment`, {
-      params: { page, size, sort, order, value },
-    }),
+    api.get<ApiResponse<Department[] | undefined>>(
+      `/department/getAllDepartment`,
+      {
+        params: { page, size, sort, order, value },
+      }
+    ),
   createDepartment: (name: string, description: string, manager: string) =>
     api.post<ApiResponse<Department>>(`/department/createDepartment`, {
       name,

@@ -1,12 +1,4 @@
-export interface Department {
-  _id: string;
-  name: string;
-  description: string;
-  manager: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+import { Department } from './departments';
 
 export interface Employee {
   _id: string;

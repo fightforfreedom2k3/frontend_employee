@@ -9,3 +9,13 @@ export const convertToVietnamTime = (isoString: string): string => {
 
   return vietnamTime;
 };
+
+export const convertToVietnamDate = (isoString: string): string => {
+  const date = new Date(isoString);
+
+  const vietnamDate = date.toLocaleDateString('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+  });
+
+  return vietnamDate;
+};

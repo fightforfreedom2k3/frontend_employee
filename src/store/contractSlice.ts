@@ -36,11 +36,13 @@ export const getAllContract = createAsyncThunk(
       size,
       sort,
       order,
+      value,
     }: {
       page: number;
       size: number;
       sort: string;
       order: string;
+      value: string;
     },
     { rejectWithValue }
   ) => {
@@ -49,16 +51,17 @@ export const getAllContract = createAsyncThunk(
         page,
         size,
         sort,
-        order
+        order,
+        value
       );
-      if (!Array.isArray(response.data.datta)) {
+      if (!Array.isArray(response.data.data)) {
         return rejectWithValue(
           'Lỗi client không lấy được danh sách hợp đồng do mảng ko hợp lệ'
         );
       }
       return {
         total: response.data.totalCount,
-        contracts: response.data.datta,
+        contracts: response.data.data,
       };
     } catch (error: any) {
       return rejectWithValue(

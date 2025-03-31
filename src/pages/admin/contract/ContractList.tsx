@@ -12,19 +12,40 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
+  TextField,
 } from '@mui/material';
-import { convertToVietnamTime } from '../../../lib/formatDateTime';
+import { convertToVietnamDate } from '../../../lib/formatDateTime';
 
 export default function ContractList() {
   const dispatch = useDispatch<AppDispatch>();
-  const { contracts, contract, loading, error } = useSelector(
+  const { contracts, contract, loading, error, pagination } = useSelector(
     (state: RootState) => state.contract
   );
+
+  //search state
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   //state for pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //pagination
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   //Initialize data
   useEffect(() => {
@@ -34,14 +55,26 @@ export default function ContractList() {
         size: rowsPerPage,
         sort: 'createdAt',
         order: 'ASC',
+        value: searchQuery,
       })
     );
-  }, [dispatch, page, rowsPerPage]);
+  }, [dispatch, page, rowsPerPage, searchQuery]);
 
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
-      {/* maybe add search or sth */}
-      <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}></Grid>
+      {/* Search contract */}
+      <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}>
+        <Grid item xs={12} sm={8} md={6}>
+          <TextField
+            fullWidth
+            label="Tìm kiếm tên hợp đồng"
+            variant="outlined"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            sx={{ width: '100%' }}
+          />
+        </Grid>
+      </Grid>
 
       <Box
         maxHeight={'65vh'}
@@ -63,13 +96,13 @@ export default function ContractList() {
                   <b>Tên nhân viên</b>
                 </TableCell>
                 <TableCell>
-                  <b>Tên phòng</b>
-                </TableCell>
-                <TableCell>
                   <b>Email</b>
                 </TableCell>
                 <TableCell>
-                  <b>Số diện thoại</b>
+                  <b>Số điện thoại</b>
+                </TableCell>
+                <TableCell>
+                  <b>Loại hợp đồng</b>
                 </TableCell>
                 <TableCell>
                   <b>Ngày bắt đầu làm việc</b>
@@ -92,23 +125,39 @@ export default function ContractList() {
                   }}
                 >
                   <TableCell>{contract.employeeId?.fullName}</TableCell>
-                  <TableCell>{'Phong abc'}</TableCell>
                   <TableCell>{contract.employeeId?.email}</TableCell>
                   <TableCell>{contract.employeeId?.phoneNumber}</TableCell>
+                  <TableCell>{contract.contractType}</TableCell>
                   <TableCell>
-                    {convertToVietnamTime(contract.startDate)}
+                    {convertToVietnamDate(contract.startDate)}
                   </TableCell>
                   <TableCell>
-                    {convertToVietnamTime(contract.signDate)}
+                    {convertToVietnamDate(contract.signDate)}
                   </TableCell>
                   <TableCell>
-                    {convertToVietnamTime(contract.endDate)}
+                    {contract.endDate
+                      ? convertToVietnamDate(contract?.endDate)
+                      : ''}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+      </Box>
+
+      {/* paginaiton */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto' }}>
+        <TablePagination
+          component={'div'}
+          count={pagination.totalContract || 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 15]}
+          labelRowsPerPage="Số hợp đồng mỗi trang"
+        ></TablePagination>
       </Box>
     </Container>
   );

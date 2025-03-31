@@ -194,7 +194,7 @@ export default function DepartmentList() {
                   <TableCell>{department.name}</TableCell>
                   <TableCell>{department.description}</TableCell>
                   <TableCell>
-                    {department.manager.fullName || 'Đang tải...'}
+                    {department.manager.fullName || 'Chưa có quản lý'}
                   </TableCell>
                   <TableCell>
                     <IconButton

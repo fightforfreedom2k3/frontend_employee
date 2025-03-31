@@ -6,4 +6,5 @@ export interface Contract {
   startDate: string;
   endDate: string;
   signDate: string;
+  contractType: string;
 }
