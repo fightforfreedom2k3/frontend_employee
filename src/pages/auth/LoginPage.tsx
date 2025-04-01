@@ -3,15 +3,17 @@ import {
   Container,
   TextField,
   Button,
-  Typography,
   Box,
   Paper,
+  Typography,
   CircularProgress,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { login } from '../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+
+import backgroundImage from '../../assets/img1.jpg'; // Đường dẫn ảnh nền
 
 function LoginPage() {
   const [userName, setUsername] = useState('');
@@ -25,9 +27,7 @@ function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userName || !password) {
-      return;
-    }
+    if (!userName || !password) return;
     dispatch(login({ userName, password }));
   };
 
@@ -41,27 +41,41 @@ function LoginPage() {
   }, [token, navigate]);
 
   return (
-    <Container maxWidth="xs" className="login-container">
+    <Box
+      sx={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '95vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Paper
         elevation={6}
         sx={{
-          padding: 4,
-          mt: 10,
-          textAlign: 'center',
-          borderRadius: 3,
-          backgroundColor: '#ffffff', // White background similar to your image
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Light shadow
+          width: 360,
+          p: 4,
+          borderRadius: 2,
+          backdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.75)',
         }}
       >
-        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
-          Đăng nhập HRM
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          gutterBottom
+          textAlign="center"
+        >
+          ĐĂNG NHẬP
         </Typography>
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          Xin chào! Một ngày mới tốt lành nhé
+        <Typography variant="body2" textAlign="center" sx={{ mb: 2 }}>
+          Nhập email và mật khẩu để đăng ký tài khoản
         </Typography>
         <Box component="form" onSubmit={handleLogin}>
           <TextField
-            label="Email"
+            label="Tên đăng nhập"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -80,20 +94,19 @@ function LoginPage() {
             required
           />
           {error && (
-            <Typography color="error" sx={{ mt: 2, mb: 2 }}>
+            <Typography color="error" sx={{ mt: 1 }}>
               {error}
             </Typography>
           )}
           <Button
             type="submit"
             variant="contained"
-            color="success"
             fullWidth
             sx={{
               mt: 2,
-              padding: '10px',
+              py: 1.2,
+              fontSize: 16,
               textTransform: 'none',
-              fontSize: '16px',
             }}
             disabled={loading}
           >
@@ -101,7 +114,7 @@ function LoginPage() {
           </Button>
         </Box>
       </Paper>
-    </Container>
+    </Box>
   );
 }
 

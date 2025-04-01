@@ -1,7 +1,8 @@
 import api from './api';
 import { ApiResponse } from '../types/api';
-import { Department, Employee } from '../types/employee';
+import { Employee } from '../types/employee';
 import { Attachments } from '../types/common';
+import { Department } from '../types/departments';
 
 //getAllEmployee
 // export interface GetAllEmployeeResponse {

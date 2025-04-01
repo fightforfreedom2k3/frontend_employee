@@ -4,11 +4,11 @@ import { Department } from '../types/departments';
 
 export const departmentService = {
   getAllDepartment: (
-    page: number,
-    size: number,
-    sort: string,
-    order: string,
-    value: string
+    page = 1,
+    size = 100,
+    sort = 'createdAt',
+    order: 'ASC',
+    value: ''
   ) =>
     api.get<ApiResponse<Department[] | undefined>>(
       `/department/getAllDepartment`,

@@ -20,6 +20,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
@@ -30,6 +32,7 @@ import UpdateEmployeeDialog from './UpdateEmployeeDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { departmentService } from '../../../services/department';
+import { Department } from '../../../types/departments';
 
 export default function EmployeeList() {
   console.log(localStorage.getItem('token'));
@@ -38,6 +41,7 @@ export default function EmployeeList() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
   const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>('');
+  const [departments, setDepartments] = useState<Department[] | undefined>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
@@ -57,10 +61,18 @@ export default function EmployeeList() {
         sort: 'createdAt',
         order: 'DESC',
         value: searchQuery.trim(),
+        department: selectedDepartmentId,
       })
     );
-    departmentService.getAllDepartment(1, 100, 'createdAt', 'ASC', '');
-  }, [dispatch, page, rowsPerPage, searchQuery]);
+    departmentService
+      .getAllDepartment(1, 100, 'createdAt', 'ASC', '')
+      .then(response => {
+        setDepartments(response.data.data);
+      })
+      .catch(error => {
+        //maybe i'll add alert or sth
+      });
+  }, [dispatch, page, rowsPerPage, searchQuery, selectedDepartmentId]);
 
   // Dialog handling
   const handleRowClick = (employeeId: string) => {
@@ -136,7 +148,7 @@ export default function EmployeeList() {
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
       <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
             label="Tìm kiếm nhân viên"
@@ -145,11 +157,28 @@ export default function EmployeeList() {
             onChange={handleSearchChange}
           />
         </Grid>
-        <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+        <Grid item xs={12} sm={4}>
+          <Select
+            fullWidth
+            value={selectedDepartmentId}
+            onChange={event => setSelectedDepartmentId(event.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="">
+              <em>Tất cả phòng ban</em>
+            </MenuItem>
+            {departments?.map(department => (
+              <MenuItem key={department._id} value={department._id}>
+                {department.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+        <Grid item xs={12} sm={4} sx={{ textAlign: 'right' }}>
           <Button
             onClick={handleCreateDialogOpen}
             variant="contained"
-            color="secondary"
+            color="primary"
           >
             Tạo mới người dùng
           </Button>
