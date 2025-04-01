@@ -41,7 +41,7 @@ export default function CreateEmployeeDialog({
       setLoading(true);
       setError(null);
       departmentService
-        .getAllDepartment()
+        .getAllDepartment(1, 100, 'createdAt', 'ASC', '')
         .then(response => {
           setDepartments(response.data.data);
           setLoading(false);

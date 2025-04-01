@@ -29,23 +29,25 @@ import CreateEmployeeDialog from './CreateEmployeeDialog';
 import UpdateEmployeeDialog from './UpdateEmployeeDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { departmentService } from '../../../services/department';
 
 export default function EmployeeList() {
   console.log(localStorage.getItem('token'));
-  const dispatch = useDispatch<AppDispatch>();
-  const { employees, loading, error, pagination } = useSelector(
-    (state: RootState) => state.employee
-  );
-
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { employees, loading, error, pagination } = useSelector(
+    (state: RootState) => state.employee
+  );
 
   useEffect(() => {
     dispatch(
@@ -57,6 +59,7 @@ export default function EmployeeList() {
         value: searchQuery.trim(),
       })
     );
+    departmentService.getAllDepartment(1, 100, 'createdAt', 'ASC', '');
   }, [dispatch, page, rowsPerPage, searchQuery]);
 
   // Dialog handling
@@ -81,9 +84,12 @@ export default function EmployeeList() {
   const handleUpdateDialogClose = () => setUpdateDialogOpen(false);
 
   const handleChangePage = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
-  ) => setPage(newPage);
+  ) => {
+    setPage(newPage);
+  };
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -165,9 +171,21 @@ export default function EmployeeList() {
       >
         <TableContainer
           component={Paper}
-          sx={{ overflowX: 'auto', width: '100%', maxWidth: '1200px' }}
+          sx={{
+            overflowX: 'auto',
+            width: '100%',
+            maxWidth: '1200px',
+            border: '1px solid #e0e0e0', // Thêm border cho TableContainer
+          }}
         >
-          <Table>
+          <Table
+            sx={{
+              borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+              '& td, & th': {
+                border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>
