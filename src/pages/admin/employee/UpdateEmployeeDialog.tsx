@@ -60,7 +60,7 @@ export default function UpdateEmployeeDialog({
         .then(reponse => {
           const employeeData = reponse.data;
           setEmployee({
-            //no match no big deals
+            //no match type no big deals
             ...employeeData,
             department: employeeData.department._id,
           });

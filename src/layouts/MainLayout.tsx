@@ -39,9 +39,9 @@ export default function MainLayout() {
       role: 'ADMIN',
     },
     {
-      text: 'Hợp đồng',
+      text: 'Quản lý bữa trưa',
       icon: <DescriptionIcon />,
-      path: '/contract',
+      path: '/meal-order',
       role: 'ADMIN',
     },
     {

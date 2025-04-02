@@ -5,10 +5,20 @@ import {
   DialogContent,
   Typography,
   Grid,
-  Avatar,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from '@mui/material';
 import { Department } from '../../../types/departments';
-import { Person as PersonIcon } from '@mui/icons-material'; // Icon người
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../store';
+import { useEffect } from 'react';
+import { getAllEmployeeByDepartment } from '../../../store/employeeSlice';
 
 export interface DepartmentDetailDialogProps {
   open: boolean;
@@ -18,6 +28,25 @@ export interface DepartmentDetailDialogProps {
 
 export const DepartmentDetailDialog = (props: DepartmentDetailDialogProps) => {
   const { open, onClose, department } = props;
+  const { employees, loading, pagination } = useSelector(
+    (state: RootState) => state.employee
+  );
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (department?._id) {
+      dispatch(
+        getAllEmployeeByDepartment({
+          department: department._id,
+          page: 1,
+          size: 100,
+          sort: 'role',
+          order: 'ASC',
+          value: '',
+        })
+      );
+    }
+  }, [department, dispatch]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -33,27 +62,66 @@ export const DepartmentDetailDialog = (props: DepartmentDetailDialogProps) => {
           {/* Thông tin người quản lý */}
           <Grid item xs={12} container alignItems="center" spacing={2}>
             <Grid item>
-              <Avatar sx={{ bgcolor: '#1976d2' }}>
-                <PersonIcon sx={{ color: 'white' }} />
-              </Avatar>
-            </Grid>
-            <Grid item>
               <Typography variant="h6">
-                Manager: {department?.manager?.fullName}
+                <strong>Quản lý</strong>: {department?.manager?.fullName}
               </Typography>
             </Grid>
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="body1" sx={{ color: '#666' }}>
-              <strong>Description:</strong> {department?.description}
+            <Typography variant="body1" sx={{ color: 'black' }}>
+              <strong>Mô tả:</strong> {department?.description}
             </Typography>
+          </Grid>
+
+          {/* Danh sách nhân viên */}
+          <Grid item xs={12}>
+            <Typography
+              variant="body2"
+              sx={{ marginBottom: 2, color: 'black' }}
+            >
+              <strong>Số lượng</strong>: {pagination?.totalEmployee || 0}
+            </Typography>
+
+            <Typography variant="h6" sx={{ marginBottom: 2 }}>
+              Danh sách nhân viên:
+            </Typography>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <strong>Họ tên</strong>
+                      </TableCell>
+                      <TableCell>
+                        <strong>Vai trò</strong>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {employees.map(employee => (
+                      <TableRow key={employee._id}>
+                        <TableCell>{employee.fullName}</TableCell>
+                        <TableCell>
+                          {employee.role === 'ADMIN'
+                            ? 'Trưởng phòng'
+                            : 'Nhân viên'}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" variant="contained">
-          Close
+          Đóng
         </Button>
       </DialogActions>
     </Dialog>

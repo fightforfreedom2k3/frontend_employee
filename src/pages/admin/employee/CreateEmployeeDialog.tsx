@@ -305,7 +305,7 @@ export default function CreateEmployeeDialog({
             {' '}
             Đóng{' '}
           </Button>
-          <Button onClick={handleSubmit} variant="contained" color="secondary">
+          <Button onClick={handleSubmit} variant="contained" color="primary">
             Tạo mới
           </Button>
         </DialogActions>

@@ -143,7 +143,7 @@ export default function DepartmentList() {
           <Button
             onClick={handleCreateDialogOpen}
             variant="contained"
-            color="secondary"
+            color="primary"
           >
             Tạo mới phòng ban
           </Button>
@@ -153,18 +153,34 @@ export default function DepartmentList() {
       {/* Department List Table */}
       <Box
         maxHeight={'65vh'}
-        sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          overflowX: 'auto',
+          maxHeight: '62vh',
+          border: '1px solid #e0e0e0',
+          borderRadius: '5px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        }}
       >
         <TableContainer
           component={Paper}
           sx={{
-            overflow: 'auto',
+            overflowX: 'auto',
             width: '100%',
             maxWidth: '1200px',
-            borderRadius: '8px',
+            border: '1px solid #e0e0e0', // Thêm border cho TableContainer
           }}
         >
-          <Table>
+          <Table
+            sx={{
+              borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+              '& td, & th': {
+                border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>
@@ -189,6 +205,7 @@ export default function DepartmentList() {
                   sx={{
                     cursor: 'pointer',
                     '&:hover': { backgroundColor: '#f5f5f5' },
+                    borderBottom: '1px solid #ccc', // Thêm border giữa các hàng
                   }}
                 >
                   <TableCell>{department.name}</TableCell>
@@ -256,7 +273,7 @@ export default function DepartmentList() {
         <DialogTitle>Xác nhận xóa</DialogTitle>
         <DialogContent>
           <Typography>
-            Bạn có chắc chắn muốn xóa nhân viên này không?
+            Bạn có chắc chắn muốn xóa phòng ban này không?
           </Typography>
         </DialogContent>
         <DialogActions>

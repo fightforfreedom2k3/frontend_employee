@@ -5,11 +5,15 @@ import {
   DialogActions,
   Button,
   Typography,
-  CircularProgress,
+  Grid,
+  Card,
+  CardContent,
+  Avatar,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { employeeService } from '../../../services/employee';
 import { Employee } from '../../../types/employee';
+import { convertToVietnamDate } from '../../../lib/formatDateTime';
 
 interface EmployeeDialogProps {
   open: boolean;
@@ -34,6 +38,7 @@ export default function EmployeeDialog({
       employeeService
         .getEmployeeById(employeeId)
         .then(response => {
+          //lỗi ư! Không vấn đề
           setEmployee(response.data);
           setLoading(false);
         })
@@ -45,7 +50,7 @@ export default function EmployeeDialog({
   }, [open, employeeId]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         Thông tin nhân viên
         <Button
@@ -57,37 +62,68 @@ export default function EmployeeDialog({
       </DialogTitle>
       <DialogContent dividers>
         {loading ? (
-          <CircularProgress />
+          <Typography>Đang tải...</Typography>
         ) : error ? (
           <Typography color="error">{error}</Typography>
         ) : employee ? (
-          <>
-            <Typography>
-              <b>Username:</b> {employee.userName}
-            </Typography>
-            <Typography>
-              <b>Email:</b> {employee.email}
-            </Typography>
-            <Typography>
-              <b>Số điện thoại:</b> {employee.phoneNumber}
-            </Typography>
-            <Typography>
-              <b>Họ và tên:</b> {employee.fullName}
-            </Typography>
-            <Typography>
-              <b>Chức vụ:</b> {employee.position}
-            </Typography>
-            <Typography>
-              <b>Phòng ban:</b>{' '}
-              {employee.department ? employee.department.name : ''}
-            </Typography>
-          </>
+          <Grid container spacing={2}>
+            {/* Thông tin cơ bản */}
+            <Grid item xs={12}>
+              <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
+                <CardContent>
+                  <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                    Thông tin cơ bản
+                  </Typography>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      <Avatar sx={{ width: 80, height: 80 }} src={''} />
+                    </Grid>
+                    <Grid item xs>
+                      <Typography>
+                        <b>Họ và tên:</b> {employee.fullName}
+                      </Typography>
+                      <Typography>
+                        <b>Ngày sinh:</b>{' '}
+                        {convertToVietnamDate(employee.dob) || 'N/A'}
+                      </Typography>
+                      <Typography>
+                        <b>Chức vụ:</b>{' '}
+                        {employee.role === 'ADMIN'
+                          ? 'Trưởng phòng'
+                          : 'Nhân viên'}
+                      </Typography>
+                      <Typography>
+                        <b>Phòng ban:</b> {employee.department.name || 'N/A'}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Thông tin liên hệ */}
+            <Grid item xs={12}>
+              <Card sx={{ borderRadius: 2, boxShadow: 2 }}>
+                <CardContent>
+                  <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                    Thông tin liên hệ
+                  </Typography>
+                  <Typography>
+                    <b>Số điện thoại:</b> {employee.phoneNumber}
+                  </Typography>
+                  <Typography>
+                    <b>Email:</b> {employee.email}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         ) : (
           <Typography color="error">Không tìm thấy nhân viên</Typography>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant="contained" color="secondary">
+        <Button onClick={onClose} variant="contained" color="primary">
           Đóng
         </Button>
       </DialogActions>

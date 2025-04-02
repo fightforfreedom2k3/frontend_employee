@@ -76,6 +76,7 @@ export default function EmployeeList() {
       })
       .catch(error => {
         //maybe i'll add alert or sth
+        console.log(error);
       });
   }, [dispatch, page, rowsPerPage, searchQuery, selectedDepartmentId]);
 
@@ -119,6 +120,7 @@ export default function EmployeeList() {
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
+    console.log(event);
     setPage(newPage);
   };
 
@@ -157,13 +159,6 @@ export default function EmployeeList() {
     setSelectedEmployeeId(employeeId);
     setConfirmDeleteOpen(true);
   };
-
-  if (error)
-    return (
-      <Typography color="error" sx={{ textAlign: 'center', mt: 5 }}>
-        {error}
-      </Typography>
-    );
 
   return (
     <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column' }}>
