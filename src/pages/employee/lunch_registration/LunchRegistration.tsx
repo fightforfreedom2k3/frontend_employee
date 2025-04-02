@@ -45,11 +45,6 @@ export default function LunchRegistration() {
           </Grid>
         ))}
       </Grid>
-
-      {/* This Week */}
-      <Box textAlign="center" mt={4}>
-        <Button variant="outlined">View detail</Button>
-      </Box>
     </Container>
   );
 }

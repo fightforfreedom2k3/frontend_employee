@@ -137,8 +137,6 @@ export default function CreateEmployeeDialog({
         <DialogContent>
           {loading ? (
             <CircularProgress />
-          ) : error ? (
-            <Typography color="error">{error}</Typography>
           ) : departments ? (
             <>
               <TextField
@@ -316,15 +314,20 @@ export default function CreateEmployeeDialog({
         autoHideDuration={3000}
         onClose={() => setError(null)}
       >
-        <Alert severity="error">{error}</Alert>
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
       </Snackbar>
+
       {/* Thông báo thành công */}
       <Snackbar
         open={successMessage !== null}
         autoHideDuration={3000}
         onClose={() => setSuccessMessage(null)}
       >
-        <Alert severity="success">{successMessage}</Alert>
+        <Alert severity="success" onClose={() => setSuccessMessage(null)}>
+          {successMessage}
+        </Alert>
       </Snackbar>
     </>
   );

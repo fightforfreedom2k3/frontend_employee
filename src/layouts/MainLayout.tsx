@@ -52,11 +52,26 @@ export default function MainLayout() {
     },
   ];
 
-  const currentTitle =
-    location.pathname === '/attendance-history'
-      ? 'Lịch sử chấm công' // Tiêu đề cho trang lịch sử chấm công
-      : menuItems.find(item => location.pathname === item.path)?.text ||
-        'Quản lý nhân sự';
+  const currentTitle = (() => {
+    switch (location.pathname) {
+      case '/attendance-history':
+        return 'Lịch sử chấm công'; // Tiêu đề cho trang lịch sử chấm công
+      case '/dashboard':
+        return 'Dashboard';
+      case '/employee':
+        return 'Nhân viên';
+      case '/department':
+        return 'Phòng ban';
+      case '/meal-order':
+        return 'Quản lý bữa trưa';
+      case '/attendance':
+        return 'Chấm công';
+      case '/lunch-registration':
+        return 'Đăng kí cơm trưa';
+      default:
+        return 'Quản lý nhân sự';
+    }
+  })();
 
   return (
     <Box sx={{ display: 'flex' }}>

@@ -71,9 +71,23 @@ export default function AttendanceRecordList() {
       >
         <TableContainer
           component={Paper}
-          sx={{ overflow: 'auto', width: '100%', maxWidth: '900px' }}
+          sx={{
+            overflow: 'auto',
+            width: '100%',
+            maxWidth: '900px',
+            border: '1px solid #e0e0e0', // Thêm border cho TableContainer
+            borderRadius: '5px', // Bo góc
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Hiệu ứng đổ bóng
+          }}
         >
-          <Table>
+          <Table
+            sx={{
+              borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+              '& td, & th': {
+                border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+              },
+            }}
+          >
             {/* Head */}
             <TableHead>
               <TableRow>
@@ -102,15 +116,15 @@ export default function AttendanceRecordList() {
                   onClick={() => {}}
                   sx={{
                     cursor: 'pointer',
-                    '$:hover': { backgroundColor: '#f5f5f5' },
+                    '&:hover': { backgroundColor: '#f5f5f5' },
+                    borderBottom: '1px solid #ccc', // Thêm border giữa các hàng
                   }}
                 >
                   <TableCell>
-                    {attendanceRecord.employeeId
-                      ? attendanceRecord.employeeId.fullName
+                    {attendanceRecord.employeeDetails
+                      ? attendanceRecord.employeeDetails.fullName
                       : ''}
                   </TableCell>
-                  {/* Cần xử lý gọi api lấy tên phòng ban */}
                   <TableCell>Nothing</TableCell>
                   <TableCell>
                     {convertToVietnamTime(attendanceRecord.checkIn)}
