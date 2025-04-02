@@ -25,7 +25,11 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
-import { deleteEmployee, fetchEmployees } from '../../../store/employeeSlice';
+import {
+  deleteEmployee,
+  fetchEmployees,
+  getAllEmployeeByDepartment,
+} from '../../../store/employeeSlice';
 import EmployeeDialog from './EmployeeDialog';
 import CreateEmployeeDialog from './CreateEmployeeDialog';
 import UpdateEmployeeDialog from './UpdateEmployeeDialog';
@@ -54,16 +58,17 @@ export default function EmployeeList() {
   );
 
   useEffect(() => {
-    dispatch(
-      fetchEmployees({
-        page: page + 1,
-        size: rowsPerPage,
-        sort: 'createdAt',
-        order: 'DESC',
-        value: searchQuery.trim(),
-        department: selectedDepartmentId,
-      })
-    );
+    if (selectedDepartmentId === '') {
+      dispatch(
+        fetchEmployees({
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'createdAt',
+          order: 'DESC',
+          value: searchQuery.trim(),
+        })
+      );
+    }
     departmentService
       .getAllDepartment(1, 100, 'createdAt', 'ASC', '')
       .then(response => {
@@ -73,6 +78,21 @@ export default function EmployeeList() {
         //maybe i'll add alert or sth
       });
   }, [dispatch, page, rowsPerPage, searchQuery, selectedDepartmentId]);
+
+  useEffect(() => {
+    if (selectedDepartmentId !== '') {
+      dispatch(
+        getAllEmployeeByDepartment({
+          department: selectedDepartmentId,
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'createdAt',
+          order: 'DESC',
+          value: searchQuery.trim(),
+        })
+      );
+    }
+  }, [dispatch, selectedDepartmentId, page, rowsPerPage, searchQuery]);
 
   // Dialog handling
   const handleRowClick = (employeeId: string) => {

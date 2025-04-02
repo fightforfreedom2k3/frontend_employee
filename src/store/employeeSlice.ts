@@ -78,6 +78,53 @@ export const fetchEmployees = createAsyncThunk(
     }
   }
 );
+
+//Gọi API lấy nhân viên theo phòng ban
+export const getAllEmployeeByDepartment = createAsyncThunk(
+  'employee/getAllEmployeeByDepartment',
+  async (
+    {
+      department,
+      page,
+      size,
+      sort,
+      order,
+      value,
+    }: {
+      department: string;
+      page: number;
+      size: number;
+      sort: string;
+      order: string;
+      value: string;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await employeeService.getAllEmployeeByDepartment(
+        department,
+        page,
+        size,
+        sort,
+        order,
+        value
+      );
+
+      if (!Array.isArray(response.data.data)) {
+        return rejectWithValue('Dữ liệu không hợp lệ từ server.');
+      }
+      return {
+        employees: response.data.data,
+        total: response.data.totalCount,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Lỗi lấy danh sách nhân viên'
+      );
+    }
+  }
+);
+
 //Gọi API tạo nhân viên mới
 export const addNewEmployee = createAsyncThunk(
   'employee/addNewEmployee',
@@ -157,6 +204,19 @@ const employeeSlice = createSlice({
         state.pagination.totalEmployee = action.payload.total;
       })
       .addCase(fetchEmployees.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //getAllEmployeeByDepartment
+      .addCase(getAllEmployeeByDepartment.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getAllEmployeeByDepartment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.employees = action.payload.employees;
+        state.pagination.totalEmployee = action.payload.total;
+      })
+      .addCase(getAllEmployeeByDepartment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

@@ -68,4 +68,15 @@ export const employeeService = {
     api.delete<ApiResponse<Employee>>(
       `/employee/deleteEmployeeByAdminAndManager/${id}`
     ),
+  getAllEmployeeByDepartment: (
+    department = '',
+    page = 1,
+    size = 10,
+    sort = 'createdAt',
+    order = 'ASC',
+    value = ''
+  ) =>
+    api.get<ApiResponse<Employee[]>>(`/employee/getAllEmployeeByDepartment`, {
+      params: { department, page, size, sort, order, value },
+    }),
 };
