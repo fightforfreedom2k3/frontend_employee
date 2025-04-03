@@ -39,7 +39,7 @@ export default function CreateMealMenuDialog({
 
   const handleAddItem = () => {
     if (itemInput.trim() !== '') {
-      setItems([...items, itemInput.trim()]);
+      setItems(prevItems => [...prevItems, itemInput.trim()]);
       setItemInput('');
     }
   };
@@ -49,6 +49,7 @@ export default function CreateMealMenuDialog({
   };
 
   const handleSubmit = async () => {
+    console.log(items);
     try {
       await mealService.createMenu(date, items, price);
       setSnackbar({
@@ -57,6 +58,10 @@ export default function CreateMealMenuDialog({
         severity: 'success',
       });
       onClose(); // Đóng dialog sau khi thành công
+      setDate(null);
+      setPrice(0);
+      setItemInput('');
+      setItems([]);
     } catch (error: any) {
       setSnackbar({
         open: true,
