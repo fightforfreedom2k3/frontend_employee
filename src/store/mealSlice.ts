@@ -38,12 +38,28 @@ export const getMyOrder = createAsyncThunk(
   }
 );
 
+export const createMenu = createAsyncThunk(
+  `meal-menu/createMenu`,
+  async (
+    { date, items, price }: { date: string; items: string[]; price: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await mealService.createMenu(date, items, price);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mealSlice = createSlice({
   name: 'meal',
   initialState,
   reducers: {},
   extraReducers: builder => {
     builder
+      //getMyOrder
       .addCase(getMyOrder.pending, state => {
         state.loading = true;
         state.error = null;
@@ -54,6 +70,18 @@ const mealSlice = createSlice({
         state.error = null;
       })
       .addCase(getMyOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //createMenu
+      .addCase(createMenu.pending, state => {
+        state.loading = true;
+      })
+      .addCase(createMenu.fulfilled, (state, action) => {
+        state.loading = false;
+        state.meal = action.payload.data || null;
+      })
+      .addCase(createMenu.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

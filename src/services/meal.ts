@@ -5,4 +5,10 @@ import api from './api';
 export const mealService = {
   getMyOrder: (id: string) =>
     api.get<ApiResponse<Meal[]>>(`/meal-ordering/getMyOrder/${id}`),
+  createMenu: (date: string, items: string[], price: number) =>
+    api.post<ApiResponse<Meal>>(`/meal-menu/createMenu`, {
+      date: date,
+      price: price,
+      items: items,
+    }),
 };

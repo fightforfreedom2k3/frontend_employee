@@ -7,8 +7,8 @@ export const departmentService = {
     page = 1,
     size = 100,
     sort = 'createdAt',
-    order: 'ASC',
-    value: ''
+    order = 'ASC',
+    value = ''
   ) =>
     api.get<ApiResponse<Department[] | undefined>>(
       `/department/getAllDepartment`,

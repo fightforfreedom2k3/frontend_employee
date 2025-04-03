@@ -41,7 +41,7 @@ export default function MainLayout() {
     {
       text: 'Quản lý bữa trưa',
       icon: <DescriptionIcon />,
-      path: '/meal-order',
+      path: '/meal-menu',
       role: 'ADMIN',
     },
     {
@@ -62,7 +62,7 @@ export default function MainLayout() {
         return 'Nhân viên';
       case '/department':
         return 'Phòng ban';
-      case '/meal-order':
+      case '/meal-menu':
         return 'Quản lý bữa trưa';
       case '/attendance':
         return 'Chấm công';
