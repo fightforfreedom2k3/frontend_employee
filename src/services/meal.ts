@@ -1,5 +1,5 @@
 import { ApiResponse } from '../types/api';
-import { Meal } from '../types/meal';
+import { Meal, OrderMealResponse } from '../types/meal';
 import api from './api';
 
 export const mealService = {
@@ -10,5 +10,17 @@ export const mealService = {
       date: date,
       price: price,
       items: items,
+    }),
+  orderMeal: (
+    menuId: string,
+    employeeId: string,
+    quantity: number,
+    date: string
+  ) =>
+    api.post<ApiResponse<OrderMealResponse>>(`/meal-ordering/orderMeal`, {
+      menuId: menuId,
+      employeeId: employeeId,
+      quantity: quantity,
+      date: date,
     }),
 };

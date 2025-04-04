@@ -11,3 +11,12 @@ export interface Meal {
     totalPrice: number;
   };
 }
+
+export interface OrderMealResponse {
+  employeeId: string;
+  menuId: string;
+  quantity: number;
+  price: number;
+  _id: string;
+  date: string;
+}

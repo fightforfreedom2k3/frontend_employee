@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Meal } from '../types/meal';
+import { Meal, OrderMealResponse } from '../types/meal';
 import { mealService } from '../services/meal';
 
 interface MealState {
+  orderResponse: OrderMealResponse | null;
   meals: Meal[];
   meal: Meal | null;
   selectedMeal: Meal | null;
@@ -11,6 +12,7 @@ interface MealState {
 }
 
 const initialState: MealState = {
+  orderResponse: null,
   meals: [],
   meal: null,
   selectedMeal: null,
@@ -53,6 +55,31 @@ export const createMenu = createAsyncThunk(
   }
 );
 
+export const orderMeal = createAsyncThunk(
+  `meal-ordering/orderMeal`,
+  async (
+    {
+      menuId,
+      employeeId,
+      quantity,
+      date,
+    }: { menuId: string; employeeId: string; quantity: number; date: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await mealService.orderMeal(
+        menuId,
+        employeeId,
+        quantity,
+        date
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const mealSlice = createSlice({
   name: 'meal',
   initialState,
@@ -82,6 +109,18 @@ const mealSlice = createSlice({
         state.meal = action.payload.data || null;
       })
       .addCase(createMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //orderMeal
+      .addCase(orderMeal.pending, state => {
+        state.loading = true;
+      })
+      .addCase(orderMeal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orderResponse = action.payload.data || null;
+      })
+      .addCase(orderMeal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
