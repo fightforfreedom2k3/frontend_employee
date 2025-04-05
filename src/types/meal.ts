@@ -3,6 +3,7 @@ export interface Meal {
   day: string;
   date: string;
   menu: {
+    _id: string;
     price: number;
     items: string[];
   };

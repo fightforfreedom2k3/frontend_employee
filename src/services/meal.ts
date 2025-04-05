@@ -13,7 +13,7 @@ export const mealService = {
     }),
   orderMeal: (
     menuId: string,
-    employeeId: string,
+    employeeId: string | null,
     quantity: number,
     date: string
   ) =>
