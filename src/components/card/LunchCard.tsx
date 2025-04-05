@@ -113,7 +113,13 @@ export default function LunchCard(data: Meal) {
         </Collapse>
 
         {/* Quantity Controls */}
-        <Stack direction="row" alignItems="center" spacing={2} mt={3}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent={'center'}
+          spacing={2}
+          mt={3}
+        >
           <IconButton
             onClick={() => setQuantity(prev => Math.max(prev - 1, 0))}
             disabled={quantity === 0}
