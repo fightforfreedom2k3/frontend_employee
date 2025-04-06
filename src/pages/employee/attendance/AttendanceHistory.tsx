@@ -31,7 +31,7 @@ export const AttendanceHistory = () => {
           <TableHead>
             <TableRow>
               <TableCell>Chấm vào</TableCell>
-              <TableCell>Chấm ra</TableCell>
+              <TableCell>Kết thúc ca</TableCell>
               <TableCell>Đi muộn</TableCell>
               <TableCell>Đúng giờ</TableCell>
             </TableRow>
