@@ -29,7 +29,7 @@ export default function EmployeeDashboard() {
 
   // Dữ liệu các mục
   const items = [
-    { title: 'Xem thông tin cá nhân', navigateTo: '/user-information' },
+    { title: 'Xem thông tin cá nhân', navigateTo: '/employee-information' },
     { title: 'Truy cập lịch sử chấm công', navigateTo: '/attendance-history' },
   ];
 

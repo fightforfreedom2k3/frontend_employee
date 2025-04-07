@@ -65,7 +65,9 @@ export default function MainLayout() {
   const currentTitle = (() => {
     switch (location.pathname) {
       case '/attendance-history':
-        return 'Lịch sử chấm công'; // Tiêu đề cho trang lịch sử chấm công
+        return 'Lịch sử chấm công';
+      case '/employee-information':
+        return 'Thông tin cá nhân';
       case '/dashboard':
         return 'Dashboard';
       case '/employee':

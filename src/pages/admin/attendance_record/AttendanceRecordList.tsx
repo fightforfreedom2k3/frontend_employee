@@ -1,20 +1,25 @@
 import {
   Box,
   Container,
+  Grid,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
-  Typography,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import React, { useEffect, useState } from 'react';
 import { fetchAllAttendanceRecords } from '../../../store/attendanceSlice';
 import { convertToVietnamTime } from '../../../lib/formatDateTime';
+import { departmentService } from '../../../services/department';
+import { Department } from '../../../types/departments';
 
 export default function AttendanceRecordList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,22 +27,49 @@ export default function AttendanceRecordList() {
     (state: RootState) => state.attendance
   );
 
+  //pagination
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [selectedAttendaceRecordId, setSelectedAttendanceRecordId] =
-    useState<string>('');
+  //filter by department
+  const [departmentId, setDepartmentId] = useState<string>('');
+  const [departments, setDepartments] = useState<Department[] | undefined>([]);
+  const [departmentsLoaded, setDepartmentsLoaded] = useState(false); // Trạng thái để theo dõi khi danh sách phòng ban đã tải xong
+
+  //filter by status
+  const [status, setStatus] = useState<string>('PRESENT');
 
   useEffect(() => {
-    dispatch(
-      fetchAllAttendanceRecords({
-        page: page + 1,
-        size: rowsPerPage,
-        sort: 'checkIn',
-        order: 'DESC',
+    departmentService
+      .getAllDepartment(1, 100, 'createdAt', 'ASC', '')
+      .then(response => {
+        const fetchedDepartments = response.data.data;
+        setDepartments(fetchedDepartments);
+        if (fetchedDepartments.length > 0) {
+          setDepartmentId(fetchedDepartments[0]._id); // Đặt phòng ban mặc định là phòng đầu tiên
+        }
+        setDepartmentsLoaded(true); // Đánh dấu danh sách phòng ban đã tải xong
       })
-    );
-  }, [dispatch, page, rowsPerPage]);
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (departmentsLoaded) {
+      // Chỉ gọi API lấy danh sách chấm công khi danh sách phòng ban đã tải xong
+      dispatch(
+        fetchAllAttendanceRecords({
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'checkIn',
+          order: 'DESC',
+          value: departmentId,
+          status: status,
+        })
+      );
+    }
+  }, [dispatch, page, rowsPerPage, departmentId, status, departmentsLoaded]);
 
   //Xử lí phân trang
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -51,7 +83,6 @@ export default function AttendanceRecordList() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
   console.log(allAttendanceRecords);
 
   //Giao diện quản lý Chấm công
@@ -60,24 +91,53 @@ export default function AttendanceRecordList() {
       maxWidth={'lg'}
       sx={{ display: 'flex', flexDirection: 'column' }}
     >
+      <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}>
+        <Grid item xs={12} sm={4}>
+          <Select
+            fullWidth
+            value={departmentId}
+            onChange={event => setDepartmentId(event.target.value)}
+            displayEmpty
+          >
+            {departments?.map(department => (
+              <MenuItem key={department._id} value={department._id}>
+                {department.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+        {/* Thêm ô chọn trạng thái */}
+        <Grid item xs={12} sm={4}>
+          <Select
+            fullWidth
+            value={status}
+            onChange={event => setStatus(event.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="PRESENT">PRESENT</MenuItem>
+            <MenuItem value="LATE">LATE</MenuItem>
+          </Select>
+        </Grid>
+      </Grid>
       <Box
         sx={{
-          flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          maxHeight: '100vh',
+          overflowX: 'auto',
+          maxHeight: '65vh',
+          border: '1px solid #e0e0e0',
+          borderRadius: '5px',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
         }}
       >
         <TableContainer
           component={Paper}
           sx={{
-            overflow: 'auto',
+            overflowX: 'auto',
             width: '100%',
-            maxWidth: '900px',
+            maxWidth: '1200px',
             border: '1px solid #e0e0e0', // Thêm border cho TableContainer
-            borderRadius: '5px', // Bo góc
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Hiệu ứng đổ bóng
           }}
         >
           <Table
@@ -92,19 +152,16 @@ export default function AttendanceRecordList() {
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography>Tên nhân viên</Typography>
+                  <b>Tên nhân viên</b>
                 </TableCell>
                 <TableCell>
-                  <Typography>Tên phòng</Typography>
+                  <b>Thời gian chấm công</b>
                 </TableCell>
                 <TableCell>
-                  <Typography>Thời gian chấm công</Typography>
+                  <b>Kết thúc ca</b>
                 </TableCell>
                 <TableCell>
-                  <Typography>Kết thúc ca</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography>Trạng thái</Typography>
+                  <b>Trạng thái</b>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -125,7 +182,6 @@ export default function AttendanceRecordList() {
                       ? attendanceRecord.employeeDetails.fullName
                       : ''}
                   </TableCell>
-                  <TableCell>Nothing</TableCell>
                   <TableCell>
                     {convertToVietnamTime(attendanceRecord.checkIn)}
                   </TableCell>
@@ -138,6 +194,20 @@ export default function AttendanceRecordList() {
             </TableBody>
           </Table>
         </TableContainer>
+      </Box>
+
+      {/* Pagination */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 'auto' }}>
+        <TablePagination
+          component={'div'}
+          count={pagination.totalRecord || 0}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 15]}
+          labelRowsPerPage="Số phòng mỗi trang"
+        />
       </Box>
     </Container>
   );

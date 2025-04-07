@@ -125,16 +125,26 @@ export default function LunchCard(data: Meal) {
           spacing={2}
           mt={3}
         >
-          <IconButton
-            onClick={() => setQuantity(prev => Math.max(prev - 1, 0))}
-            disabled={quantity === 0}
-          >
-            <RemoveIcon />
-          </IconButton>
-          <Typography variant="h6">{quantity}</Typography>
-          <IconButton onClick={() => setQuantity(prev => prev + 1)}>
-            <AddIcon />
-          </IconButton>
+          {data.order ? (
+            // Hiển thị số suất nếu có data.order
+            <Typography variant="h6">
+              {`${data.order.quantity} suất`}
+            </Typography>
+          ) : (
+            // Hiển thị nút tăng/giảm nếu không có data.order
+            <>
+              <IconButton
+                onClick={() => setQuantity(prev => Math.max(prev - 1, 0))}
+                disabled={quantity === 0}
+              >
+                <RemoveIcon />
+              </IconButton>
+              <Typography variant="h6">{quantity}</Typography>
+              <IconButton onClick={() => setQuantity(prev => prev + 1)}>
+                <AddIcon />
+              </IconButton>
+            </>
+          )}
         </Stack>
         {/* Order Button */}
         {quantity > 0 && (

@@ -207,7 +207,7 @@ export default function EmployeeList() {
           flexDirection: 'column',
           alignItems: 'center',
           overflowX: 'auto',
-          maxHeight: '62vh',
+          maxHeight: '65vh',
           border: '1px solid #e0e0e0',
           borderRadius: '5px',
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',

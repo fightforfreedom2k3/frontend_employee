@@ -44,7 +44,16 @@ export const fetchAllAttendanceRecords = createAsyncThunk(
       size,
       sort,
       order,
-    }: { page: number; size: number; sort: string; order: string },
+      value,
+      status,
+    }: {
+      page: number;
+      size: number;
+      sort: string;
+      order: string;
+      value: string;
+      status: string;
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -52,7 +61,9 @@ export const fetchAllAttendanceRecords = createAsyncThunk(
         page,
         size,
         sort,
-        order
+        order,
+        value,
+        status
       );
 
       if (!Array.isArray(response.data.data)) {

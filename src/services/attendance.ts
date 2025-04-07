@@ -16,12 +16,14 @@ export const attendanceService = {
     page = 1,
     size = 10,
     sort = 'ASC',
-    order = 'checkIn'
+    order = 'checkIn',
+    value = '',
+    status = ''
   ) =>
     api.get<ApiResponse<GetAllttendanceRecordResponse[]>>(
       `/attendance-record/getAllAttendanceRecord`,
       {
-        params: { page, size, sort, order },
+        params: { page, size, sort, order, value, status },
       }
     ),
   checkIn: (id: string | null, checkInData: CheckInData) =>

@@ -14,6 +14,7 @@ import AttendanceRecordList from './pages/admin/attendance_record/AttendanceReco
 import { AttendanceHistory } from './pages/employee/attendance/AttendanceHistory';
 import LunchRegistration from './pages/employee/lunch_registration/LunchRegistration';
 import MealMenuList from './pages/admin/meal_menu/MealMenuList';
+import EmployeeInfo from './pages/employee/info/EmployeeInfo';
 
 function RedirectToLogin() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="attendance-history" element={<AttendanceHistory />} />
           <Route path="lunch-registration" element={<LunchRegistration />} />
+          <Route path="employee-information" element={<EmployeeInfo />} />
           {/* ADMIN */}
           <Route path="employee" element={<EmployeeList />} />
           <Route path="department" element={<DepartmentList />} />

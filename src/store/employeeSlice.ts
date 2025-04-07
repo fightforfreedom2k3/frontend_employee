@@ -8,7 +8,7 @@ import { Employee } from '../types/employee';
 
 interface EmployeeState {
   employeeById: { [id: string]: Employee };
-  employee: any | null;
+  employee: Employee | undefined;
   employees: Employee[];
   selectedEmployee: Employee | null;
   loading: boolean;
@@ -23,7 +23,7 @@ interface EmployeeState {
 
 const initialState: EmployeeState = {
   employeeById: {},
-  employee: null,
+  employee: undefined,
   employees: [],
   selectedEmployee: null,
   loading: false,
@@ -262,7 +262,7 @@ const employeeSlice = createSlice({
       })
       .addCase(getEmployeeById.fulfilled, (state, action) => {
         state.loading = false;
-        state.employee = action.payload.data;
+        state.employee = action.payload;
         const employeeData = action.payload.data;
         if (employeeData) {
           state.employeeById[employeeData._id] = employeeData;
