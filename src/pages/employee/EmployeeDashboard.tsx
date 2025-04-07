@@ -31,7 +31,6 @@ export default function EmployeeDashboard() {
   const items = [
     { title: 'Xem thông tin cá nhân', navigateTo: '/user-information' },
     { title: 'Truy cập lịch sử chấm công', navigateTo: '/attendance-history' },
-    { title: 'Đăng kí cơm trưa', navigateTo: '/lunch-registration' },
   ];
 
   //Trạng thái chấm công

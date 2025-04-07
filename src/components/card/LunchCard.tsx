@@ -30,7 +30,12 @@ export default function LunchCard(data: Meal) {
 
   const handleOrder = async () => {
     try {
-      await mealService.orderMeal(data.menu._id, userId, quantity, data.date);
+      await mealService.orderMeal(
+        data.menu._id || '',
+        userId,
+        quantity,
+        data.date
+      );
       setSnackbarMessage('Đặt hàng thành công!');
       setSnackbarSeverity('success');
     } catch (error) {

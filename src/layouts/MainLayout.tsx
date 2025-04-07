@@ -7,6 +7,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BusinessIcon from '@mui/icons-material/Business';
 import DescriptionIcon from '@mui/icons-material/Description';
+import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const drawerWidth = 240;
 
@@ -26,6 +28,7 @@ export default function MainLayout() {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+    //ADMIN
     {
       text: 'Nhân viên',
       icon: <PeopleIcon />,
@@ -49,6 +52,13 @@ export default function MainLayout() {
       icon: <DescriptionIcon />,
       path: '/attendance',
       role: 'ADMIN',
+    },
+    //EMPLOYEE
+    {
+      text: 'Đăng kí cơm trưa',
+      icon: <LunchDiningIcon />,
+      path: '/lunch-registration',
+      role: 'EMPLOYEE',
     },
   ];
 
