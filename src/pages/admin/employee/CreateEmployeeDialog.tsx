@@ -1,7 +1,10 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../store';
 import { useEffect, useState } from 'react';
-import { AddNewEmployeeRequest } from '../../../services/employee';
+import {
+  AddNewEmployeeRequest,
+  employeeService,
+} from '../../../services/employee';
 import { addNewEmployee, fetchEmployees } from '../../../store/employeeSlice';
 import {
   Alert,
@@ -105,15 +108,14 @@ export default function CreateEmployeeDialog({
         startDate: new Date(employeeData.contract.startDate).toISOString(),
         endDate: employeeData.contract.endDate
           ? new Date(employeeData.contract.endDate).toISOString()
-          : null, // Nếu có endDate, chuyển đổi
+          : null,
         signDate: new Date(employeeData.contract.signDate).toISOString(),
       },
     };
     try {
-      await dispatch(addNewEmployee(employeeDataFormat));
-      setSuccessMessage('Nhân viên đã được tạo thành công!');
-      setTimeout(() => {
-        onClose();
+      const response = await employeeService.addNewEmployee(employeeDataFormat);
+      if (response && response.data) {
+        setSuccessMessage('Nhân viên mới đã được tạo thành công!');
         dispatch(
           fetchEmployees({
             page: 1,
@@ -122,12 +124,18 @@ export default function CreateEmployeeDialog({
             order: 'DESC',
             value: '',
           })
-        );
-      }, 200);
+        ); // Cập nhật danh sách nhân viên
+        onClose(); // Đóng dialog sau khi thành công
+      }
     } catch (err: any) {
-      setError(`Lỗi khi tạo nhân viên: ${err.message || err}`);
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(`Lỗi khi tạo nhân viên: ${err.response.data.message}`);
+      } else {
+        setError(`Lỗi khi tạo nhân viên: ${err.message || 'Đã xảy ra lỗi'}`);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
