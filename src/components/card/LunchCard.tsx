@@ -21,7 +21,11 @@ import lunchImg from '../../assets/lunch.jpg';
 export default function LunchCard(data: Meal) {
   const userId = localStorage.getItem('userId');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  // const initialQuantity = data.order ? data.order.quantity : 0; // Lưu giá trị ban đầu
+  const [initialQuantity, setInitialQuantity] = useState<number>(
+    data.order?.quantity || 0
+  ); // Lưu giá trị ban đầu
+  const [quantity, setQuantity] = useState(initialQuantity); // Khởi tạo quantity từ giá trị ban đầu
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
@@ -38,6 +42,7 @@ export default function LunchCard(data: Meal) {
       );
       setSnackbarMessage('Đặt hàng thành công!');
       setSnackbarSeverity('success');
+      setInitialQuantity(quantity);
     } catch (error) {
       setSnackbarMessage('Đặt hàng thất bại. Vui lòng thử lại.');
       setSnackbarSeverity('error');
@@ -123,31 +128,21 @@ export default function LunchCard(data: Meal) {
           alignItems="center"
           justifyContent={'center'}
           spacing={2}
-          mt={3}
+          mt={1}
         >
-          {data.order ? (
-            // Hiển thị số suất nếu có data.order
-            <Typography variant="h6">
-              {`${data.order.quantity} suất`}
-            </Typography>
-          ) : (
-            // Hiển thị nút tăng/giảm nếu không có data.order
-            <>
-              <IconButton
-                onClick={() => setQuantity(prev => Math.max(prev - 1, 0))}
-                disabled={quantity === 0}
-              >
-                <RemoveIcon />
-              </IconButton>
-              <Typography variant="h6">{quantity}</Typography>
-              <IconButton onClick={() => setQuantity(prev => prev + 1)}>
-                <AddIcon />
-              </IconButton>
-            </>
-          )}
+          <IconButton
+            onClick={() => setQuantity(prev => Math.max(prev - 1, 0))}
+            disabled={quantity === 0}
+          >
+            <RemoveIcon />
+          </IconButton>
+          <Typography variant="h6">{quantity}</Typography>
+          <IconButton onClick={() => setQuantity(prev => prev + 1)}>
+            <AddIcon />
+          </IconButton>
         </Stack>
         {/* Order Button */}
-        {quantity > 0 && (
+        {quantity !== initialQuantity && (
           <Button
             variant="contained"
             color="primary"

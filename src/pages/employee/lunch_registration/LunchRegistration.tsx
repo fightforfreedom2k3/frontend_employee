@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import { useEffect } from 'react';
@@ -28,16 +28,7 @@ export default function LunchRegistration() {
 
   return (
     <Container maxWidth="md">
-      <Box textAlign="center" my={3}>
-        <Typography variant="h4" fontWeight="bold">
-          Meal Order
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary">
-          Week 5, March, 2025
-        </Typography>
-      </Box>
-
-      <Grid container spacing={3}>
+      <Grid container spacing={3} mt={2}>
         {filteredMeals.map((meal, index) => (
           <Grid item xs={12} md={6} key={index}>
             <LunchCard {...meal} />
