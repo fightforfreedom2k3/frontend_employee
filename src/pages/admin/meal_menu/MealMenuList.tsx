@@ -30,7 +30,7 @@ interface MealMenuListProps {
   }[];
 }
 
-const MealMenuList: React.FC<MealMenuListProps> = ({ meals }) => {
+const MealMenuList: React.FC<MealMenuListProps> = () => {
   // for order list
   const { orders } = useSelector((state: RootState) => state.meal);
   const dispatch = useDispatch<AppDispatch>();
