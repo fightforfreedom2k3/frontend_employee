@@ -25,11 +25,14 @@ import {
   TableRow,
   TextField,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { DepartmentDetailDialog } from './DepartmentDetailDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { CreateDepartmentDialog } from './CreateDepartmentDialog';
+import { EditDepartmentDialog } from './UpdateDepartmentDialog';
 
 export default function DepartmentList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,6 +54,28 @@ export default function DepartmentList() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // State for edit dialog
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  // State for Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
+
+  // Function to show Snackbar
+  const showSnackbar = (message: string, severity: 'success' | 'error') => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
+  // Function to close Snackbar
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   // Initialize data
   useEffect(() => {
@@ -85,7 +110,22 @@ export default function DepartmentList() {
   const handleCreateDialogOpen = () => {
     setCreateDialogOpen(true);
   };
-  const handleCreateDialogClose = () => setCreateDialogOpen(false);
+  const handleCreateDialogClose = () => {
+    setCreateDialogOpen(false);
+    showSnackbar('Phòng ban đã được tạo thành công!', 'success'); // Hiển thị thông báo thành công
+  };
+
+  // Handle edit button click
+  const handleEditButton = (departmentId: string) => {
+    setSelectedDepartmentId(departmentId);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+    setSelectedDepartmentId(null);
+    showSnackbar('Phòng ban đã được cập nhật thành công!', 'success'); // Hiển thị thông báo thành công
+  };
 
   // Handle pagination change
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -117,9 +157,11 @@ export default function DepartmentList() {
               value: '',
             })
           );
+          showSnackbar('Phòng ban đã được xóa thành công!', 'success'); // Hiển thị thông báo thành công
         })
         .catch(error => {
           console.error('Failed to delete department', error);
+          showSnackbar('Xóa phòng ban thất bại!', 'error'); // Hiển thị thông báo lỗi
         });
     }
   };
@@ -225,7 +267,7 @@ export default function DepartmentList() {
                     <IconButton
                       onClick={event => {
                         event.stopPropagation();
-                        // handleUpdate
+                        handleEditButton(department._id);
                       }}
                     >
                       <EditIcon />
@@ -266,6 +308,15 @@ export default function DepartmentList() {
         open={createDialogOpen}
         onClose={handleCreateDialogClose}
       />
+      <EditDepartmentDialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        department={
+          departments.find(
+            department => department._id === selectedDepartmentId
+          ) || null
+        }
+      />
       <Dialog
         open={confirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}
@@ -285,6 +336,22 @@ export default function DepartmentList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }

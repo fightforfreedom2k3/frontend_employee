@@ -22,6 +22,8 @@ import {
   DialogTitle,
   Select,
   MenuItem,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
@@ -51,9 +53,10 @@ export default function EmployeeList() {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { employees, loading, error, pagination } = useSelector(
+  const { employees, pagination } = useSelector(
     (state: RootState) => state.employee
   );
 
@@ -139,6 +142,7 @@ export default function EmployeeList() {
     dispatch(deleteEmployee({ id: selectedEmployeeId }))
       .then(() => {
         setConfirmDeleteOpen(false);
+        setSnackbarOpen(true); // Hiển thị Snackbar khi xóa thành công
         dispatch(
           fetchEmployees({
             page: page + 1,
@@ -158,6 +162,10 @@ export default function EmployeeList() {
   const handleDeleteButtonClick = (employeeId: string) => {
     setSelectedEmployeeId(employeeId);
     setConfirmDeleteOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -332,6 +340,22 @@ export default function EmployeeList() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          Nhân viên đã được xóa thành công!
+        </Alert>
+      </Snackbar>
 
       {/* Dialogs */}
       <EmployeeDialog

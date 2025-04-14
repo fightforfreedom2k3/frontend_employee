@@ -119,14 +119,18 @@ export const deleteDepartment = createAsyncThunk(
 export const updateDepartment = createAsyncThunk(
   `department/updateDepartment`,
   async (
-    { id, name, desciption }: { id: string; name: string; desciption: string },
+    {
+      id,
+      name,
+      description,
+    }: { id: string; name: string; description: string },
     { rejectWithValue }
   ) => {
     try {
       const response = await departmentService.updateDepartment(
         id,
         name,
-        desciption
+        description
       );
       return response.data;
     } catch (error: any) {
