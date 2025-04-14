@@ -150,7 +150,7 @@ const MealMenuList = () => {
                     >
                       <TableCell>{order.day}</TableCell>
                       <TableCell>{convertToVietnamDate(order.date)}</TableCell>
-                      <TableCell>{order.order.info.length}</TableCell>
+                      <TableCell>{order.order.total}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
