@@ -1,5 +1,5 @@
 import { ApiResponse } from '../types/api';
-import { Meal, OrderMealResponse } from '../types/meal';
+import { Meal, OrderByDay, OrderMealResponse } from '../types/meal';
 import api from './api';
 
 export const mealService = {
@@ -22,5 +22,9 @@ export const mealService = {
       employeeId: employeeId,
       quantity: quantity,
       date: date,
+    }),
+  getOrderList: (date: string) =>
+    api.get<ApiResponse<OrderByDay[]>>(`/meal-ordering/getAllOrderInOneDay`, {
+      params: { date },
     }),
 };

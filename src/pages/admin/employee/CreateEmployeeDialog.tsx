@@ -5,7 +5,7 @@ import {
   AddNewEmployeeRequest,
   employeeService,
 } from '../../../services/employee';
-import { addNewEmployee, fetchEmployees } from '../../../store/employeeSlice';
+import { fetchEmployees } from '../../../store/employeeSlice';
 import {
   Alert,
   Button,

@@ -21,3 +21,20 @@ export interface OrderMealResponse {
   _id: string;
   date: string;
 }
+
+export interface OrderInfo {
+  quantity: number;
+  fullName: string;
+  department: string;
+  email: string;
+  phoneNumber: string;
+}
+
+export interface OrderByDay {
+  day: string;
+  date: string;
+  order: {
+    total: number;
+    info: OrderInfo[];
+  };
+}
