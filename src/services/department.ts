@@ -24,4 +24,10 @@ export const departmentService = {
     }),
   deleteDepartment: (id: string) =>
     api.delete<ApiResponse<Department>>(`/department/deleteDepartment/${id}`),
+  updateDepartment: (_id: string, name: string, description: string) =>
+    api.put<ApiResponse<Department>>(`/department/updateDepartment`, {
+      _id,
+      name,
+      description,
+    }),
 };

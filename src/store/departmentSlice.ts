@@ -116,6 +116,27 @@ export const deleteDepartment = createAsyncThunk(
   }
 );
 
+export const updateDepartment = createAsyncThunk(
+  `department/updateDepartment`,
+  async (
+    { id, name, desciption }: { id: string; name: string; desciption: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await departmentService.updateDepartment(
+        id,
+        name,
+        desciption
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Lỗi khi cập nhật phòng ban'
+      );
+    }
+  }
+);
+
 const departmentSlice = createSlice({
   name: 'department',
   initialState,
@@ -155,6 +176,18 @@ const departmentSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteDepartment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //update department
+      .addCase(updateDepartment.pending, state => {
+        state.loading = true;
+      })
+      .addCase(updateDepartment.fulfilled, state => {
+        state.loading = false;
+        //no need to response.data to do sth
+      })
+      .addCase(updateDepartment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -20,17 +20,7 @@ import { getOrderList } from '../../../store/mealSlice';
 import { convertDate, convertToVietnamDate } from '../../../lib/formatDateTime';
 import { OrderInfo } from '../../../types/meal';
 
-interface MealMenuListProps {
-  meals: {
-    day: string;
-    date: string;
-    order: {
-      info: OrderInfo[];
-    };
-  }[];
-}
-
-const MealMenuList: React.FC<MealMenuListProps> = () => {
+const MealMenuList = () => {
   // for order list
   const { orders } = useSelector((state: RootState) => state.meal);
   const dispatch = useDispatch<AppDispatch>();
@@ -132,23 +122,29 @@ const MealMenuList: React.FC<MealMenuListProps> = () => {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {orders!.map((order, index) => (
-                  <TableRow
-                    key={index}
-                    onClick={() => handleRowClick(order.order.info, order.date)}
-                    sx={{
-                      cursor: 'pointer',
-                      '&:hover': { backgroundColor: '#f5f5f5' },
-                      borderBottom: '1px solid #ccc',
-                    }}
-                  >
-                    <TableCell>{order.day}</TableCell>
-                    <TableCell>{convertToVietnamDate(order.date)}</TableCell>
-                    <TableCell>{order.order.info.length}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+              {orders !== null ? (
+                <TableBody>
+                  {orders.map((order, index) => (
+                    <TableRow
+                      key={index}
+                      onClick={() =>
+                        handleRowClick(order.order.info, order.date)
+                      }
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': { backgroundColor: '#f5f5f5' },
+                        borderBottom: '1px solid #ccc',
+                      }}
+                    >
+                      <TableCell>{order.day}</TableCell>
+                      <TableCell>{convertToVietnamDate(order.date)}</TableCell>
+                      <TableCell>{order.order.info.length}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              ) : (
+                <></>
+              )}
             </Table>
           </TableContainer>
         </Box>

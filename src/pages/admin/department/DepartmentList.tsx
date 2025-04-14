@@ -33,7 +33,7 @@ import { CreateDepartmentDialog } from './CreateDepartmentDialog';
 
 export default function DepartmentList() {
   const dispatch = useDispatch<AppDispatch>();
-  const { departments, loading, pagination, error } = useSelector(
+  const { departments, pagination } = useSelector(
     (state: RootState) => state.department
   );
 
