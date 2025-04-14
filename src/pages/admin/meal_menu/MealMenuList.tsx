@@ -11,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import CreateMealMenuDialog from './CreateMenuDialog';
 import OrderInfoDialog from './OrderInfoDialog';
@@ -67,7 +68,18 @@ const MealMenuList = () => {
         sx={{ display: 'flex', flexDirection: 'column' }}
       >
         <Grid container mt={2} spacing={2} sx={{ mb: 2, width: '100%' }}>
-          <Grid item xs={12} sm={8} md={6}></Grid>
+          <Grid item xs={12} sm={8} md={6}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 'bold',
+                color: '#333',
+                textAlign: 'left',
+              }}
+            >
+              Danh sách báo cơm trong tuần
+            </Typography>
+          </Grid>
           <Grid item xs={12} sm={4} md={6} sx={{ textAlign: 'right' }}>
             <Button
               variant="contained"
