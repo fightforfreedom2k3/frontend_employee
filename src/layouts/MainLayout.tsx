@@ -1,5 +1,14 @@
-import { useState } from 'react';
-import { Box, CssBaseline, Stack, Toolbar } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Avatar,
+  Box,
+  CssBaseline,
+  Menu,
+  MenuItem,
+  Stack,
+  Toolbar,
+  Tooltip,
+} from '@mui/material';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -20,7 +29,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -127,12 +135,31 @@ export default function MainLayout() {
     },
   ];
 
+  const settings = [
+    {
+      text: 'profile',
+      path: '/employee-information',
+      name: 'Thông tin cá nhân',
+    },
+    {
+      text: 'attendance',
+      path: '/attendance-history',
+      name: 'Lịch sử chấm công',
+      role: 'EMPLOYEE',
+    },
+    {
+      text: 'change-password',
+      path: '/change-password',
+      name: 'Đổi mật khẩu',
+    },
+  ];
+
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const userRole = 'ADMIN'; // Replace with actual role from authentication context
+  const userRole = localStorage.getItem('role') || 'EMPLOYEE'; // Replace with actual role from authentication context
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -142,27 +169,96 @@ export default function MainLayout() {
     setOpen(false);
   };
 
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
   return (
     <Box sx={{ display: 'flex', overflowX: 'hidden' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        <Toolbar disableGutters>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ marginRight: 5, ...(open && { display: 'none' }) }}
+            sx={{
+              marginLeft: 1,
+              marginRight: 3,
+              ...(open && { display: 'none' }),
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1, ml: 2 }}
+          >
             Hệ thống quản lý nhân sự HRM
           </Typography>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: 5 }}
+          >
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings
+                .filter(item => !item.role || item.role === userRole)
+                .map(setting => (
+                  <MenuItem
+                    key={setting.text}
+                    onClick={() => navigate(setting.path)}
+                  >
+                    <Typography sx={{ textAlign: 'center' }}>
+                      {setting.name}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              <Divider />
+              <MenuItem
+                key={'logout'}
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.href = '/login';
+                }}
+              >
+                <Typography>Đăng xuất</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
+        <DrawerHeader sx={{ backgroundColor: 'primary' }}>
           <IconButton
             sx={{ '--IconButton-hoverBg': 'none' }}
             onClick={handleDrawerClose}
@@ -171,9 +267,8 @@ export default function MainLayout() {
               <Stack
                 width={'200px'}
                 direction="row"
-                spacing={3}
                 alignItems="center"
-                justifyContent={'center'}
+                justifyContent={'space-between'}
               >
                 <Typography
                   noWrap
@@ -193,7 +288,6 @@ export default function MainLayout() {
         <Divider sx={{ width: '100%' }} />
         <List
           sx={{
-            height: '80%',
             overflowY: 'auto',
             '&::-webkit-scrollbar': {
               height: 0, // ẩn thanh cuộn ngang trên Webkit
@@ -239,39 +333,6 @@ export default function MainLayout() {
             ))}
         </List>
         <Divider sx={{ width: '100%' }} />
-        <List>
-          <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={[
-                {
-                  minHeight: 48,
-                  px: 2.5,
-                },
-                open
-                  ? { justifyContent: 'initial' }
-                  : { justifyContent: 'center' },
-              ]}
-              onClick={() => {
-                localStorage.clear();
-                window.location.href = '/login';
-              }}
-            >
-              <ListItemIcon
-                sx={
-                  open
-                    ? { minWidth: 0, mr: 3, justifyContent: 'center' }
-                    : { justifyContent: 'center' }
-                }
-              >
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Đăng xuất"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
-        </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3, overflowX: 'hidden' }}>
         <DrawerHeader />

@@ -83,7 +83,6 @@ export default function AttendanceRecordList() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  console.log(allAttendanceRecords);
 
   //Giao diện quản lý Chấm công
   return (
@@ -186,7 +185,9 @@ export default function AttendanceRecordList() {
                     {convertToVietnamTime(attendanceRecord.checkIn)}
                   </TableCell>
                   <TableCell>
-                    {convertToVietnamTime(attendanceRecord.checkOut)}
+                    {attendanceRecord.checkOut
+                      ? convertToVietnamTime(attendanceRecord.checkOut)
+                      : 'Chưa kết thúc ca'}
                   </TableCell>
                   <TableCell>{attendanceRecord.status}</TableCell>
                 </TableRow>

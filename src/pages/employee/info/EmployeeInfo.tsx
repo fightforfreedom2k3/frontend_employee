@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import { getEmployeeById } from '../../../store/employeeSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Container,
   Typography,
@@ -12,24 +12,22 @@ import {
   TextField,
   Button,
   Grid,
-  MenuItem,
 } from '@mui/material';
 import { convertToVietnamDate } from '../../../lib/formatDateTime';
+import ChangePasswordDialog from '../../../components/dialog/ChangePasswordDialog';
 
 export default function EmployeeInfo() {
-  const { employee, loading, error } = useSelector((state: RootState) => {
-    console.log(state.employee);
-    return state.employee;
-  });
-
+  const { employee, loading, error } = useSelector(
+    (state: RootState) => state.employee
+  );
   const dispatch = useDispatch<AppDispatch>();
-
   const userId = localStorage.getItem('userId') || '';
+  const [openChangePasswordDialog, setOpenChangePasswordDialog] =
+    useState(false);
 
   useEffect(() => {
     dispatch(getEmployeeById(userId));
   }, [dispatch, userId]);
-  // Kiểm tra giá trị của employee
 
   if (error) {
     return <Alert severity="error">Error: {error}</Alert>;
@@ -42,8 +40,6 @@ export default function EmployeeInfo() {
       </Container>
     );
   }
-
-  console.log(employee);
 
   return (
     <Container maxWidth="md" style={{ marginTop: '20px' }}>
@@ -61,7 +57,21 @@ export default function EmployeeInfo() {
                     label="Họ và tên"
                     value={employee?.fullName || ''}
                     variant="outlined"
-                    InputProps={{ readOnly: true }}
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -69,9 +79,22 @@ export default function EmployeeInfo() {
                     fullWidth
                     label="Ngày sinh"
                     value={convertToVietnamDate(employee?.dob || '')}
-                    InputLabelProps={{ shrink: true }}
                     variant="outlined"
-                    InputProps={{ readOnly: true }}
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -80,7 +103,21 @@ export default function EmployeeInfo() {
                     label="Số điện thoại"
                     value={employee?.phoneNumber || ''}
                     variant="outlined"
-                    InputProps={{ readOnly: true }}
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -89,14 +126,43 @@ export default function EmployeeInfo() {
                     label="Email"
                     value={employee?.email || ''}
                     variant="outlined"
-                    InputProps={{ readOnly: true }}
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
                   />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setOpenChangePasswordDialog(true)} // Mở dialog khi nhấn nút
+                  >
+                    Đổi mật khẩu
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
+
+      {/* Dialog đổi mật khẩu */}
+      <ChangePasswordDialog
+        open={openChangePasswordDialog}
+        onClose={() => setOpenChangePasswordDialog(false)} // Đóng dialog
+      />
     </Container>
   );
 }

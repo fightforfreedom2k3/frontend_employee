@@ -13,10 +13,22 @@ import {
   Checkbox,
 } from '@mui/material';
 import { convertToVietnamTime } from '../../../lib/formatDateTime';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../store';
+import { useEffect } from 'react';
+import { getAllMyAttendanceRecord } from '../../../store/attendanceSlice';
 
 export const AttendanceHistory = () => {
-  const location = useLocation();
-  const { attendanceRecords } = location.state;
+  const { attendanceRecords } = useSelector(
+    (state: RootState) => state.attendance
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    dispatch(getAllMyAttendanceRecord(userId || ''));
+  }, [dispatch]);
 
   return (
     <Container>
