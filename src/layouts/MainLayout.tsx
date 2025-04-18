@@ -236,7 +236,10 @@ export default function MainLayout() {
                 .map(setting => (
                   <MenuItem
                     key={setting.text}
-                    onClick={() => navigate(setting.path)}
+                    onClick={() => {
+                      navigate(setting.path);
+                      handleCloseUserMenu();
+                    }}
                   >
                     <Typography sx={{ textAlign: 'center' }}>
                       {setting.name}

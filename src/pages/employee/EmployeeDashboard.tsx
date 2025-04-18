@@ -7,8 +7,8 @@ import {
   CardContent,
   Snackbar,
   Alert,
+  Container,
 } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import {
@@ -17,21 +17,14 @@ import {
   takeAttendance,
 } from '../../store/attendanceSlice';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export default function EmployeeDashboard() {
   const userId = localStorage.getItem('userId');
   const today = new Date();
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { attendanceRecords, attendanceRecord, loading, error, pagination } =
-    useSelector((state: RootState) => state.attendance);
-
-  // Dữ liệu các mục
-  const items = [
-    { title: 'Xem thông tin cá nhân', navigateTo: '/employee-information' },
-    { title: 'Truy cập lịch sử chấm công', navigateTo: '/attendance-history' },
-  ];
+  const { attendanceRecords } = useSelector(
+    (state: RootState) => state.attendance
+  );
 
   //Trạng thái chấm công
   const [isCheckIn, setIsCheckIn] = useState(false);
@@ -171,25 +164,127 @@ export default function EmployeeDashboard() {
       </Grid>
 
       {/* Danh sách mục */}
-      <Grid container spacing={7}>
-        {items.map((item, index) => (
-          <Grid item xs={12} sm={12} md={12} lg={12} key={index}>
-            <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-              <CardContent
-                sx={{ flexGrow: 1, cursor: 'pointer' }}
-                onClick={() =>
-                  navigate(`${item.navigateTo}`, {
-                    state: { attendanceRecords },
-                  })
-                }
+      <Grid container gap={5} pt={5}>
+        <Grid item xs={12} sm={7}>
+          <Container
+            sx={{
+              backgroundColor: 'rgba(240, 241, 255, 1)',
+              padding: 3,
+              borderRadius: '8px',
+            }}
+          >
+            <Typography variant="h5" fontWeight="bold" mb={2}>
+              Hòm thư công việc
+            </Typography>
+            <Grid container gap={2} ml={2}>
+              <Grid
+                item
+                xs={12}
+                sm={5.5}
+                justifyContent={'center'}
+                alignItems={'center'}
               >
-                <Typography variant="subtitle1">{item.title}</Typography>
-              </CardContent>
-              <ArrowForwardIcon />
-              <Box sx={{ ml: 2 }}></Box>
-            </Card>
-          </Grid>
-        ))}
+                <Card
+                  sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    boxShadow: 'none',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      fontWeight={700}
+                      display={'flex'}
+                      justifyContent={'center'}
+                    >
+                      Yêu cầu nghỉ phép
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={5.5}>
+                <Card
+                  sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    boxShadow: 'none',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      fontWeight={700}
+                      display={'flex'}
+                      justifyContent={'center'}
+                    >
+                      Yêu cầu đặt lịch họp
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={5.5}>
+                <Card
+                  sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    boxShadow: 'none',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      fontWeight={700}
+                      display={'flex'}
+                      justifyContent={'center'}
+                    >
+                      Yêu cầu đã được duyệt
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={5.5}>
+                <Card
+                  sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
+                    boxShadow: 'none',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      fontWeight={700}
+                      display={'flex'}
+                      justifyContent={'center'}
+                    >
+                      Yêu cầu bảo trì tài sản
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Container>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Container
+            sx={{
+              backgroundColor: 'rgba(240, 241, 255, 1)',
+              padding: 3,
+              borderRadius: '8px',
+            }}
+          >
+            <Typography
+              display={'flex'}
+              justifyContent={'center'}
+              variant="h6"
+              fontWeight="bold"
+              mb={2}
+            >
+              Lịch họp sắp tới
+            </Typography>
+          </Container>
+        </Grid>
       </Grid>
 
       {/* Thông báo phải checkin trước khi checkout */}
