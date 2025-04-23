@@ -17,6 +17,7 @@ import {
   takeAttendance,
 } from '../../store/attendanceSlice';
 import { useEffect, useState } from 'react';
+import MeetingCard from '../../components/card/MeetingCard'; // Import MeetingCard
 
 export default function EmployeeDashboard() {
   const userId = localStorage.getItem('userId');
@@ -26,7 +27,26 @@ export default function EmployeeDashboard() {
     (state: RootState) => state.attendance
   );
 
-  //Trạng thái chấm công
+  // Fake data for meetings
+  const meetingList = [
+    {
+      title: 'Cuộc họp dự án A',
+      description: 'Thảo luận tiến độ và kế hoạch dự án A.',
+      time: '10:00 AM - 11:00 AM, 24/04/2025',
+    },
+    {
+      title: 'Họp nhóm phát triển',
+      description: 'Trao đổi về các vấn đề kỹ thuật trong nhóm.',
+      time: '2:00 PM - 3:00 PM, 25/04/2025',
+    },
+    {
+      title: 'Đánh giá quý I',
+      description: 'Tổng kết và đánh giá hiệu quả công việc quý I.',
+      time: '9:00 AM - 10:30 AM, 26/04/2025',
+    },
+  ];
+
+  // Trạng thái chấm công
   const [isCheckIn, setIsCheckIn] = useState(false);
   const [isCheckOut, setIsCheckOut] = useState(false);
 
@@ -42,15 +62,14 @@ export default function EmployeeDashboard() {
     setSuccessSnackbar(false);
   };
 
-  //Hàm lấy giờ làm việc
+  // Hàm lấy giờ làm việc
   function getWorkHour() {
-    //default 8h
     const workHour = new Date(today); // Tạo một bản sao của today
     workHour.setHours(8, 0, 0, 0);
     return workHour.toISOString();
   }
 
-  //Hàm chấm công
+  // Hàm chấm công
   const handleCheckIn = () => {
     if (!userId) return;
     const currentTime = new Date();
@@ -64,13 +83,13 @@ export default function EmployeeDashboard() {
         },
       })
     ).then(() => {
-      dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
+      dispatch(getAllMyAttendanceRecord(userId)); // Gọi lại api để cập nhật lịch sử chấm công
       setIsCheckIn(true);
       setSuccessSnackbar(true);
     });
   };
 
-  //Hàm chấm công ra
+  // Hàm chấm công ra
   const hadleCheckOut = () => {
     if (!isCheckIn) {
       setOpenSnackbar(true);
@@ -85,13 +104,13 @@ export default function EmployeeDashboard() {
         note: 'Check out',
       })
     ).then(() => {
-      dispatch(getAllMyAttendanceRecord(userId)); //Gọi lại api để cập nhật lịch sử chấm công
+      dispatch(getAllMyAttendanceRecord(userId)); // Gọi lại api để cập nhật lịch sử chấm công
       setIsCheckOut(true);
       setSuccessSnackbar(true);
     });
   };
 
-  //Lấy lịch sử chấm công
+  // Lấy lịch sử chấm công
   useEffect(() => {
     if (userId) {
       dispatch(getAllMyAttendanceRecord(userId));
@@ -102,7 +121,7 @@ export default function EmployeeDashboard() {
   useEffect(() => {
     if (attendanceRecords && attendanceRecords.length > 0) {
       try {
-        //Kiểm tra checkin
+        // Kiểm tra checkin
         const nearestCheckIn = new Date(
           attendanceRecords[attendanceRecords.length - 1].checkIn
         );
@@ -113,7 +132,7 @@ export default function EmployeeDashboard() {
         ) {
           setIsCheckIn(true);
         }
-        //Kiểm tra checkOut
+        // Kiểm tra checkOut
         const nearestCheckOut = new Date(
           attendanceRecords[attendanceRecords.length - 1].checkOut
         );
@@ -139,9 +158,6 @@ export default function EmployeeDashboard() {
         justifyContent="space-between"
         sx={{ mb: 3 }}
       >
-        <Typography variant="h4" fontWeight="bold">
-          Xin chào!
-        </Typography>
         <Box>
           <Button
             disabled={isCheckIn}
@@ -190,6 +206,12 @@ export default function EmployeeDashboard() {
                     boxShadow: 'none',
                     borderRadius: '8px',
                     border: '1px solid rgba(0, 0, 0, 0.12)',
+                    cursor: 'pointer', // Thêm con trỏ chuột
+                    transition: 'transform 0.2s, box-shadow 0.2s', // Hiệu ứng chuyển đổi
+                    '&:hover': {
+                      transform: 'scale(1.05)', // Phóng to nhẹ khi hover
+                      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Thêm bóng
+                    },
                   }}
                 >
                   <CardContent>
@@ -210,6 +232,12 @@ export default function EmployeeDashboard() {
                     boxShadow: 'none',
                     borderRadius: '8px',
                     border: '1px solid rgba(0, 0, 0, 0.12)',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                    },
                   }}
                 >
                   <CardContent>
@@ -230,6 +258,12 @@ export default function EmployeeDashboard() {
                     boxShadow: 'none',
                     borderRadius: '8px',
                     border: '1px solid rgba(0, 0, 0, 0.12)',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                    },
                   }}
                 >
                   <CardContent>
@@ -250,6 +284,12 @@ export default function EmployeeDashboard() {
                     boxShadow: 'none',
                     borderRadius: '8px',
                     border: '1px solid rgba(0, 0, 0, 0.12)',
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                    },
                   }}
                 >
                   <CardContent>
@@ -283,6 +323,15 @@ export default function EmployeeDashboard() {
             >
               Lịch họp sắp tới
             </Typography>
+            {/* Hiển thị danh sách MeetingCard */}
+            {meetingList.map((meeting, index) => (
+              <MeetingCard
+                key={index}
+                title={meeting.title}
+                description={meeting.description}
+                time={meeting.time}
+              />
+            ))}
           </Container>
         </Grid>
       </Grid>

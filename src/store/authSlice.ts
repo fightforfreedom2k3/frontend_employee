@@ -4,6 +4,7 @@ import { authService, LoginRequest } from '../services/auth';
 interface AuthState {
   userId: string | null;
   role: string | null;
+  fullName: string;
   token: string | null;
   loading: boolean;
   statusCode: number | null;
@@ -15,6 +16,7 @@ const initialState: AuthState = {
   userId: localStorage.getItem('userId'),
   role: localStorage.getItem('role'),
   token: localStorage.getItem('token'),
+  fullName: localStorage.getItem('fullName') || '',
   loading: false,
   error: null,
   statusCode: null,
@@ -26,7 +28,6 @@ const login = createAsyncThunk(
   async (credentials: LoginRequest, { rejectWithValue }) => {
     try {
       const response = await authService.login(credentials);
-      console.log(response.data.user._id);
       // Kiểm tra xem API có trả về accessToken hợp lệ không
       if (!response.data || !response.data.acessToken) {
         throw new Error('Invalid response from server');
@@ -35,6 +36,7 @@ const login = createAsyncThunk(
         token: response.data.acessToken,
         role: response.data.user.role,
         userId: response.data.user._id,
+        fullName: response.data.user.fullName,
       };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -63,6 +65,7 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.role = action.payload.role;
         state.userId = action.payload.userId;
+        state.fullName = action.payload.fullName;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;

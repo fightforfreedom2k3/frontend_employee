@@ -181,6 +181,8 @@ export default function MainLayout() {
     setAnchorElUser(null);
   };
 
+  const fullName = localStorage.getItem('fullName');
+
   return (
     <Box sx={{ display: 'flex', overflowX: 'hidden' }}>
       <CssBaseline />
@@ -211,9 +213,12 @@ export default function MainLayout() {
             sx={{ display: 'flex', justifyContent: 'flex-end', marginRight: 5 }}
           >
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
+              <Stack display="flex" direction="row" alignItems="center" gap={2}>
+                <Typography>Xin chào {fullName}!</Typography>
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Stack>
             </Tooltip>
             <Menu
               sx={{ mt: '45px' }}

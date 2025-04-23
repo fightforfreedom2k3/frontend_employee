@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-  Container,
   TextField,
   Button,
   Box,
@@ -21,7 +20,7 @@ function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error, token, role, userId } = useSelector(
+  const { loading, error, token, role, userId, fullName } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -36,6 +35,7 @@ function LoginPage() {
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       localStorage.setItem('userId', userId);
+      localStorage.setItem('fullName', fullName);
       navigate('/dashboard');
     }
   }, [token, navigate]);
