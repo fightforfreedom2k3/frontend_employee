@@ -5,6 +5,7 @@ import departmentReducer from './departmentSlice';
 import attendanceReducer from './attendanceSlice';
 import mealReducer from './mealSlice';
 import contractReducer from './contractSlice';
+import leaveRequestReducer from './leaveRequestSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     attendance: attendanceReducer,
     meal: mealReducer,
     contract: contractReducer,
+    leaveRequest: leaveRequestReducer,
   },
 });
 

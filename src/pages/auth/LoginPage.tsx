@@ -20,7 +20,7 @@ function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error, token, role, userId, fullName } = useSelector(
+  const { loading, error, token, role, userId, fullName, user } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -36,6 +36,7 @@ function LoginPage() {
       localStorage.setItem('role', role);
       localStorage.setItem('userId', userId);
       localStorage.setItem('fullName', fullName);
+      localStorage.setItem('user', JSON.stringify(user));
       navigate('/dashboard');
     }
   }, [token, navigate]);

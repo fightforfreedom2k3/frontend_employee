@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Avatar,
   Box,
   CssBaseline,
   Menu,
@@ -29,6 +28,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { Employee } from '../types/employee';
 
 const drawerWidth = 240;
 
@@ -133,6 +134,12 @@ export default function MainLayout() {
       path: '/lunch-registration',
       role: 'EMPLOYEE',
     },
+    {
+      text: 'Quản lý đơn nghỉ phép',
+      icon: <DescriptionIcon />,
+      path: '/leave-request',
+      role: 'ADMIN',
+    },
   ];
 
   const settings = [
@@ -146,11 +153,6 @@ export default function MainLayout() {
       path: '/attendance-history',
       name: 'Lịch sử chấm công',
       role: 'EMPLOYEE',
-    },
-    {
-      text: 'change-password',
-      path: '/change-password',
-      name: 'Đổi mật khẩu',
     },
   ];
 
@@ -181,7 +183,7 @@ export default function MainLayout() {
     setAnchorElUser(null);
   };
 
-  const fullName = localStorage.getItem('fullName');
+  // const user: Employee = JSON.parse(localStorage.getItem('user') || '');
 
   return (
     <Box sx={{ display: 'flex', overflowX: 'hidden' }}>
@@ -214,9 +216,9 @@ export default function MainLayout() {
           >
             <Tooltip title="Open settings">
               <Stack display="flex" direction="row" alignItems="center" gap={2}>
-                <Typography>Xin chào {fullName}!</Typography>
+                <Typography>Xin chào</Typography>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <SettingsIcon sx={{ color: 'white' }} />
                 </IconButton>
               </Stack>
             </Tooltip>

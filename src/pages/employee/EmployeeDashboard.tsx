@@ -18,6 +18,8 @@ import {
 } from '../../store/attendanceSlice';
 import { useEffect, useState } from 'react';
 import MeetingCard from '../../components/card/MeetingCard'; // Import MeetingCard
+import CreateLeaveRequestDialog from './leave_request/CreateLeaveRequestDialog'; // Import dialog
+import LeaveRequestsDialog from './leave_request/LeaveRequestsDialog'; // Import dialog
 
 export default function EmployeeDashboard() {
   const userId = localStorage.getItem('userId');
@@ -54,12 +56,33 @@ export default function EmployeeDashboard() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [successSnackbar, setSuccessSnackbar] = useState(false);
 
+  // Trạng thái mở/đóng dialog
+  const [openLeaveRequestDialog, setOpenLeaveRequestDialog] = useState(false);
+  const [openLeaveRequestsDialog, setOpenLeaveRequestsDialog] = useState(false);
+
   // Hàm đóng Snackbar
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
   const handleCloseSuccessSnackbar = () => {
     setSuccessSnackbar(false);
+  };
+
+  // Hàm mở/đóng dialog
+  const handleOpenLeaveRequestDialog = () => {
+    setOpenLeaveRequestDialog(true);
+  };
+
+  const handleCloseLeaveRequestDialog = () => {
+    setOpenLeaveRequestDialog(false);
+  };
+
+  const handleOpenLeaveRequestsDialog = () => {
+    setOpenLeaveRequestsDialog(true);
+  };
+
+  const handleCloseLeaveRequestsDialog = () => {
+    setOpenLeaveRequestsDialog(false);
   };
 
   // Hàm lấy giờ làm việc
@@ -213,6 +236,7 @@ export default function EmployeeDashboard() {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Thêm bóng
                     },
                   }}
+                  onClick={handleOpenLeaveRequestDialog} // Mở dialog khi nhấp
                 >
                   <CardContent>
                     <Typography
@@ -265,6 +289,7 @@ export default function EmployeeDashboard() {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                     },
                   }}
+                  onClick={handleOpenLeaveRequestsDialog} // Mở dialog khi nhấp
                 >
                   <CardContent>
                     <Typography
@@ -335,6 +360,18 @@ export default function EmployeeDashboard() {
           </Container>
         </Grid>
       </Grid>
+
+      {/* Dialog Tạo Đơn Xin Nghỉ Phép */}
+      <CreateLeaveRequestDialog
+        open={openLeaveRequestDialog}
+        onClose={handleCloseLeaveRequestDialog}
+      />
+
+      {/* Dialog Hiển Thị Danh Sách Yêu Cầu Nghỉ Phép */}
+      <LeaveRequestsDialog
+        open={openLeaveRequestsDialog}
+        onClose={handleCloseLeaveRequestsDialog}
+      />
 
       {/* Thông báo phải checkin trước khi checkout */}
       <Snackbar

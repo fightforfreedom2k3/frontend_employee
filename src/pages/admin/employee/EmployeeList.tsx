@@ -284,6 +284,7 @@ export default function EmployeeList() {
                     <TableCell>{emp.phoneNumber}</TableCell>
                     <TableCell>
                       <IconButton
+                        title="Xóa nhân viên"
                         onClick={event => {
                           event.stopPropagation();
                           handleDeleteButtonClick(emp._id);
@@ -292,6 +293,7 @@ export default function EmployeeList() {
                         <DeleteIcon />
                       </IconButton>
                       <IconButton
+                        title="Chỉnh sửa nhân viên"
                         onClick={event => {
                           event.stopPropagation();
                           handleUpdateDialogOpen(emp._id);
