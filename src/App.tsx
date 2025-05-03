@@ -16,6 +16,7 @@ import LunchRegistration from './pages/employee/lunch_registration/LunchRegistra
 import MealMenuList from './pages/admin/meal_menu/MealMenuList';
 import EmployeeInfo from './pages/employee/info/EmployeeInfo';
 import LeaveRequestList from './pages/admin/leave-request/LeaveRequestList';
+import PropertyList from './pages/admin/property/PropertyList';
 
 function RedirectToLogin() {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ function App() {
           <Route path="attendance" element={<AttendanceRecordList />} />
           <Route path="meal-menu" element={<MealMenuList />} />
           <Route path="leave-request" element={<LeaveRequestList />} />
+          <Route path="property" element={<PropertyList />} />
         </Route>
       </Routes>
     </Router>

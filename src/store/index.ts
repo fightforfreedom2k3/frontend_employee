@@ -6,6 +6,7 @@ import attendanceReducer from './attendanceSlice';
 import mealReducer from './mealSlice';
 import contractReducer from './contractSlice';
 import leaveRequestReducer from './leaveRequestSlice';
+import propertyReducer from './propertySlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     meal: mealReducer,
     contract: contractReducer,
     leaveRequest: leaveRequestReducer,
+    property: propertyReducer,
   },
 });
 

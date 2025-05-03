@@ -62,7 +62,7 @@ export const fecthLeaveRequests = createAsyncThunk(
       );
       return {
         leaveRequests: response.data.data,
-        total: response.data.total,
+        total: response.data.totalCount,
       };
     } catch (error: any) {
       return rejectWithValue(error.response.data.message);

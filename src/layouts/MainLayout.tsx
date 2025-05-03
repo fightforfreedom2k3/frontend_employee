@@ -140,6 +140,12 @@ export default function MainLayout() {
       path: '/leave-request',
       role: 'ADMIN',
     },
+    {
+      text: 'Quản lý cơ sở vật chất',
+      icon: <DescriptionIcon />,
+      path: '/property',
+      role: 'ADMIN',
+    }
   ];
 
   const settings = [

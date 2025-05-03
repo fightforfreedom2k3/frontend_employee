@@ -265,6 +265,7 @@ export default function DepartmentList() {
                       <DeleteIcon />
                     </IconButton>
                     <IconButton
+                      title='edit department'
                       onClick={event => {
                         event.stopPropagation();
                         handleEditButton(department._id);
