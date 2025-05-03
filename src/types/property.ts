@@ -4,6 +4,6 @@ export interface Property{
     name: string;
     status: string;
     number: number;
-    createAt: string;
+    createdAt: string;
     updatedAt: string;
 }
