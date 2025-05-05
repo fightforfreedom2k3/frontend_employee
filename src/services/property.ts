@@ -15,4 +15,16 @@ export const propertyService = {
         id,
       },
     }),
+  requestMaintenance: (id: string) =>
+    api.get(`/property/requestMaintenance/${id}`, {
+      params: {
+        id,
+      },
+    }),
+  returnProperty: (id: string) =>
+    api.get(`/property/returnProperty/${id}`, {
+      params: {
+        id,
+      },
+    }),
 };

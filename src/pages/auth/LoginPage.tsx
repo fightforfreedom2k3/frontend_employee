@@ -20,9 +20,8 @@ function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error, token, role, userId, fullName, user } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { loading, error, token, role, userId, fullName, departmentId } =
+    useSelector((state: RootState) => state.auth);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +35,7 @@ function LoginPage() {
       localStorage.setItem('role', role);
       localStorage.setItem('userId', userId);
       localStorage.setItem('fullName', fullName);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('departmentId', departmentId);
       navigate('/dashboard');
     }
   }, [token, navigate]);

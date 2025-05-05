@@ -29,7 +29,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Employee } from '../types/employee';
 
 const drawerWidth = 240;
 

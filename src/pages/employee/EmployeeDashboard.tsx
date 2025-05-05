@@ -23,8 +23,8 @@ import LeaveRequestsDialog from './leave_request/LeaveRequestsDialog'; // Import
 import PropertyDialog from './property/PropertyDialog'; // Import dialog
 
 export default function EmployeeDashboard() {
+  const departmentId = localStorage.getItem('departmentId');
   const userId = localStorage.getItem('userId');
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const today = new Date();
   const dispatch = useDispatch<AppDispatch>();
   const { attendanceRecords } = useSelector(
@@ -62,9 +62,6 @@ export default function EmployeeDashboard() {
   const [openLeaveRequestDialog, setOpenLeaveRequestDialog] = useState(false);
   const [openLeaveRequestsDialog, setOpenLeaveRequestsDialog] = useState(false);
   const [openPropertyDialog, setOpenPropertyDialog] = useState(false);
-
-  // ID của phòng ban (giả sử bạn lấy từ localStorage hoặc API)
-  const departmentId = user.department._id;
 
   // Hàm đóng Snackbar
   const handleCloseSnackbar = () => {

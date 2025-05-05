@@ -71,6 +71,37 @@ export const getAllPropertyByDepartment = createAsyncThunk(
   }
 );
 
+//request maintance
+export const requestMaintenance = createAsyncThunk(
+  `property/requestMaintenance`,
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await propertyService.requestMaintenance(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          ` Lỗi khi yêu cầu bảo trì cơ sở vật chất`
+      );
+    }
+  }
+);
+
+//return property
+export const returnProperty = createAsyncThunk(
+  `property/returnProperty`,
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await propertyService.returnProperty(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || ` Lỗi khi trả lại cơ sở vật chất`
+      );
+    }
+  }
+);
+
 const propertySlice = createSlice({
   name: `property`,
   initialState,
@@ -108,6 +139,28 @@ const propertySlice = createSlice({
         state.properties = action.payload;
       })
       .addCase(getAllPropertyByDepartment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //request maintenance
+      .addCase(requestMaintenance.pending, state => {
+        state.loading = true;
+      })
+      .addCase(requestMaintenance.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(requestMaintenance.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //return property
+      .addCase(returnProperty.pending, state => {
+        state.loading = true;
+      })
+      .addCase(returnProperty.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(returnProperty.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

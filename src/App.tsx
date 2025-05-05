@@ -29,6 +29,7 @@ function RedirectToLogin() {
 }
 
 function App() {
+  localStorage.clear();
   return (
     <Router>
       <Routes>

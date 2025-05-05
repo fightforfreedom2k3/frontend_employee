@@ -50,7 +50,14 @@ export default function LeaveRequestsDialog({
           <CircularProgress />
         ) : leaveRequests.length > 0 ? (
           <TableContainer component={Paper}>
-            <Table>
+            <Table
+              sx={{
+                borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+                '& td, & th': {
+                  border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+                },
+              }}
+            >
               <TableHead>
                 <TableRow>
                   <TableCell>

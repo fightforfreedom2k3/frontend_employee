@@ -7,6 +7,7 @@ interface AuthState {
   userId: string | null;
   role: string | null;
   fullName: string;
+  departmentId: string;
   token: string | null;
   loading: boolean;
   statusCode: number | null;
@@ -20,6 +21,7 @@ const initialState: AuthState = {
   role: localStorage.getItem('role'),
   token: localStorage.getItem('token'),
   fullName: localStorage.getItem('fullName') || '',
+  departmentId: localStorage.getItem('departmentId') || '',
   loading: false,
   error: null,
   statusCode: null,
@@ -41,6 +43,7 @@ const login = createAsyncThunk(
         role: response.data.user.role,
         userId: response.data.user._id,
         fullName: response.data.user.fullName,
+        departmentId: response.data.user.department._id,
       };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -70,7 +73,7 @@ const authSlice = createSlice({
         state.role = action.payload.role;
         state.userId = action.payload.userId;
         state.fullName = action.payload.fullName;
-        state.user = action.payload.user;
+        state.departmentId = action.payload.departmentId;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
