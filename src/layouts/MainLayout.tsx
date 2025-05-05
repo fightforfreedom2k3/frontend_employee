@@ -145,7 +145,7 @@ export default function MainLayout() {
       icon: <DescriptionIcon />,
       path: '/property',
       role: 'ADMIN',
-    }
+    },
   ];
 
   const settings = [
@@ -190,6 +190,7 @@ export default function MainLayout() {
   };
 
   // const user: Employee = JSON.parse(localStorage.getItem('user') || '');
+  const fullName = localStorage.getItem('fullName') || 'Người dùng';
 
   return (
     <Box sx={{ display: 'flex', overflowX: 'hidden' }}>
@@ -222,7 +223,7 @@ export default function MainLayout() {
           >
             <Tooltip title="Open settings">
               <Stack display="flex" direction="row" alignItems="center" gap={2}>
-                <Typography>Xin chào</Typography>
+                <Typography>{`Xin chào ${fullName}`}</Typography>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <SettingsIcon sx={{ color: 'white' }} />
                 </IconButton>

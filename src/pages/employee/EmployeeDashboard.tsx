@@ -20,9 +20,11 @@ import { useEffect, useState } from 'react';
 import MeetingCard from '../../components/card/MeetingCard'; // Import MeetingCard
 import CreateLeaveRequestDialog from './leave_request/CreateLeaveRequestDialog'; // Import dialog
 import LeaveRequestsDialog from './leave_request/LeaveRequestsDialog'; // Import dialog
+import PropertyDialog from './property/PropertyDialog'; // Import dialog
 
 export default function EmployeeDashboard() {
   const userId = localStorage.getItem('userId');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const today = new Date();
   const dispatch = useDispatch<AppDispatch>();
   const { attendanceRecords } = useSelector(
@@ -59,6 +61,10 @@ export default function EmployeeDashboard() {
   // Trạng thái mở/đóng dialog
   const [openLeaveRequestDialog, setOpenLeaveRequestDialog] = useState(false);
   const [openLeaveRequestsDialog, setOpenLeaveRequestsDialog] = useState(false);
+  const [openPropertyDialog, setOpenPropertyDialog] = useState(false);
+
+  // ID của phòng ban (giả sử bạn lấy từ localStorage hoặc API)
+  const departmentId = user.department._id;
 
   // Hàm đóng Snackbar
   const handleCloseSnackbar = () => {
@@ -83,6 +89,14 @@ export default function EmployeeDashboard() {
 
   const handleCloseLeaveRequestsDialog = () => {
     setOpenLeaveRequestsDialog(false);
+  };
+
+  const handleOpenPropertyDialog = () => {
+    setOpenPropertyDialog(true);
+  };
+
+  const handleClosePropertyDialog = () => {
+    setOpenPropertyDialog(false);
   };
 
   // Hàm lấy giờ làm việc
@@ -316,6 +330,7 @@ export default function EmployeeDashboard() {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                     },
                   }}
+                  onClick={handleOpenPropertyDialog} // Mở dialog khi nhấp
                 >
                   <CardContent>
                     <Typography
@@ -371,6 +386,13 @@ export default function EmployeeDashboard() {
       <LeaveRequestsDialog
         open={openLeaveRequestsDialog}
         onClose={handleCloseLeaveRequestsDialog}
+      />
+
+      {/* Dialog hiển thị danh sách tài sản */}
+      <PropertyDialog
+        open={openPropertyDialog}
+        onClose={handleClosePropertyDialog}
+        departmentId={departmentId}
       />
 
       {/* Thông báo phải checkin trước khi checkout */}

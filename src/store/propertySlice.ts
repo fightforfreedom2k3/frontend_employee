@@ -29,6 +29,48 @@ export const fetchProperties = createAsyncThunk(
   }
 );
 
+export const createProperty = createAsyncThunk(
+  `property/createProperty`,
+  async (
+    {
+      department,
+      name,
+      status,
+      number,
+    }: { department: string; name: string; status: string; number: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await propertyService.createProperty(
+        department,
+        name,
+        status,
+        number
+      );
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || `Lỗi khi tạo cơ sở vật chất`
+      );
+    }
+  }
+);
+
+export const getAllPropertyByDepartment = createAsyncThunk(
+  `property/getAllPropertyByDepartment`,
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await propertyService.getAllPropertyByDepartment(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          `Lỗi khi lấy cơ sở vật chất theo phòng ban`
+      );
+    }
+  }
+);
+
 const propertySlice = createSlice({
   name: `property`,
   initialState,
@@ -46,6 +88,29 @@ const propertySlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      //create property
+      .addCase(createProperty.pending, state => {
+        state.loading = true;
+      })
+      .addCase(createProperty.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(createProperty.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //get properties by department
+      .addCase(getAllPropertyByDepartment.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getAllPropertyByDepartment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.properties = action.payload;
+      })
+      .addCase(getAllPropertyByDepartment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 

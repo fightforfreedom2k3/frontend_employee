@@ -34,8 +34,8 @@ import {
   Add as AddIcon,
 } from '@mui/icons-material';
 import { convertToVietnamDate } from '../../../lib/formatDateTime';
+import CreatePropertyDialog from './CreatePropertyDialog'; // Adjust path if needed
 
-// const CreatePropertyDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => (/* ... implementation ... */);
 // const EditPropertyDialog = ({ open, onClose, property }: { open: boolean; onClose: () => void; property: any | null }) => (/* ... implementation ... */);
 // const PropertyDetailDialog = ({ open, onClose, property }: { open: boolean; onClose: () => void; property: any | null }) => (/* ... implementation ... */);
 
@@ -179,16 +179,7 @@ export default function PropertyList() {
 
     return (
       <>
-        <Box
-          sx={{
-            width: '100%',
-            overflowX: 'auto',
-            mt: 2,
-            border: '1px solid rgba(224, 224, 224, 1)',
-            borderRadius: '4px',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-          }}
-        >
+        <Box>
           <TableContainer
             sx={{
               overflowX: 'auto',
@@ -208,7 +199,6 @@ export default function PropertyList() {
                 },
               }}
             >
-              {/* --------- FIX START: TableHead --------- */}
               <TableHead>
                 <TableRow
                   sx={{
@@ -231,7 +221,6 @@ export default function PropertyList() {
                     onClick={() => handleRowClick(property._id)}
                     sx={{
                       cursor: 'pointer',
-                      '&:last-child td, &:last-child th': { border: 0 },
                     }}
                   >
                     <TableCell component="th" scope="row">
@@ -334,11 +323,12 @@ export default function PropertyList() {
 
       {renderContent()}
 
-      {/* <CreatePropertyDialog
+      <CreatePropertyDialog
         open={createDialogOpen}
         onClose={handleCreateDialogClose}
       />
-      <PropertyDetailDialog
+
+      {/* <PropertyDetailDialog
         open={detailDialogOpen}
         onClose={handleDetailDialogClose}
         property={properties.find(p => p._id === selectedPropertyId) || null}
