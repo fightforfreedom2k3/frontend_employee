@@ -1,15 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store'; // Adjust path if needed
-import { useEffect, useState, useMemo } from 'react';
-import {
-  fetchProperties /* deleteProperty */,
-} from '../../../store/propertySlice'; // Adjust path if needed - Uncomment deleteProperty when implemented
+import { AppDispatch, RootState } from '../../../store';
+import { useEffect, useState } from 'react';
+import { getAllPropertyByDepartmentAndStatus } from '../../../store/propertySlice';
 import {
   Box,
-  Button,
   Container,
   Grid,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -22,61 +18,67 @@ import {
   Alert,
   Paper,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Select,
+  MenuItem,
 } from '@mui/material';
-import {
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Visibility as VisibilityIcon,
-  Add as AddIcon,
-} from '@mui/icons-material';
 import { convertToVietnamDate } from '../../../lib/formatDateTime';
-import CreatePropertyDialog from './CreatePropertyDialog'; // Adjust path if needed
-
-// const EditPropertyDialog = ({ open, onClose, property }: { open: boolean; onClose: () => void; property: any | null }) => (/* ... implementation ... */);
-// const PropertyDetailDialog = ({ open, onClose, property }: { open: boolean; onClose: () => void; property: any | null }) => (/* ... implementation ... */);
+import CreatePropertyDialog from './CreatePropertyDialog';
+import { departmentService } from '../../../services/department';
+import { Department } from '../../../types/departments';
 
 export default function PropertyList() {
-  const {
-    properties = [],
-    loading,
-    error,
-  } = useSelector((state: RootState) => state.property);
+  const { properties, loading, error, pagination } = useSelector(
+    (state: RootState) => state.property
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [propertyToDeleteId, setPropertyToDeleteId] = useState<string | null>(
-    null
-  );
-
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('ACTIVE');
+  const [departments, setDepartments] = useState<Department[] | undefined>([]);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchProperties());
-  }, [dispatch]);
+    // Fetch departments and set default department
+    departmentService
+      .getAllDepartment(1, 100, 'createdAt', 'ASC', '')
+      .then(response => {
+        const departmentList = response.data.data ?? [];
+        setDepartments(departmentList);
+        if (departmentList.length > 0) {
+          setSelectedDepartmentId(departmentList[0]._id); // Set default department to the first one
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching departments:', error);
+      });
+  }, []);
 
-  const filteredProperties = useMemo(() => {
-    if (!properties) return [];
-    return properties.filter(property =>
-      property.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [properties, searchQuery]);
-
-  const paginatedProperties = useMemo(() => {
-    const startIndex = page * rowsPerPage;
-    return filteredProperties.slice(startIndex, startIndex + rowsPerPage);
-  }, [filteredProperties, page, rowsPerPage]);
+  useEffect(() => {
+    // Fetch properties based on filters
+    if (selectedDepartmentId) {
+      dispatch(
+        getAllPropertyByDepartmentAndStatus({
+          departmentId: selectedDepartmentId,
+          status: selectedStatus,
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'createdAt',
+          order: 'DESC',
+          value: searchQuery.trim(),
+        })
+      );
+    }
+  }, [
+    dispatch,
+    selectedDepartmentId,
+    selectedStatus,
+    page,
+    rowsPerPage,
+    searchQuery,
+  ]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -97,45 +99,6 @@ export default function PropertyList() {
   const handleCreateDialogOpen = () => setCreateDialogOpen(true);
   const handleCreateDialogClose = () => setCreateDialogOpen(false);
 
-  const handleRowClick = (propertyId: string) => {
-    setSelectedPropertyId(propertyId);
-    setDetailDialogOpen(true);
-  };
-  const handleDetailDialogClose = () => {
-    setDetailDialogOpen(false);
-    setSelectedPropertyId(null);
-  };
-
-  const handleEditButton = (propertyId: string) => {
-    setSelectedPropertyId(propertyId);
-    setEditDialogOpen(true);
-  };
-  const handleEditDialogClose = () => {
-    setEditDialogOpen(false);
-    setSelectedPropertyId(null);
-  };
-
-  const handleDeleteButton = (propertyId: string) => {
-    setPropertyToDeleteId(propertyId);
-    setConfirmDeleteOpen(true);
-  };
-
-  const handleCloseConfirmDelete = () => {
-    setConfirmDeleteOpen(false);
-    setPropertyToDeleteId(null);
-  };
-
-  const handleDeleteConfirm = () => {
-    if (propertyToDeleteId) {
-      console.log(
-        'Dispatching delete action for property:',
-        propertyToDeleteId
-      );
-    }
-    handleCloseConfirmDelete();
-  };
-
-  // --- Render Logic ---
   const renderContent = () => {
     if (loading) {
       return (
@@ -169,14 +132,6 @@ export default function PropertyList() {
       );
     }
 
-    if (paginatedProperties.length === 0 && searchQuery !== '') {
-      return (
-        <Typography sx={{ mt: 3, textAlign: 'center' }}>
-          Không tìm thấy cơ sở vật chất nào phù hợp với "{searchQuery}".
-        </Typography>
-      );
-    }
-
     return (
       <>
         <Box>
@@ -187,15 +142,15 @@ export default function PropertyList() {
               maxWidth: '1200px',
               border: '1px solid #e0e0e0',
               maxHeight: '60vh',
-              boxShadow: 'none', // Thêm border cho TableContainer
+              boxShadow: 'none',
             }}
             component={Paper}
           >
             <Table
               sx={{
-                borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+                borderCollapse: 'collapse',
                 '& td, & th': {
-                  border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+                  border: '1px solid #e0e0e0',
                 },
               }}
             >
@@ -210,50 +165,21 @@ export default function PropertyList() {
                   <TableCell align="right">Số lượng</TableCell>
                   <TableCell>Phòng ban (ID)</TableCell>
                   <TableCell>Ngày tạo</TableCell>
-                  <TableCell align="center">Hành động</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {paginatedProperties.map(property => (
-                  <TableRow
-                    key={property._id}
-                    hover
-                    onClick={() => handleRowClick(property._id)}
-                    sx={{
-                      cursor: 'pointer',
-                    }}
-                  >
+                {properties.map(property => (
+                  <TableRow key={property._id} hover>
                     <TableCell component="th" scope="row">
                       {property.name}
                     </TableCell>
                     <TableCell>{property.status}</TableCell>
                     <TableCell align="right">{property.number}</TableCell>
-                    <TableCell>{property.department}</TableCell>
+                    <TableCell>
+                      {property.department?.name || 'Không xác định'}
+                    </TableCell>
                     <TableCell>
                       {convertToVietnamDate(property.createdAt)}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        size="small"
-                        title="Chỉnh sửa cơ sở vật chất"
-                        onClick={event => {
-                          event.stopPropagation();
-                          handleEditButton(property._id);
-                        }}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        title="Xóa cơ sở vật chất"
-                        color="error"
-                        onClick={event => {
-                          event.stopPropagation();
-                          handleDeleteButton(property._id);
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -265,7 +191,7 @@ export default function PropertyList() {
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
           <TablePagination
             component="div"
-            count={filteredProperties.length}
+            count={pagination.total}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
@@ -293,31 +219,40 @@ export default function PropertyList() {
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: 2, alignItems: 'center' }}>
-        <Grid item xs={12} sm={6} md={8}>
+        <Grid item xs={12} sm={4}>
           <TextField
             fullWidth
-            label="Tìm kiếm cơ sở vật chất (theo tên...)"
+            label="Tìm kiếm cơ sở vật chất"
             variant="outlined"
             size="small"
             value={searchQuery}
             onChange={handleSearchChange}
           />
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          md={4}
-          sx={{ textAlign: { xs: 'left', sm: 'right' }, mt: { xs: 1, sm: 0 } }}
-        >
-          <Button
-            onClick={handleCreateDialogOpen}
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
+        <Grid item xs={12} sm={4}>
+          <Select
+            fullWidth
+            value={selectedDepartmentId}
+            onChange={event => setSelectedDepartmentId(event.target.value)}
+            displayEmpty
           >
-            Thêm cơ sở vật chất mới
-          </Button>
+            {departments?.map(department => (
+              <MenuItem key={department._id} value={department._id}>
+                {department.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Select
+            fullWidth
+            value={selectedStatus}
+            onChange={event => setSelectedStatus(event.target.value)}
+            displayEmpty
+          >
+            <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
+            <MenuItem value="MAINTAINING">Bảo trì</MenuItem>
+          </Select>
         </Grid>
       </Grid>
 
@@ -327,56 +262,6 @@ export default function PropertyList() {
         open={createDialogOpen}
         onClose={handleCreateDialogClose}
       />
-
-      {/* <PropertyDetailDialog
-        open={detailDialogOpen}
-        onClose={handleDetailDialogClose}
-        property={properties.find(p => p._id === selectedPropertyId) || null}
-      />
-       <EditPropertyDialog
-        open={editDialogOpen}
-        onClose={handleEditDialogClose}
-        property={properties.find(p => p._id === selectedPropertyId) || null}
-      /> */}
-
-      <Dialog
-        open={confirmDeleteOpen}
-        onClose={handleCloseConfirmDelete}
-        aria-labelledby="delete-confirm-dialog-title"
-        aria-describedby="delete-confirm-dialog-description"
-      >
-        <DialogTitle id="delete-confirm-dialog-title">
-          Xác nhận xóa cơ sở vật chất
-        </DialogTitle>
-        <DialogContent>
-          <Typography id="delete-confirm-dialog-description">
-            Bạn có chắc chắn muốn xóa cơ sở vật chất{' '}
-            <b>
-              {properties.find(p => p._id === propertyToDeleteId)?.name || ''}
-            </b>
-            ?
-            <br />
-            Hành động này không thể hoàn tác.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseConfirmDelete}
-            variant="outlined"
-            color="secondary"
-          >
-            Hủy
-          </Button>
-          <Button
-            onClick={handleDeleteConfirm}
-            variant="contained"
-            color="error"
-            autoFocus
-          >
-            Xác nhận Xóa
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 }
