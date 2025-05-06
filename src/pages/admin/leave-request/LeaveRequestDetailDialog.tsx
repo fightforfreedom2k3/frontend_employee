@@ -42,10 +42,9 @@ export default function LeaveRequestDetailDialog({
       fecthLeaveRequests({
         page: 1,
         size: 10,
-        field: 'createdAt',
+        sort: 'createdAt',
         order: 'desc',
-        value: '',
-        status: '',
+        value: 'PENDING',
       })
     );
   };

@@ -11,13 +11,12 @@ export const leaveRequestService = {
   getAllLeaveRequest: (
     page = 1,
     size = 10,
-    field = 'ASC',
-    order = 'username',
-    value = '',
-    status = ''
+    sort = 'createdAt',
+    order = 'DESC',
+    value = ''
   ) =>
     api.get(`/leave-request/getAllLeaveRequest`, {
-      params: { page, size, field, order, value, status },
+      params: { page, size, sort, order, value },
     }),
   createLeaveRequest: (id: string, data: LeaveRequestData) =>
     api.post(`/leave-request/createLeaveRequest/${id}`, data),

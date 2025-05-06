@@ -26,8 +26,7 @@ import LeaveRequestDetailDialog from './LeaveRequestDetailDialog';
 export default function LeaveRequestList() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('PENDING');
   const [selectedLeaveRequestId, setSelectedLeaveRequestId] = useState<
     string | null
   >(null);
@@ -42,13 +41,12 @@ export default function LeaveRequestList() {
       fecthLeaveRequests({
         page: page + 1,
         size: rowsPerPage,
-        field: 'createdAt',
+        sort: 'createdAt',
         order: 'desc',
-        value: searchQuery.trim(),
-        status: statusFilter,
+        value: statusFilter,
       })
     );
-  }, [dispatch, page, rowsPerPage, searchQuery, statusFilter]);
+  }, [dispatch, page, rowsPerPage, statusFilter]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -62,10 +60,6 @@ export default function LeaveRequestList() {
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
   };
 
   const handleStatusChange = (event: SelectChangeEvent<string>) => {
@@ -88,13 +82,6 @@ export default function LeaveRequestList() {
 
       {/* Filters */}
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-        <TextField
-          label="Tìm kiếm"
-          variant="outlined"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          fullWidth
-        />
         <Select
           value={statusFilter}
           onChange={handleStatusChange}

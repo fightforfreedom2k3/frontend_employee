@@ -37,17 +37,15 @@ export const fecthLeaveRequests = createAsyncThunk(
     {
       page,
       size,
-      field,
+      sort,
       order,
       value,
-      status,
     }: {
       page: number;
       size: number;
-      field: string;
+      sort: string;
       order: string;
       value: string;
-      status: string;
     },
     { rejectWithValue }
   ) => {
@@ -55,10 +53,9 @@ export const fecthLeaveRequests = createAsyncThunk(
       const response = await leaveRequestService.getAllLeaveRequest(
         page,
         size,
-        field,
+        sort,
         order,
-        value,
-        status
+        value
       );
       return {
         leaveRequests: response.data.data,
