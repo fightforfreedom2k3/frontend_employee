@@ -1,7 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import { useEffect, useState } from 'react';
-import { getAllPropertyByDepartmentAndStatus } from '../../../store/propertySlice';
+import {
+  getAllPropertyByDepartmentAndStatus,
+  returnProperty,
+  requestMaintenance, // Import action
+} from '../../../store/propertySlice';
 import {
   Box,
   Container,
@@ -20,6 +24,7 @@ import {
   Typography,
   Select,
   MenuItem,
+  Button,
 } from '@mui/material';
 import { convertToVietnamDate } from '../../../lib/formatDateTime';
 import CreatePropertyDialog from './CreatePropertyDialog';
@@ -99,6 +104,44 @@ export default function PropertyList() {
   const handleCreateDialogOpen = () => setCreateDialogOpen(true);
   const handleCreateDialogClose = () => setCreateDialogOpen(false);
 
+  const handleReturnProperty = async (propertyId: string) => {
+    try {
+      await dispatch(returnProperty(propertyId)).unwrap(); // Call returnProperty API
+      dispatch(
+        getAllPropertyByDepartmentAndStatus({
+          departmentId: selectedDepartmentId,
+          status: selectedStatus,
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'createdAt',
+          order: 'DESC',
+          value: searchQuery.trim(),
+        })
+      ); // Refresh the property list
+    } catch (error) {
+      console.error('Error returning property:', error);
+    }
+  };
+
+  const handleRequestMaintenance = async (propertyId: string) => {
+    try {
+      await dispatch(requestMaintenance(propertyId)).unwrap(); // Call requestMaintenance API
+      dispatch(
+        getAllPropertyByDepartmentAndStatus({
+          departmentId: selectedDepartmentId,
+          status: selectedStatus,
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'createdAt',
+          order: 'DESC',
+          value: searchQuery.trim(),
+        })
+      ); // Refresh the property list
+    } catch (error) {
+      console.error('Error requesting maintenance:', error);
+    }
+  };
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -163,8 +206,9 @@ export default function PropertyList() {
                   <TableCell>Tên cơ sở vật chất</TableCell>
                   <TableCell>Trạng thái</TableCell>
                   <TableCell align="right">Số lượng</TableCell>
-                  <TableCell>Phòng ban (ID)</TableCell>
+                  <TableCell>Phòng ban</TableCell>
                   <TableCell>Ngày tạo</TableCell>
+                  <TableCell>Hành động</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -180,6 +224,30 @@ export default function PropertyList() {
                     </TableCell>
                     <TableCell>
                       {convertToVietnamDate(property.createdAt)}
+                    </TableCell>
+                    <TableCell>
+                      {/* Add Maintenance button */}
+                      {property.status === 'ACTIVE' && (
+                        <Button
+                          variant="contained"
+                          color="warning"
+                          size="small"
+                          onClick={() => handleRequestMaintenance(property._id)}
+                        >
+                          Bảo trì
+                        </Button>
+                      )}
+                      {/* Add Return button */}
+                      {property.status === 'MAINTAINING' && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={() => handleReturnProperty(property._id)}
+                        >
+                          Return
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
