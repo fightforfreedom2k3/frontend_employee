@@ -88,9 +88,6 @@ export default function LeaveRequestList() {
           displayEmpty
           fullWidth
         >
-          <MenuItem value="">
-            <em>Tất cả trạng thái</em>
-          </MenuItem>
           <MenuItem value="PENDING">Đang chờ</MenuItem>
           <MenuItem value="APPROVED">Đã duyệt</MenuItem>
           <MenuItem value="REJECTED">Từ chối</MenuItem>

@@ -33,20 +33,17 @@ export const propertyService = {
     order: string,
     value: string
   ) =>
-    api.get(
-      `/property/getAllPropertyByDepartmentAndStatus/${departmentId}/${status}`,
-      {
-        params: {
-          departmentId,
-          status,
-          page,
-          size,
-          sort,
-          order,
-          value,
-        },
-      }
-    ),
+    api.get(`/property/getAllPropertyByDepartmentAndStatus`, {
+      params: {
+        departmentId,
+        status,
+        page,
+        size,
+        sort,
+        order,
+        value,
+      },
+    }),
   requestMaintenance: (id: string) =>
     api.get(`/property/requestMaintenance/${id}`, {
       params: {
