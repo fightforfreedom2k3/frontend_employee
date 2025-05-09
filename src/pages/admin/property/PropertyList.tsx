@@ -101,7 +101,6 @@ export default function PropertyList() {
     setPage(0);
   };
 
-  const handleCreateDialogOpen = () => setCreateDialogOpen(true);
   const handleCreateDialogClose = () => setCreateDialogOpen(false);
 
   const handleReturnProperty = async (propertyId: string) => {

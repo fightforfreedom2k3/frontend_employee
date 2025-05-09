@@ -52,7 +52,7 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
       }
   );
 
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [statusFilter, setStatusFilter] = useState<string>('ACTIVE');
   const [page, setPage] = useState<number>(0); // Current page (0-based index)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10); // Rows per page
   const departmentId = localStorage.getItem('departmentId'); // Lấy departmentId từ localStorage
@@ -67,7 +67,7 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
       dispatch(
         getAllPropertyByDepartmentAndStatus({
           departmentId,
-          status: statusFilter === 'ACTIVE' ? '' : statusFilter,
+          status: statusFilter,
           page: page + 1, // API expects 1-based index
           size: rowsPerPage,
           sort: 'createdAt',
@@ -133,7 +133,7 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
             value={statusFilter}
             onChange={handleStatusChange}
           >
-            <MenuItem value="AVAILABLE">Đang hoạt động</MenuItem>
+            <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
             <MenuItem value="MAINTAINING">Đang bảo trì</MenuItem>
           </Select>
         </FormControl>

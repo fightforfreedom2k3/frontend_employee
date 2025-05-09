@@ -389,7 +389,6 @@ export default function EmployeeDashboard() {
       <PropertyDialog
         open={openPropertyDialog}
         onClose={handleClosePropertyDialog}
-        departmentId={departmentId}
       />
 
       {/* Thông báo phải checkin trước khi checkout */}
