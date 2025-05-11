@@ -124,10 +124,34 @@ const PropertyMaintenanceApprovalDialog: React.FC<
     }
 
     return (
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
-        <Table>
+      <TableContainer
+        sx={{
+          overflowX: 'auto',
+          width: '100%',
+          maxWidth: '1200px',
+          border: '1px solid #e0e0e0',
+          maxHeight: '60vh',
+          boxShadow: 'none',
+        }}
+        component={Paper}
+      >
+        <Table
+          sx={{
+            borderCollapse: 'collapse',
+            '& td, & th': {
+              border: '1px solid #e0e0e0',
+            },
+            '&': {
+              border: '1px solid #e0e0e0', // Thêm viền cho toàn bộ bảng
+            },
+          }}
+        >
           <TableHead>
-            <TableRow>
+            <TableRow
+              sx={{
+                '& th': { fontWeight: 'bold', backgroundColor: 'grey.100' },
+              }}
+            >
               <TableCell>Tên cơ sở vật chất</TableCell>
               <TableCell align="right">Số lượng</TableCell>
               <TableCell>Phòng ban</TableCell>
@@ -137,7 +161,12 @@ const PropertyMaintenanceApprovalDialog: React.FC<
           </TableHead>
           <TableBody>
             {properties.map(property => (
-              <TableRow key={property._id}>
+              <TableRow
+                key={property._id}
+                sx={{
+                  '& th': { fontWeight: 'bold', backgroundColor: 'grey.100' },
+                }}
+              >
                 <TableCell>{property.name}</TableCell>
                 <TableCell align="right">{property.number}</TableCell>
                 <TableCell>
