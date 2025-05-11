@@ -15,7 +15,6 @@ import { AttendanceHistory } from './pages/employee/attendance/AttendanceHistory
 import LunchRegistration from './pages/employee/lunch_registration/LunchRegistration';
 import MealMenuList from './pages/admin/meal_menu/MealMenuList';
 import EmployeeInfo from './pages/employee/info/EmployeeInfo';
-import LeaveRequestList from './pages/admin/leave-request/LeaveRequestList';
 import PropertyList from './pages/admin/property/PropertyList';
 
 function RedirectToLogin() {
@@ -29,7 +28,6 @@ function RedirectToLogin() {
 }
 
 function App() {
-  localStorage.clear();
   return (
     <Router>
       <Routes>
@@ -47,7 +45,6 @@ function App() {
           <Route path="department" element={<DepartmentList />} />
           <Route path="attendance" element={<AttendanceRecordList />} />
           <Route path="meal-menu" element={<MealMenuList />} />
-          <Route path="leave-request" element={<LeaveRequestList />} />
           <Route path="property" element={<PropertyList />} />
         </Route>
       </Routes>

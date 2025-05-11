@@ -12,7 +12,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BusinessIcon from '@mui/icons-material/Business';
-import DescriptionIcon from '@mui/icons-material/Description';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -29,6 +28,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import SettingsIcon from '@mui/icons-material/Settings';
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 
 const drawerWidth = 240;
 
@@ -123,7 +124,7 @@ export default function MainLayout() {
     },
     {
       text: 'Chấm công',
-      icon: <DescriptionIcon />,
+      icon: <ChecklistIcon />,
       path: '/attendance',
       role: 'ADMIN',
     },
@@ -134,14 +135,8 @@ export default function MainLayout() {
       role: 'EMPLOYEE',
     },
     {
-      text: 'Quản lý đơn nghỉ phép',
-      icon: <DescriptionIcon />,
-      path: '/leave-request',
-      role: 'ADMIN',
-    },
-    {
       text: 'Quản lý cơ sở vật chất',
-      icon: <DescriptionIcon />,
+      icon: <HomeRepairServiceIcon />,
       path: '/property',
       role: 'ADMIN',
     },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -9,10 +9,14 @@ import {
   Grid,
   CircularProgress,
   Alert,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store'; // Adjust path if needed
 import { createProperty } from '../../../store/propertySlice';
+import { departmentService } from '../../../services/department'; // Import department service
+import { Department } from '../../../types/departments'; // Import department type
 
 interface CreatePropertyDialogProps {
   open: boolean;
@@ -29,20 +33,43 @@ const CreatePropertyDialog: React.FC<CreatePropertyDialogProps> = ({
   const [formData, setFormData] = useState({
     department: '',
     name: '',
-    status: '',
+    status: 'ACTIVE', // Default status
     number: 0,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [departments, setDepartments] = useState<Department[]>([]);
+
+  const fetchDepartments = () => {
+    departmentService
+      .getAllDepartment(1, 100, 'createdAt', 'ASC', '')
+      .then(response => {
+        setDepartments(response.data.data ?? []);
+      })
+      .catch(error => {
+        console.error('Error fetching departments:', error);
+      });
+  };
+
+  useEffect(() => {
+    // Fetch departments when the dialog opens
+    if (open) {
+      fetchDepartments();
+    }
+  }, [open]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'number' ? parseInt(value, 10) : value,
+      [name as string]: value,
     });
   };
 
   const handleSubmit = async () => {
     await dispatch(createProperty(formData));
+    fetchDepartments(); // Fetch the updated list of departments
     onClose();
   };
 
@@ -62,24 +89,22 @@ const CreatePropertyDialog: React.FC<CreatePropertyDialogProps> = ({
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
+            <Select
               fullWidth
-              label="Phòng ban"
               name="department"
               value={formData.department}
               onChange={handleChange}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Trạng thái"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              variant="outlined"
-            />
+              displayEmpty
+            >
+              <MenuItem value="" disabled>
+                Chọn phòng ban
+              </MenuItem>
+              {departments.map(department => (
+                <MenuItem key={department._id} value={department._id}>
+                  {department.name}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
           <Grid item xs={12}>
             <TextField

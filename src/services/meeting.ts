@@ -30,7 +30,7 @@ export const meetingService = {
   createMeeting: (data: CreateMeetingData) =>
     api.post(`/meeting/createMeeting`, data),
   approveMeeting: (meetingId: string) =>
-    api.get(`/meeting, approveMeeing`, {
+    api.get(`/meeting/approveMeeting`, {
       params: {
         meetingId,
       },

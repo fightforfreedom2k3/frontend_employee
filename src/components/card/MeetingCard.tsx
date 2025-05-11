@@ -12,7 +12,7 @@ export default function MeetingCard({
   time,
 }: MeetingCardProps) {
   return (
-    <Card sx={{ mb: 2 }}>
+    <Card sx={{ mb: 2, cursor: 'pointer' }}>
       <CardContent>
         <Typography variant="h6" component="div">
           {title}

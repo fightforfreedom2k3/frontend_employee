@@ -285,6 +285,17 @@ export default function PropertyList() {
         Quản Lý Cơ Sở Vật Chất
       </Typography>
 
+      {/* Thêm nút "Thêm" */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setCreateDialogOpen(true)} // Mở dialog
+        >
+          Thêm Cơ Sở Vật Chất
+        </Button>
+      </Box>
+
       <Grid container spacing={2} sx={{ mb: 2, alignItems: 'center' }}>
         <Grid item xs={12} sm={4}>
           <TextField
@@ -325,6 +336,7 @@ export default function PropertyList() {
 
       {renderContent()}
 
+      {/* Dialog thêm cơ sở vật chất */}
       <CreatePropertyDialog
         open={createDialogOpen}
         onClose={handleCreateDialogClose}

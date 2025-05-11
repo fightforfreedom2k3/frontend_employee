@@ -21,9 +21,12 @@ import MeetingCard from '../../components/card/MeetingCard'; // Import MeetingCa
 import CreateLeaveRequestDialog from './leave_request/CreateLeaveRequestDialog'; // Import dialog
 import LeaveRequestsDialog from './leave_request/LeaveRequestsDialog'; // Import dialog
 import PropertyDialog from './property/PropertyDialog'; // Import dialog
+import CreateMeetingRequestDialog from './meeting/CreateMeetingRequestDialog';
+import { meetingService } from '../../services/meeting';
+import { convertToVietnamTime } from '../../lib/formatDateTime';
 
 export default function EmployeeDashboard() {
-  const departmentId = localStorage.getItem('departmentId');
+  const departmentId = localStorage.getItem('departmentId') || '';
   const userId = localStorage.getItem('userId');
   const today = new Date();
   const dispatch = useDispatch<AppDispatch>();
@@ -31,24 +34,28 @@ export default function EmployeeDashboard() {
     (state: RootState) => state.attendance
   );
 
-  // Fake data for meetings
-  const meetingList = [
-    {
-      title: 'Cuộc họp dự án A',
-      description: 'Thảo luận tiến độ và kế hoạch dự án A.',
-      time: '10:00 AM - 11:00 AM, 24/04/2025',
-    },
-    {
-      title: 'Họp nhóm phát triển',
-      description: 'Trao đổi về các vấn đề kỹ thuật trong nhóm.',
-      time: '2:00 PM - 3:00 PM, 25/04/2025',
-    },
-    {
-      title: 'Đánh giá quý I',
-      description: 'Tổng kết và đánh giá hiệu quả công việc quý I.',
-      time: '9:00 AM - 10:30 AM, 26/04/2025',
-    },
-  ];
+  // Gọi API để lấy danh sách lịch họp
+  const [meetingList, setMeetingList] = useState<any[]>([]); // Giá trị mặc định là mảng rỗng
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const response =
+          await meetingService.getAllMeetingByDepartmentAndStatus(
+            1, // page
+            10, // size
+            'date', // field
+            'asc', // order
+            departmentId,
+            'APPROVED' // Trạng thái lịch họp
+          );
+        setMeetingList(response.data.data); // Cập nhật danh sách lịch họp
+      } catch (error) {
+        console.error('Error fetching meetings:', error);
+      }
+    };
+
+    fetchMeetings();
+  }, []);
 
   // Trạng thái chấm công
   const [isCheckIn, setIsCheckIn] = useState(false);
@@ -62,6 +69,8 @@ export default function EmployeeDashboard() {
   const [openLeaveRequestDialog, setOpenLeaveRequestDialog] = useState(false);
   const [openLeaveRequestsDialog, setOpenLeaveRequestsDialog] = useState(false);
   const [openPropertyDialog, setOpenPropertyDialog] = useState(false);
+  const [openMeetingRequestDialog, setOpenMeetingRequestDialog] =
+    useState(false);
 
   // Hàm đóng Snackbar
   const handleCloseSnackbar = () => {
@@ -95,6 +104,11 @@ export default function EmployeeDashboard() {
   const handleClosePropertyDialog = () => {
     setOpenPropertyDialog(false);
   };
+
+  const handleOpenMeetingRequestDialog = () =>
+    setOpenMeetingRequestDialog(true);
+  const handleCloseMeetingRequestDialog = () =>
+    setOpenMeetingRequestDialog(false);
 
   // Hàm lấy giờ làm việc
   function getWorkHour() {
@@ -274,6 +288,7 @@ export default function EmployeeDashboard() {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                     },
                   }}
+                  onClick={handleOpenMeetingRequestDialog} // Mở dialog khi nhấp
                 >
                   <CardContent>
                     <Typography
@@ -308,7 +323,7 @@ export default function EmployeeDashboard() {
                       display={'flex'}
                       justifyContent={'center'}
                     >
-                      Yêu cầu đã được duyệt
+                      Danh sách yêu cầu nghỉ phép
                     </Typography>
                   </CardContent>
                 </Card>
@@ -364,9 +379,9 @@ export default function EmployeeDashboard() {
             {meetingList.map((meeting, index) => (
               <MeetingCard
                 key={index}
-                title={meeting.title}
+                title={meeting.name}
                 description={meeting.description}
-                time={meeting.time}
+                time={convertToVietnamTime(meeting.date)}
               />
             ))}
           </Container>
@@ -389,6 +404,11 @@ export default function EmployeeDashboard() {
       <PropertyDialog
         open={openPropertyDialog}
         onClose={handleClosePropertyDialog}
+      />
+
+      <CreateMeetingRequestDialog
+        open={openMeetingRequestDialog}
+        onClose={handleCloseMeetingRequestDialog}
       />
 
       {/* Thông báo phải checkin trước khi checkout */}

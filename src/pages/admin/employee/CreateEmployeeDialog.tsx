@@ -18,9 +18,12 @@ import {
   Snackbar,
   TextField,
   Typography,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 import { departmentService } from '../../../services/department';
 import { Department } from '../../../types/departments';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface CreateEmployeeDialogProps {
   open: boolean;
@@ -37,6 +40,7 @@ export default function CreateEmployeeDialog({
   const [error, setError] = useState<string | null>(null);
   const [departments, setDepartments] = useState<Department[] | undefined>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   //Lấy danh sách phòng ban
   useEffect(() => {
@@ -95,6 +99,10 @@ export default function CreateEmployeeDialog({
         [name]: value, //Cập nhật giá trị của các trường khác
       }));
     }
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
   };
 
   const handleSubmit = async () => {
@@ -160,8 +168,21 @@ export default function CreateEmployeeDialog({
                 name="password"
                 fullWidth
                 margin="dense"
+                type={showPassword ? 'text' : 'password'}
                 value={employeeData.password}
                 onChange={handleChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleTogglePasswordVisibility}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <TextField
                 label={'Họ và tên'}
@@ -308,8 +329,7 @@ export default function CreateEmployeeDialog({
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} variant="contained" color="secondary">
-            {' '}
-            Đóng{' '}
+            Đóng
           </Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
             Tạo mới

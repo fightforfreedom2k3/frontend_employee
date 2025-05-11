@@ -1,6 +1,6 @@
+import { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Container,
@@ -8,29 +8,64 @@ import {
   Typography,
 } from '@mui/material';
 import MeetingCard from '../../components/card/MeetingCard';
+import MeetingListDialog from './meeting/MeetingListDialog';
+import CreateMeetingDialog from './meeting/CreateMeetingDialog';
+import { convertToVietnamTime } from '../../lib/formatDateTime';
+import { Meeting } from '../../types/meeting';
+import { meetingService } from '../../services/meeting'; // Import service
+import LeaveRequestListDialog from './leave-request/LeaveRequestList';
+import PropertyMaintenanceApprovalDialog from './property/PropertyDialog';
 
 export const AdminDashboard = () => {
-  // Fake data for meetings
-  const meetingList = [
-    {
-      title: 'Cuộc họp dự án A',
-      description: 'Thảo luận tiến độ và kế hoạch dự án A.',
-      time: '10:00 AM - 11:00 AM, 24/04/2025',
-    },
-    {
-      title: 'Họp nhóm phát triển',
-      description: 'Trao đổi về các vấn đề kỹ thuật trong nhóm.',
-      time: '2:00 PM - 3:00 PM, 25/04/2025',
-    },
-    {
-      title: 'Đánh giá quý I',
-      description: 'Tổng kết và đánh giá hiệu quả công việc quý I.',
-      time: '9:00 AM - 10:30 AM, 26/04/2025',
-    },
-  ];
+  const [openMeetingDialog, setOpenMeetingDialog] = useState(false);
+  const [createMeetingDialogOpen, setCreateMeetingDialogOpen] = useState(false);
+  const [meetingList, setMeetingList] = useState<Meeting[]>([]); // Giá trị mặc định là mảng rỗng
+  const [openLeaveRequestDialog, setOpenLeaveRequestDialog] = useState(false);
+  const [openMaintenanceDialog, setOpenMaintenanceDialog] = useState(false);
+  const departmentId = localStorage.getItem('departmentId') || '';
+
+  const handleOpenMeetingDialog = () => {
+    setOpenMeetingDialog(true);
+  };
+
+  const handleCloseMeetingDialog = () => {
+    setOpenMeetingDialog(false);
+  };
+
+  const handleOpenCreateMeetingDialog = () => setCreateMeetingDialogOpen(true);
+  const handleCloseCreateMeetingDialog = () =>
+    setCreateMeetingDialogOpen(false);
+
+  const handleOpenLeaveRequestDialog = () => setOpenLeaveRequestDialog(true);
+  const handleCloseLeaveRequestDialog = () => setOpenLeaveRequestDialog(false);
+
+  const handleOpenMaintenanceDialog = () => setOpenMaintenanceDialog(true);
+  const handleCloseMaintenanceDialog = () => setOpenMaintenanceDialog(false);
+
+  // Gọi API để lấy danh sách lịch họp
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const response =
+          await meetingService.getAllMeetingByDepartmentAndStatus(
+            1, // page
+            10, // size
+            'date', // field
+            'asc', // order
+            departmentId, // Thay bằng ID phòng ban phù hợp
+            'APPROVED' // Trạng thái lịch họp
+          );
+        setMeetingList(response.data.data); // Cập nhật danh sách lịch họp
+      } catch (error) {
+        console.error('Error fetching meetings:', error);
+      }
+    };
+
+    fetchMeetings();
+  }, []);
+
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: 2 }}>
-      {/* Danh sách mục */}
       <Grid container gap={5} pt={5}>
         <Grid item xs={12} sm={7}>
           <Container
@@ -64,7 +99,7 @@ export const AdminDashboard = () => {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Thêm bóng
                     },
                   }}
-                  onClick={() => {}} // Mở dialog khi nhấp
+                  onClick={handleOpenCreateMeetingDialog}
                 >
                   <CardContent>
                     <Typography
@@ -91,6 +126,7 @@ export const AdminDashboard = () => {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                     },
                   }}
+                  onClick={handleOpenMeetingDialog} // Mở dialog khi nhấp
                 >
                   <CardContent>
                     <Typography
@@ -117,7 +153,7 @@ export const AdminDashboard = () => {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                     },
                   }}
-                  onClick={() => {}} // Mở dialog khi nhấp
+                  onClick={handleOpenMaintenanceDialog}
                 >
                   <CardContent>
                     <Typography
@@ -144,7 +180,7 @@ export const AdminDashboard = () => {
                       boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
                     },
                   }}
-                  onClick={() => {}} // Mở dialog khi nhấp
+                  onClick={handleOpenLeaveRequestDialog}
                 >
                   <CardContent>
                     <Typography
@@ -177,18 +213,33 @@ export const AdminDashboard = () => {
             >
               Lịch họp sắp tới
             </Typography>
-            {/* Hiển thị danh sách MeetingCard */}
             {meetingList.map((meeting, index) => (
               <MeetingCard
                 key={index}
-                title={meeting.title}
+                title={meeting.name}
                 description={meeting.description}
-                time={meeting.time}
+                time={convertToVietnamTime(meeting.date)}
               />
             ))}
           </Container>
         </Grid>
       </Grid>
+      <MeetingListDialog
+        open={openMeetingDialog}
+        onClose={handleCloseMeetingDialog}
+      />
+      <CreateMeetingDialog
+        open={createMeetingDialogOpen}
+        onClose={handleCloseCreateMeetingDialog}
+      />
+      <LeaveRequestListDialog
+        open={openLeaveRequestDialog}
+        onClose={handleCloseLeaveRequestDialog}
+      />
+      <PropertyMaintenanceApprovalDialog
+        open={openMaintenanceDialog}
+        onClose={handleCloseMaintenanceDialog}
+      />
     </Box>
   );
 };
