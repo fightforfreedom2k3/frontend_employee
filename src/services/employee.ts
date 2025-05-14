@@ -44,6 +44,18 @@ export interface UpdateEmployeeRequest {
   position: string;
 }
 
+export interface UpdateEmployeePassword {
+  fullName: string;
+  password: string;
+  dob: string;
+  department: Department | string;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  role: string;
+  position: string;
+}
+
 export const employeeService = {
   getAllEmployee: (
     page = 1,
@@ -79,4 +91,9 @@ export const employeeService = {
     api.get<ApiResponse<Employee[]>>(`/employee/getAllEmployeeByDepartment`, {
       params: { department, page, size, sort, order, value },
     }),
+  updateEmployeePassword: (_id: string, employeeData: UpdateEmployeePassword) =>
+    api.post<ApiResponse<Employee>>(
+      `employee/updateEmployee/${_id}`,
+      employeeData
+    ),
 };

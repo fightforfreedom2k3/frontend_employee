@@ -143,6 +143,75 @@ export default function EmployeeInfo() {
                     }}
                   />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Phòng ban"
+                    value={employee?.department?.name || ''}
+                    variant="outlined"
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Vị trí"
+                    value={employee?.position || ''}
+                    variant="outlined"
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Quyền"
+                    value={employee?.role || ''}
+                    variant="outlined"
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                      style: { pointerEvents: 'none' }, // Ngăn chặn chọn và hover
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#ccc', // Màu viền cố định
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#ccc', // Không thay đổi màu viền khi hover
+                        },
+                      },
+                    }}
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <Button
                     variant="contained"

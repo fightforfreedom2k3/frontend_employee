@@ -20,8 +20,16 @@ function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { loading, error, token, role, userId, fullName, departmentId } =
-    useSelector((state: RootState) => state.auth);
+  const {
+    loading,
+    error,
+    token,
+    role,
+    userId,
+    fullName,
+    departmentId,
+    username,
+  } = useSelector((state: RootState) => state.auth);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +44,7 @@ function LoginPage() {
       localStorage.setItem('userId', userId);
       localStorage.setItem('fullName', fullName);
       localStorage.setItem('departmentId', departmentId);
+      localStorage.setItem('username', username);
       navigate('/dashboard');
     }
   }, [token, navigate]);
@@ -71,7 +80,7 @@ function LoginPage() {
           ĐĂNG NHẬP
         </Typography>
         <Typography variant="body2" textAlign="center" sx={{ mb: 2 }}>
-          Nhập email và mật khẩu để đăng ký tài khoản
+          Nhập email và mật khẩu để truy cập
         </Typography>
         <Box component="form" onSubmit={handleLogin}>
           <TextField

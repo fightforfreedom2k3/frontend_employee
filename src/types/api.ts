@@ -19,4 +19,5 @@ export interface ApiResponse<T> {
 
 export interface AuthResponse {
   token: string;
+  data: string;
 }

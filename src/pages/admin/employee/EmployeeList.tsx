@@ -39,6 +39,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { departmentService } from '../../../services/department';
 import { Department } from '../../../types/departments';
+import LockResetIcon from '@mui/icons-material/LockReset';
+import UpdateEmployeePasswordDialog from './UpdateEmployeePasswordDialog';
 
 export default function EmployeeList() {
   console.log(localStorage.getItem('token'));
@@ -51,6 +53,8 @@ export default function EmployeeList() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
+  const [updatePasswordDialogOpen, setUpdatePasswordDialogOpen] =
+    useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -118,6 +122,14 @@ export default function EmployeeList() {
   };
 
   const handleUpdateDialogClose = () => setUpdateDialogOpen(false);
+
+  const handleUpdatePasswordDialogOpen = (employeeId: string) => {
+    setSelectedEmployeeId(employeeId);
+    setUpdatePasswordDialogOpen(true);
+  };
+
+  const handleUpdatePasswordDialogClose = () =>
+    setUpdatePasswordDialogOpen(false);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -301,6 +313,15 @@ export default function EmployeeList() {
                       >
                         <EditIcon />
                       </IconButton>
+                      <IconButton
+                        title="Đổi mật khẩu"
+                        onClick={event => {
+                          event.stopPropagation();
+                          handleUpdatePasswordDialogOpen(emp._id);
+                        }}
+                      >
+                        <LockResetIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -372,6 +393,11 @@ export default function EmployeeList() {
       <UpdateEmployeeDialog
         open={updateDialogOpen}
         onClose={handleUpdateDialogClose}
+        employeeId={selectedEmployeeId}
+      />
+      <UpdateEmployeePasswordDialog
+        open={updatePasswordDialogOpen}
+        onClose={handleUpdatePasswordDialogClose}
         employeeId={selectedEmployeeId}
       />
     </Container>

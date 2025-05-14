@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { authService, LoginRequest } from '../services/auth';
+import {
+  authService,
+  ChangePasswordData,
+  LoginRequest,
+} from '../services/auth';
 import { Employee } from '../types/employee';
 
 interface AuthState {
@@ -13,6 +17,7 @@ interface AuthState {
   statusCode: number | null;
   error: string | null;
   message: string | null;
+  username: string;
 }
 
 const initialState: AuthState = {
@@ -26,6 +31,7 @@ const initialState: AuthState = {
   error: null,
   statusCode: null,
   message: null,
+  username: localStorage.getItem('username') || '',
 };
 
 const login = createAsyncThunk(
@@ -44,9 +50,24 @@ const login = createAsyncThunk(
         userId: response.data.user._id,
         fullName: response.data.user.fullName,
         departmentId: response.data.user.department._id,
+        username: response.data.user.userName,
       };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Login failed');
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  `auth/changePassword`,
+  async (data: ChangePasswordData, { rejectWithValue }) => {
+    try {
+      const response = await authService.changePassword(data);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Đổi mật khẩu thất bại'
+      );
     }
   }
 );
@@ -74,10 +95,22 @@ const authSlice = createSlice({
         state.userId = action.payload.userId;
         state.fullName = action.payload.fullName;
         state.departmentId = action.payload.departmentId;
+        state.username = action.payload.username;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string; // Lưu message từ API vào Redux state
+      })
+      //change password
+      .addCase(changePassword.pending, state => {
+        state.loading = true;
+      })
+      .addCase(changePassword.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

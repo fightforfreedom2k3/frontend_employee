@@ -52,7 +52,6 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
       }
   );
 
-  const [statusFilter, setStatusFilter] = useState<string>('ACTIVE');
   const [page, setPage] = useState<number>(0); // Current page (0-based index)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10); // Rows per page
   const departmentId = localStorage.getItem('departmentId'); // Lấy departmentId từ localStorage
@@ -67,7 +66,7 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
       dispatch(
         getAllPropertyByDepartmentAndStatus({
           departmentId,
-          status: statusFilter,
+          status: 'ACTIVE',
           page: page + 1, // API expects 1-based index
           size: rowsPerPage,
           sort: 'createdAt',
@@ -82,12 +81,7 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
     if (open) {
       fetchProperties();
     }
-  }, [open, departmentId, statusFilter, page, rowsPerPage]);
-
-  const handleStatusChange = (event: SelectChangeEvent<string>) => {
-    setStatusFilter(event.target.value);
-    setPage(0); // Reset to the first page when filter changes
-  };
+  }, [open, departmentId, page, rowsPerPage]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -122,21 +116,6 @@ const PropertyDialog: React.FC<PropertyDialogProps> = ({ open, onClose }) => {
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Danh sách tài sản</DialogTitle>
       <DialogContent>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel sx={{ mt: 2 }} id="status-filter-label">
-            Trạng thái
-          </InputLabel>
-          <Select
-            sx={{ mt: 2.25 }}
-            label="Trạng thái"
-            labelId="status-filter-label"
-            value={statusFilter}
-            onChange={handleStatusChange}
-          >
-            <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
-            <MenuItem value="MAINTAINING">Đang bảo trì</MenuItem>
-          </Select>
-        </FormControl>
         {loading ? (
           <Box
             display="flex"

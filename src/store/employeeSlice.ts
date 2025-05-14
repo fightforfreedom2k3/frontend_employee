@@ -3,6 +3,7 @@ import {
   AddNewEmployeeRequest,
   employeeService,
   UpdateEmployeeRequest,
+  UpdateEmployeePassword,
 } from '../services/employee';
 import { Employee } from '../types/employee';
 
@@ -188,6 +189,27 @@ export const getEmployeeById = createAsyncThunk(
   }
 );
 
+//Gọi api cập nhật mật khẩu nhân viên
+export const updateEmployeePassword = createAsyncThunk(
+  `employee/updateEmployeePassword`,
+  async (
+    {
+      _id,
+      employeeData,
+    }: { _id: string; employeeData: UpdateEmployeePassword },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await employeeService.updateEmployee(_id, employeeData);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Lỗi khi cập nhật mật khẩu nhân viên'
+      );
+    }
+  }
+);
+
 const employeeSlice = createSlice({
   name: 'employee',
   initialState,
@@ -269,6 +291,17 @@ const employeeSlice = createSlice({
         }
       })
       .addCase(getEmployeeById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      //updateEmployeePassword
+      .addCase(updateEmployeePassword.pending, state => {
+        state.loading = true;
+      })
+      .addCase(updateEmployeePassword.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(updateEmployeePassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

@@ -35,11 +35,15 @@ export const AttendanceHistory = () => {
       <Typography variant="h4" gutterBottom>
         Lịch sử chấm công
       </Typography>
-      <Button variant="outlined" sx={{ mb: 2 }}>
-        Tháng 03/2025
-      </Button>
       <TableContainer component={Paper}>
-        <Table>
+        <Table
+          sx={{
+            borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+            '& td, & th': {
+              border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+            },
+          }}
+        >
           <TableHead>
             <TableRow>
               <TableCell>Chấm vào</TableCell>
