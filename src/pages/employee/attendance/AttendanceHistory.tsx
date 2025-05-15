@@ -11,11 +11,12 @@ import {
   TableRow,
   Paper,
   Checkbox,
+  TablePagination, // Thêm dòng này
 } from '@mui/material';
 import { convertToVietnamTime } from '../../../lib/formatDateTime';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react'; // Thêm useState
 import { getAllMyAttendanceRecord } from '../../../store/attendanceSlice';
 
 export const AttendanceHistory = () => {
@@ -26,9 +27,32 @@ export const AttendanceHistory = () => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = localStorage.getItem('userId');
 
+  // State cho phân trang
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   useEffect(() => {
     dispatch(getAllMyAttendanceRecord(userId || ''));
   }, [dispatch]);
+
+  // Xử lý thay đổi trang
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  // Xử lý thay đổi số dòng mỗi trang
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Lấy dữ liệu cho trang hiện tại
+  const paginatedRecords = attendanceRecords.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Container>
@@ -38,9 +62,9 @@ export const AttendanceHistory = () => {
       <TableContainer component={Paper}>
         <Table
           sx={{
-            borderCollapse: 'collapse', // Đảm bảo các border không bị chồng chéo
+            borderCollapse: 'collapse',
             '& td, & th': {
-              border: '1px solid #e0e0e0', // Thêm border cho các ô trong bảng
+              border: '1px solid #e0e0e0',
             },
           }}
         >
@@ -53,7 +77,7 @@ export const AttendanceHistory = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {attendanceRecords.map((record: any, index: number) => (
+            {paginatedRecords.map((record: any, index: number) => (
               <TableRow key={index}>
                 <TableCell>{convertToVietnamTime(record.checkIn)}</TableCell>
                 <TableCell>
@@ -68,7 +92,7 @@ export const AttendanceHistory = () => {
                     sx={{
                       color: record.status === 'LATE' ? 'red' : 'default',
                       '&.Mui-checked': {
-                        color: 'red', // Khi checkbox được chọn, màu sẽ là đỏ
+                        color: 'red',
                       },
                     }}
                   />
@@ -80,7 +104,7 @@ export const AttendanceHistory = () => {
                     sx={{
                       color: record.status === 'PRESENT' ? 'green' : 'default',
                       '&.Mui-checked': {
-                        color: 'green', // Khi checkbox được chọn, màu sẽ là xanh
+                        color: 'green',
                       },
                     }}
                   />
@@ -89,6 +113,15 @@ export const AttendanceHistory = () => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={attendanceRecords.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="Số dòng mỗi trang:"
+        />
       </TableContainer>
     </Container>
   );
