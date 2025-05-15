@@ -56,4 +56,10 @@ export const propertyService = {
         id,
       },
     }),
+  acceptMaintaince: (id: string) =>
+    api.get(`/property/acceptMaintaince/${id}`, {
+      params: {
+        id,
+      },
+    }),
 };

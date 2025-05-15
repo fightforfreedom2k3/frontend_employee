@@ -169,6 +169,21 @@ export const returnProperty = createAsyncThunk(
   }
 );
 
+//accept maintaince
+export const acceptMaintaince = createAsyncThunk(
+  `property/acceptMaintaince`,
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await propertyService.acceptMaintaince(id);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || `Lỗi khi hoàn tất bảo trì`
+      );
+    }
+  }
+);
+
 const propertySlice = createSlice({
   name: `property`,
   initialState,
@@ -239,6 +254,17 @@ const propertySlice = createSlice({
       .addCase(returnProperty.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      //accept maintaince
+      .addCase(acceptMaintaince.pending, state => {
+        state.loading = true;
+      })
+      .addCase(acceptMaintaince.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(acceptMaintaince.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
       });
   },
 });

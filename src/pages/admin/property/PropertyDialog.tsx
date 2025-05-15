@@ -22,6 +22,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store';
 import {
+  acceptMaintaince,
   getAllPropertyByDepartmentAndStatus,
   returnProperty,
 } from '../../../store/propertySlice';
@@ -67,7 +68,7 @@ const PropertyMaintenanceApprovalDialog: React.FC<
       dispatch(
         getAllPropertyByDepartmentAndStatus({
           departmentId: selectedDepartmentId,
-          status: 'MAINTAINING',
+          status: 'PENDING',
           page: 1,
           size: 10,
           sort: 'createdAt',
@@ -80,11 +81,11 @@ const PropertyMaintenanceApprovalDialog: React.FC<
 
   const handleReturnProperty = async (propertyId: string) => {
     try {
-      await dispatch(returnProperty(propertyId)).unwrap();
+      await dispatch(acceptMaintaince(propertyId)).unwrap();
       dispatch(
         getAllPropertyByDepartmentAndStatus({
           departmentId: selectedDepartmentId,
-          status: 'MAINTAINING',
+          status: 'PENDING',
           page: 1,
           size: 10,
           sort: 'createdAt',
@@ -178,11 +179,11 @@ const PropertyMaintenanceApprovalDialog: React.FC<
                 <TableCell>
                   <Button
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     size="small"
                     onClick={() => handleReturnProperty(property._id)}
                   >
-                    Return
+                    Phê duyệt
                   </Button>
                 </TableCell>
               </TableRow>
@@ -214,7 +215,7 @@ const PropertyMaintenanceApprovalDialog: React.FC<
         {renderContent()}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="primary">
           Đóng
         </Button>
       </DialogActions>

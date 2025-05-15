@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import {
   getAllPropertyByDepartmentAndStatus,
   returnProperty,
-  requestMaintenance, // Import action
+  requestMaintenance,
+  acceptMaintaince, // Import action
 } from '../../../store/propertySlice';
 import {
   Box,
@@ -141,6 +142,25 @@ export default function PropertyList() {
     }
   };
 
+  const handleAcceptMaintaince = async (propertyId: string) => {
+    try {
+      await dispatch(acceptMaintaince(propertyId)).unwrap();
+      dispatch(
+        getAllPropertyByDepartmentAndStatus({
+          departmentId: selectedDepartmentId,
+          status: selectedStatus,
+          page: page + 1,
+          size: rowsPerPage,
+          sort: 'createdAt',
+          order: 'DESC',
+          value: searchQuery.trim(),
+        })
+      );
+    } catch (error: any) {
+      console.error(`Error accept maintaince: `, error);
+    }
+  };
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -244,7 +264,17 @@ export default function PropertyList() {
                           size="small"
                           onClick={() => handleReturnProperty(property._id)}
                         >
-                          Return
+                          Hoàn thành
+                        </Button>
+                      )}
+                      {property.status === 'PENDING' && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          size="small"
+                          onClick={() => handleAcceptMaintaince(property._id)}
+                        >
+                          Phê duyệt
                         </Button>
                       )}
                     </TableCell>
@@ -330,6 +360,7 @@ export default function PropertyList() {
           >
             <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
             <MenuItem value="MAINTAINING">Bảo trì</MenuItem>
+            <MenuItem value="PENDING">Đang chờ duyệt</MenuItem>
           </Select>
         </Grid>
       </Grid>

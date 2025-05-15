@@ -101,21 +101,27 @@ const MeetingListDialog: React.FC<MeetingListDialogProps> = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {meetings.map(meeting => (
-                    <TableRow
-                      key={meeting.name}
-                      hover
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => handleRowClick(meeting)}
-                    >
-                      <TableCell>{meeting.name}</TableCell>
-                      <TableCell>{meeting.department.name}</TableCell>
-                      <TableCell>
-                        {convertToVietnamTime(meeting.date)}
-                      </TableCell>
-                      <TableCell>Đang chờ duyệt</TableCell>
-                    </TableRow>
-                  ))}
+                  {meetings
+                    .filter(
+                      meeting =>
+                        new Date(meeting.date).setHours(0, 0, 0, 0) >=
+                        new Date().setHours(0, 0, 0, 0)
+                    )
+                    .map(meeting => (
+                      <TableRow
+                        key={meeting.name}
+                        hover
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleRowClick(meeting)}
+                      >
+                        <TableCell>{meeting.name}</TableCell>
+                        <TableCell>{meeting.department.name}</TableCell>
+                        <TableCell>
+                          {convertToVietnamTime(meeting.date)}
+                        </TableCell>
+                        <TableCell>Đang chờ duyệt</TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>

@@ -376,14 +376,20 @@ export default function EmployeeDashboard() {
               Lịch họp sắp tới
             </Typography>
             {/* Hiển thị danh sách MeetingCard */}
-            {meetingList.map((meeting, index) => (
-              <MeetingCard
-                key={index}
-                title={meeting.name}
-                description={meeting.description}
-                time={convertToVietnamTime(meeting.date)}
-              />
-            ))}
+            {meetingList
+              .filter(
+                meeting =>
+                  new Date(meeting.date).setHours(0, 0, 0, 0) >=
+                  new Date().setHours(0, 0, 0, 0)
+              )
+              .map((meeting, index) => (
+                <MeetingCard
+                  key={index}
+                  title={meeting.name}
+                  description={meeting.description}
+                  time={convertToVietnamTime(meeting.date)}
+                />
+              ))}
           </Container>
         </Grid>
       </Grid>
