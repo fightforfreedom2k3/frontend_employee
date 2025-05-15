@@ -170,9 +170,7 @@ export default function EmployeeDashboard() {
     if (attendanceRecords && attendanceRecords.length > 0) {
       try {
         // Kiểm tra checkin
-        const nearestCheckIn = new Date(
-          attendanceRecords[attendanceRecords.length - 1].checkIn
-        );
+        const nearestCheckIn = new Date(attendanceRecords[0].checkIn);
         if (
           today.getDate() === nearestCheckIn.getDate() &&
           today.getMonth() === nearestCheckIn.getMonth() &&
@@ -181,9 +179,7 @@ export default function EmployeeDashboard() {
           setIsCheckIn(true);
         }
         // Kiểm tra checkOut
-        const nearestCheckOut = new Date(
-          attendanceRecords[attendanceRecords.length - 1].checkOut
-        );
+        const nearestCheckOut = new Date(attendanceRecords[0].checkOut);
         if (
           today.getDate() === nearestCheckOut.getDate() &&
           today.getMonth() === nearestCheckOut.getMonth() &&

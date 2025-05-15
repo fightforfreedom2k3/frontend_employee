@@ -113,8 +113,8 @@ export default function AttendanceRecordList() {
             onChange={event => setStatus(event.target.value)}
             displayEmpty
           >
-            <MenuItem value="PRESENT">PRESENT</MenuItem>
-            <MenuItem value="LATE">LATE</MenuItem>
+            <MenuItem value="PRESENT">Đúng giờ</MenuItem>
+            <MenuItem value="LATE">Đi muộn</MenuItem>
           </Select>
         </Grid>
       </Grid>
@@ -189,7 +189,11 @@ export default function AttendanceRecordList() {
                       ? convertToVietnamTime(attendanceRecord.checkOut)
                       : 'Chưa kết thúc ca'}
                   </TableCell>
-                  <TableCell>{attendanceRecord.status}</TableCell>
+                  <TableCell>
+                    {attendanceRecord.status === 'LATE'
+                      ? 'Đi muộn'
+                      : 'Đúng giờ'}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
