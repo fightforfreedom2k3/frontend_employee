@@ -124,7 +124,6 @@ export default function DepartmentList() {
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
     setSelectedDepartmentId(null);
-    showSnackbar('Phòng ban đã được cập nhật thành công!', 'success'); // Hiển thị thông báo thành công
   };
 
   // Handle pagination change
@@ -265,7 +264,7 @@ export default function DepartmentList() {
                       <DeleteIcon />
                     </IconButton>
                     <IconButton
-                      title='edit department'
+                      title="edit department"
                       onClick={event => {
                         event.stopPropagation();
                         handleEditButton(department._id);
